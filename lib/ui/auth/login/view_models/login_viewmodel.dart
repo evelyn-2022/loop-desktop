@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:babelbeats/data/repositories/auth_repository.dart';
+import 'package:loop/data/repositories/auth_repository.dart';
 
 class LoginViewModel extends ChangeNotifier {
   final AuthRepository authRepository;

@@ -1,6 +1,6 @@
-import 'package:babelbeats/data/services/auth_api_client.dart';
-import 'package:babelbeats/data/services/models/login_request.dart';
-import 'package:babelbeats/data/services/models/login_response.dart';
+import 'package:loop/data/services/auth_api_client.dart';
+import 'package:loop/data/services/models/login_request.dart';
+import 'package:loop/data/services/models/login_response.dart';
 
 class AuthRepository {
   final AuthApiClient apiClient;

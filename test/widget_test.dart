@@ -8,6 +8,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-import 'package:babelbeats/main.dart';
+import 'package:loop/main.dart';
 
 void main() {}

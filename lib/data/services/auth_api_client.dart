@@ -1,7 +1,7 @@
 import 'package:http/http.dart' as http;
-import 'package:babelbeats/config/app_config.dart';
-import 'package:babelbeats/data/services/models/login_request.dart';
-import 'package:babelbeats/data/services/models/login_response.dart';
+import 'package:loop/config/app_config.dart';
+import 'package:loop/data/services/models/login_request.dart';
+import 'package:loop/data/services/models/login_response.dart';
 
 class AuthApiClient {
   final http.Client httpClient;
@@ -10,7 +10,7 @@ class AuthApiClient {
       : httpClient = httpClient ?? http.Client();
 
   Future<LoginResponse> login(LoginRequest request) async {
-    final url = '${AppConfig.baseUrl}/api/auth/login';
+    final url = '${AppConfig.baseUrl}/auth/login';
     final response = await httpClient.post(
       Uri.parse(url),
       headers: {'Content-Type': 'application/json'},

@@ -2,9 +2,9 @@
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:babelbeats/data/repositories/auth_repository.dart';
-import 'package:babelbeats/data/services/auth_api_client.dart';
-import 'package:babelbeats/ui/auth/login/view_models/login_viewmodel.dart';
+import 'package:loop/data/repositories/auth_repository.dart';
+import 'package:loop/data/services/auth_api_client.dart';
+import 'package:loop/ui/auth/login/view_models/login_viewmodel.dart';
 
 class AppProviders extends StatelessWidget {
   final Widget child;

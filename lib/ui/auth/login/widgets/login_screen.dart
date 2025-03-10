@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:babelbeats/utils/validators.dart';
-import 'package:babelbeats/ui/auth/login/view_models/login_viewmodel.dart';
+import 'package:loop/utils/validators.dart';
+import 'package:loop/ui/auth/login/view_models/login_viewmodel.dart';
 
 class LoginScreen extends StatelessWidget {
   final _emailController = TextEditingController();
