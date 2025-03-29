@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:loop/ui/shared/widgets/app_text_field.dart';
+import 'package:loop/ui/shared/widgets/app_button.dart';
+import 'package:loop/utils/validators.dart';
 
 class SignupScreen extends StatelessWidget {
   final _emailController = TextEditingController();
@@ -24,43 +27,31 @@ class SignupScreen extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            // Email
-            TextField(
+            AppTextField(
               controller: _emailController,
-              decoration: const InputDecoration(
-                labelText: 'Email',
-                border: OutlineInputBorder(),
-              ),
-              style: textTheme.bodyMedium,
+              label: 'Email',
+              hint: 'Enter your email',
+              keyboardType: TextInputType.emailAddress,
+              validator: Validators.validateEmail,
             ),
             const SizedBox(height: 16),
-
-            // Password
-            TextField(
+            AppTextField(
               controller: _passwordController,
-              obscureText: true,
-              decoration: const InputDecoration(
-                labelText: 'Password',
-                border: OutlineInputBorder(),
-              ),
-              style: textTheme.bodyMedium,
+              label: 'Password',
+              hint: 'Enter your password',
+              obscure: true,
+              keyboardType: TextInputType.visiblePassword,
+              validator: Validators.validatePassword,
             ),
             const SizedBox(height: 24),
-
-            // Signup Button
-            ElevatedButton(
+            AppButton(
+              label: 'Sign Up',
               onPressed: () {
-                final email = _emailController.text;
-                final password = _passwordController.text;
-                print('Signing up with $email / $password');
+                // Handle sign up logic
+                print('Email: ${_emailController.text}');
+                print(
+                    'Password: ${_passwordController.text}');
               },
-              style: ElevatedButton.styleFrom(
-                minimumSize:
-                    const Size(double.infinity, 48),
-                backgroundColor: colorScheme.primary,
-                foregroundColor: colorScheme.onPrimary,
-              ),
-              child: const Text('Sign Up'),
             ),
           ],
         ),

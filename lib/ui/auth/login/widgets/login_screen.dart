@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:loop/routes/routes.dart';
 import 'package:loop/ui/auth/login/view_models/login_viewmodel.dart';
+import 'package:loop/ui/shared/widgets/app_text_field.dart';
+import 'package:loop/ui/shared/widgets/app_button.dart';
 import 'package:loop/utils/validators.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -83,46 +85,30 @@ class _LoginScreenState extends State<LoginScreen> {
                         crossAxisAlignment:
                             CrossAxisAlignment.stretch,
                         children: <Widget>[
-                          TextFormField(
+                          AppTextField(
                             controller: _emailController,
-                            decoration:
-                                const InputDecoration(
-                              labelText: 'Email',
-                              hintText: 'Enter your email',
-                              border: OutlineInputBorder(),
-                            ),
+                            label: 'Email',
+                            hint: 'Enter your email',
                             keyboardType:
                                 TextInputType.emailAddress,
                             validator:
                                 Validators.validateEmail,
                           ),
                           const SizedBox(height: 16.0),
-                          TextFormField(
+                          AppTextField(
                             controller: _passwordController,
-                            decoration:
-                                const InputDecoration(
-                              labelText: 'Password',
-                              hintText:
-                                  'Enter your password',
-                              border: OutlineInputBorder(),
-                            ),
-                            obscureText: true,
+                            label: 'Password',
+                            hint: 'Enter your password',
+                            obscure: true,
+                            keyboardType: TextInputType
+                                .visiblePassword,
                             validator:
                                 Validators.validatePassword,
                           ),
                           const SizedBox(height: 24.0),
-                          ElevatedButton(
+                          AppButton(
+                            label: 'Login',
                             onPressed: _login,
-                            style: ElevatedButton.styleFrom(
-                              padding: const EdgeInsets
-                                  .symmetric(
-                                  vertical: 16.0),
-                              backgroundColor:
-                                  colorScheme.primary,
-                              foregroundColor:
-                                  colorScheme.onPrimary,
-                            ),
-                            child: const Text('Login'),
                           ),
                           if (viewModel.errorMessage !=
                               null)
