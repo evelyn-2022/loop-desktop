@@ -8,10 +8,16 @@ class SignupScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+    final textTheme = theme.textTheme;
+
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Sign Up'),
-        backgroundColor: Colors.teal,
+        title: Text('Sign Up',
+            style: textTheme.headlineMedium),
+        backgroundColor: colorScheme.primary,
+        elevation: 0,
       ),
       body: Padding(
         padding: const EdgeInsets.all(24.0),
@@ -25,6 +31,7 @@ class SignupScreen extends StatelessWidget {
                 labelText: 'Email',
                 border: OutlineInputBorder(),
               ),
+              style: textTheme.bodyMedium,
             ),
             const SizedBox(height: 16),
 
@@ -36,6 +43,7 @@ class SignupScreen extends StatelessWidget {
                 labelText: 'Password',
                 border: OutlineInputBorder(),
               ),
+              style: textTheme.bodyMedium,
             ),
             const SizedBox(height: 24),
 
@@ -44,13 +52,13 @@ class SignupScreen extends StatelessWidget {
               onPressed: () {
                 final email = _emailController.text;
                 final password = _passwordController.text;
-                // Just print for now
                 print('Signing up with $email / $password');
               },
               style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.teal,
                 minimumSize:
                     const Size(double.infinity, 48),
+                backgroundColor: colorScheme.primary,
+                foregroundColor: colorScheme.onPrimary,
               ),
               child: const Text('Sign Up'),
             ),

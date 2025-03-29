@@ -19,8 +19,6 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   void initState() {
     super.initState();
-
-    // Add listeners to clear error on typing
     _emailController.addListener(_clearErrorOnInput);
     _passwordController.addListener(_clearErrorOnInput);
   }
@@ -60,14 +58,22 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     final viewModel = Provider.of<LoginViewModel>(context);
+    final theme = Theme.of(context);
+    final textTheme = theme.textTheme;
+    final colorScheme = theme.colorScheme;
+
     return Scaffold(
       appBar: AppBar(
-        title: Text('Login'),
+        title:
+            Text('Login', style: textTheme.headlineMedium),
+        backgroundColor: colorScheme.primary,
+        elevation: 0,
       ),
       body: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(24.0),
         child: viewModel.isLoading
-            ? Center(child: CircularProgressIndicator())
+            ? const Center(
+                child: CircularProgressIndicator())
             : Column(
                 children: [
                   Expanded(
@@ -79,7 +85,8 @@ class _LoginScreenState extends State<LoginScreen> {
                         children: <Widget>[
                           TextFormField(
                             controller: _emailController,
-                            decoration: InputDecoration(
+                            decoration:
+                                const InputDecoration(
                               labelText: 'Email',
                               hintText: 'Enter your email',
                               border: OutlineInputBorder(),
@@ -89,10 +96,11 @@ class _LoginScreenState extends State<LoginScreen> {
                             validator:
                                 Validators.validateEmail,
                           ),
-                          SizedBox(height: 16.0),
+                          const SizedBox(height: 16.0),
                           TextFormField(
                             controller: _passwordController,
-                            decoration: InputDecoration(
+                            decoration:
+                                const InputDecoration(
                               labelText: 'Password',
                               hintText:
                                   'Enter your password',
@@ -102,37 +110,45 @@ class _LoginScreenState extends State<LoginScreen> {
                             validator:
                                 Validators.validatePassword,
                           ),
-                          SizedBox(height: 16.0),
+                          const SizedBox(height: 24.0),
                           ElevatedButton(
                             onPressed: _login,
-                            child: Text('Login'),
                             style: ElevatedButton.styleFrom(
-                              padding: EdgeInsets.symmetric(
+                              padding: const EdgeInsets
+                                  .symmetric(
                                   vertical: 16.0),
+                              backgroundColor:
+                                  colorScheme.primary,
+                              foregroundColor:
+                                  colorScheme.onPrimary,
                             ),
+                            child: const Text('Login'),
                           ),
                           if (viewModel.errorMessage !=
                               null)
                             Padding(
                               padding:
                                   const EdgeInsets.only(
-                                      top: 8.0),
+                                      top: 12.0),
                               child: Text(
                                 viewModel.errorMessage!,
-                                style: TextStyle(
-                                    color: Colors.red),
+                                style: textTheme.bodyMedium
+                                    ?.copyWith(
+                                        color: colorScheme
+                                            .error),
                               ),
                             ),
                         ],
                       ),
                     ),
                   ),
-                  SizedBox(height: 16),
+                  const SizedBox(height: 16),
                   Row(
                     mainAxisAlignment:
                         MainAxisAlignment.center,
                     children: [
-                      Text("No account? "),
+                      Text("No account? ",
+                          style: textTheme.bodyMedium),
                       GestureDetector(
                         onTap: () {
                           Navigator.pushNamed(
@@ -140,16 +156,16 @@ class _LoginScreenState extends State<LoginScreen> {
                         },
                         child: Text(
                           "Sign up",
-                          style: TextStyle(
-                            color: Theme.of(context)
-                                .primaryColor,
+                          style: textTheme.bodyMedium
+                              ?.copyWith(
+                            color: colorScheme.primary,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
                       ),
                     ],
                   ),
-                  SizedBox(height: 16),
+                  const SizedBox(height: 16),
                 ],
               ),
       ),
