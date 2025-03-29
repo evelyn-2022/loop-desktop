@@ -30,4 +30,11 @@ class LoginViewModel extends ChangeNotifier {
       return false;
     }
   }
+
+  void clearError() {
+    if (_errorMessage != null) {
+      _errorMessage = null;
+      notifyListeners();
+    }
+  }
 }

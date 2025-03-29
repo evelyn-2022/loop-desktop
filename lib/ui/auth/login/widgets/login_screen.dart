@@ -1,19 +1,40 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:loop/utils/validators.dart';
+import 'package:loop/routes/routes.dart';
 import 'package:loop/ui/auth/login/view_models/login_viewmodel.dart';
+import 'package:loop/utils/validators.dart';
 
-class LoginScreen extends StatelessWidget {
+class LoginScreen extends StatefulWidget {
+  const LoginScreen({Key? key}) : super(key: key);
+
+  @override
+  State<LoginScreen> createState() => _LoginScreenState();
+}
+
+class _LoginScreenState extends State<LoginScreen> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
 
-  LoginScreen({Key? key}) : super(key: key);
+  @override
+  void initState() {
+    super.initState();
 
-  void _login(BuildContext context) async {
+    // Add listeners to clear error on typing
+    _emailController.addListener(_clearErrorOnInput);
+    _passwordController.addListener(_clearErrorOnInput);
+  }
+
+  void _clearErrorOnInput() {
+    final viewModel =
+        Provider.of<LoginViewModel>(context, listen: false);
+    viewModel.clearError();
+  }
+
+  void _login() async {
+    final viewModel =
+        Provider.of<LoginViewModel>(context, listen: false);
     if (_formKey.currentState?.validate() ?? false) {
-      final viewModel = Provider.of<LoginViewModel>(context,
-          listen: false);
       final email = _emailController.text;
       final password = _passwordController.text;
       final success =
@@ -30,6 +51,13 @@ class LoginScreen extends StatelessWidget {
   }
 
   @override
+  void dispose() {
+    _emailController.dispose();
+    _passwordController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final viewModel = Provider.of<LoginViewModel>(context);
     return Scaffold(
@@ -40,56 +68,89 @@ class LoginScreen extends StatelessWidget {
         padding: const EdgeInsets.all(16.0),
         child: viewModel.isLoading
             ? Center(child: CircularProgressIndicator())
-            : Form(
-                key: _formKey,
-                child: Column(
-                  crossAxisAlignment:
-                      CrossAxisAlignment.stretch,
-                  children: <Widget>[
-                    TextFormField(
-                      controller: _emailController,
-                      decoration: InputDecoration(
-                        labelText: 'Email',
-                        hintText: 'Enter your email',
-                        border: OutlineInputBorder(),
+            : Column(
+                children: [
+                  Expanded(
+                    child: Form(
+                      key: _formKey,
+                      child: Column(
+                        crossAxisAlignment:
+                            CrossAxisAlignment.stretch,
+                        children: <Widget>[
+                          TextFormField(
+                            controller: _emailController,
+                            decoration: InputDecoration(
+                              labelText: 'Email',
+                              hintText: 'Enter your email',
+                              border: OutlineInputBorder(),
+                            ),
+                            keyboardType:
+                                TextInputType.emailAddress,
+                            validator:
+                                Validators.validateEmail,
+                          ),
+                          SizedBox(height: 16.0),
+                          TextFormField(
+                            controller: _passwordController,
+                            decoration: InputDecoration(
+                              labelText: 'Password',
+                              hintText:
+                                  'Enter your password',
+                              border: OutlineInputBorder(),
+                            ),
+                            obscureText: true,
+                            validator:
+                                Validators.validatePassword,
+                          ),
+                          SizedBox(height: 16.0),
+                          ElevatedButton(
+                            onPressed: _login,
+                            child: Text('Login'),
+                            style: ElevatedButton.styleFrom(
+                              padding: EdgeInsets.symmetric(
+                                  vertical: 16.0),
+                            ),
+                          ),
+                          if (viewModel.errorMessage !=
+                              null)
+                            Padding(
+                              padding:
+                                  const EdgeInsets.only(
+                                      top: 8.0),
+                              child: Text(
+                                viewModel.errorMessage!,
+                                style: TextStyle(
+                                    color: Colors.red),
+                              ),
+                            ),
+                        ],
                       ),
-                      keyboardType:
-                          TextInputType.emailAddress,
-                      validator: Validators.validateEmail,
                     ),
-                    SizedBox(height: 16.0),
-                    TextFormField(
-                      controller: _passwordController,
-                      decoration: InputDecoration(
-                        labelText: 'Password',
-                        hintText: 'Enter your password',
-                        border: OutlineInputBorder(),
-                      ),
-                      obscureText: true,
-                      validator:
-                          Validators.validatePassword,
-                    ),
-                    SizedBox(height: 16.0),
-                    ElevatedButton(
-                      onPressed: () => _login(context),
-                      child: Text('Login'),
-                      style: ElevatedButton.styleFrom(
-                        padding: EdgeInsets.symmetric(
-                            vertical: 16.0),
-                      ),
-                    ),
-                    if (viewModel.errorMessage != null)
-                      Padding(
-                        padding:
-                            const EdgeInsets.only(top: 8.0),
+                  ),
+                  SizedBox(height: 16),
+                  Row(
+                    mainAxisAlignment:
+                        MainAxisAlignment.center,
+                    children: [
+                      Text("No account? "),
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.pushNamed(
+                              context, AppRoutes.signup);
+                        },
                         child: Text(
-                          viewModel.errorMessage!,
-                          style:
-                              TextStyle(color: Colors.red),
+                          "Sign up",
+                          style: TextStyle(
+                            color: Theme.of(context)
+                                .primaryColor,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
                       ),
-                  ],
-                ),
+                    ],
+                  ),
+                  SizedBox(height: 16),
+                ],
               ),
       ),
     );
