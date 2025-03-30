@@ -63,7 +63,7 @@ class AppTheme {
             return TextStyle(color: AppColors.grey_200);
           }),
           contentPadding: EdgeInsets.symmetric(
-              horizontal: 16, vertical: 16),
+              horizontal: 20, vertical: 16),
         ),
         textSelectionTheme: TextSelectionThemeData(
           cursorColor: AppColors.yellow_400,
@@ -74,11 +74,11 @@ class AppTheme {
         ),
         elevatedButtonTheme: ElevatedButtonThemeData(
           style: ElevatedButton.styleFrom(
-            backgroundColor: AppColors.primary,
-            foregroundColor: Colors.white,
+            backgroundColor: AppColors.green_800,
+            foregroundColor: AppColors.white_800,
             padding: const EdgeInsets.symmetric(
               vertical: 16,
-              horizontal: 24,
+              horizontal: 20,
             ),
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(4),
@@ -163,7 +163,7 @@ class AppTheme {
             return TextStyle(color: AppColors.grey_300);
           }),
           contentPadding: EdgeInsets.symmetric(
-              horizontal: 16, vertical: 12),
+              horizontal: 20, vertical: 16),
         ),
         textSelectionTheme: TextSelectionThemeData(
           cursorColor: AppColors.yellow_200,
@@ -173,11 +173,11 @@ class AppTheme {
         ),
         elevatedButtonTheme: ElevatedButtonThemeData(
           style: ElevatedButton.styleFrom(
-            backgroundColor: AppColors.primary,
-            foregroundColor: Colors.white,
+            backgroundColor: AppColors.yellow_300,
+            foregroundColor: AppColors.black_800,
             padding: const EdgeInsets.symmetric(
               vertical: 16,
-              horizontal: 24,
+              horizontal: 20,
             ),
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(4),
