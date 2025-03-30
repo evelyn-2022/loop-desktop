@@ -9,11 +9,9 @@ class AppTheme {
         // fontFamily: 'Inter',
         colorScheme: ColorScheme.light(
           primary: AppColors.primary,
-          background: AppColors.background,
           surface: AppColors.surface,
           error: AppColors.error,
           onPrimary: Colors.white,
-          onBackground: AppColors.text,
           onSurface: AppColors.text,
         ),
         textTheme: const TextTheme(
@@ -47,11 +45,9 @@ class AppTheme {
         // fontFamily: 'Inter',
         colorScheme: ColorScheme.dark(
           primary: AppColors.primary,
-          background: Colors.black,
-          surface: const Color(0xFF1E1E1E),
+          surface: const Color.fromRGBO(24, 23, 27, 1),
           error: AppColors.error,
           onPrimary: Colors.white,
-          onBackground: Colors.white,
           onSurface: Colors.white,
         ),
         textTheme: const TextTheme(

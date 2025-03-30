@@ -4,7 +4,7 @@ import 'package:provider/provider.dart';
 import 'config/dependencies.dart';
 import 'routes/routes.dart';
 import 'theme/app_theme.dart';
-import 'ui/home/widgets/home_screen.dart';
+import 'ui/shared/layout/desktop_shell.dart';
 import 'ui/auth/login/widgets/login_screen.dart';
 import 'ui/auth/signup/widgets/signup_screen.dart';
 
@@ -29,7 +29,8 @@ class App extends StatelessWidget {
             debugShowCheckedModeBanner: false,
             initialRoute: AppRoutes.home,
             routes: {
-              AppRoutes.home: (context) => HomeScreen(),
+              AppRoutes.home: (context) =>
+                  const DesktopShell(),
               AppRoutes.login: (context) => LoginScreen(),
               AppRoutes.signup: (context) => SignupScreen(),
             },

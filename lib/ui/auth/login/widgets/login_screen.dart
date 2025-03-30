@@ -65,12 +65,6 @@ class _LoginScreenState extends State<LoginScreen> {
     final colorScheme = theme.colorScheme;
 
     return Scaffold(
-      appBar: AppBar(
-        title:
-            Text('Login', style: textTheme.headlineMedium),
-        backgroundColor: colorScheme.primary,
-        elevation: 0,
-      ),
       body: Padding(
         padding: const EdgeInsets.all(24.0),
         child: viewModel.isLoading

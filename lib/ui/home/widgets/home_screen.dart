@@ -12,25 +12,6 @@ class HomeScreen extends StatelessWidget {
         Provider.of<ThemeProvider>(context);
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Home Screen',
-            style: textTheme.headlineMedium),
-        backgroundColor: colorScheme.primary,
-        elevation: 0,
-        actions: [
-          IconButton(
-            icon: Icon(
-              themeProvider.isDarkMode
-                  ? Icons.wb_sunny
-                  : Icons.nightlight_round,
-              color: Colors.white,
-            ),
-            onPressed: () {
-              themeProvider.toggleTheme();
-            },
-          ),
-        ],
-      ),
       body: Center(
         child: Text(
           'Welcome to the Home Screen',

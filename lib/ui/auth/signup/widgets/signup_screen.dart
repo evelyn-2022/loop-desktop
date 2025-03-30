@@ -16,12 +16,6 @@ class SignupScreen extends StatelessWidget {
     final textTheme = theme.textTheme;
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Sign Up',
-            style: textTheme.headlineMedium),
-        backgroundColor: colorScheme.primary,
-        elevation: 0,
-      ),
       body: Padding(
         padding: const EdgeInsets.all(24.0),
         child: Column(
