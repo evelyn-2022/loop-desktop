@@ -59,29 +59,33 @@ class _AppTextFieldState extends State<AppTextField> {
     final activeIconColor =
         Theme.of(context).colorScheme.secondary;
 
-    return TextFormField(
-      controller: widget.controller,
-      obscureText: _obscureText,
-      keyboardType: widget.keyboardType,
-      validator: widget.validator,
-      focusNode: _focusNode,
-      style: Theme.of(context).textTheme.bodyMedium,
-      decoration: InputDecoration(
-        labelText: widget.label,
-        hintText: widget.hint,
-        suffixIcon: isPassword
-            ? IconButton(
-                icon: Icon(
-                  _obscureText
-                      ? Icons.visibility_off
-                      : Icons.visibility,
-                  color: _hasFocus
-                      ? activeIconColor
-                      : baseIconColor,
-                ),
-                onPressed: _toggleVisibility,
-              )
-            : null,
+    return SizedBox(
+      width: double.infinity,
+      height: 48,
+      child: TextFormField(
+        controller: widget.controller,
+        obscureText: _obscureText,
+        keyboardType: widget.keyboardType,
+        validator: widget.validator,
+        focusNode: _focusNode,
+        style: Theme.of(context).textTheme.bodyMedium,
+        decoration: InputDecoration(
+          labelText: widget.label,
+          hintText: widget.hint,
+          suffixIcon: isPassword
+              ? IconButton(
+                  icon: Icon(
+                    _obscureText
+                        ? Icons.visibility_off
+                        : Icons.visibility,
+                    color: _hasFocus
+                        ? activeIconColor
+                        : baseIconColor,
+                  ),
+                  onPressed: _toggleVisibility,
+                )
+              : null,
+        ),
       ),
     );
   }
