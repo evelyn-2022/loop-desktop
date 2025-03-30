@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:loop/ui/auth/login/widgets/login_screen.dart';
 
 import 'package:loop/ui/home/widgets/home_screen.dart';
 import 'package:loop/ui/search/widgets/search_screen.dart';
@@ -16,7 +17,8 @@ class _DesktopShellState extends State<DesktopShell> {
   int _selectedIndex = 0;
 
   final List<Widget> _screens = [
-    HomeScreen(),
+    // HomeScreen(),
+    LoginScreen(),
     SearchScreen(),
     SettingsScreen(),
     ProfileScreen(),

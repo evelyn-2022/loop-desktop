@@ -24,11 +24,26 @@ class AppTextField extends StatefulWidget {
 
 class _AppTextFieldState extends State<AppTextField> {
   late bool _obscureText;
+  late FocusNode _focusNode;
+  bool _hasFocus = false;
 
   @override
   void initState() {
     super.initState();
     _obscureText = widget.obscure;
+    _focusNode = FocusNode();
+
+    _focusNode.addListener(() {
+      setState(() {
+        _hasFocus = _focusNode.hasFocus;
+      });
+    });
+  }
+
+  @override
+  void dispose() {
+    _focusNode.dispose();
+    super.dispose();
   }
 
   void _toggleVisibility() {
@@ -40,26 +55,29 @@ class _AppTextFieldState extends State<AppTextField> {
   @override
   Widget build(BuildContext context) {
     final isPassword = widget.obscure;
+    final baseIconColor = Theme.of(context).iconTheme.color;
+    final activeIconColor =
+        Theme.of(context).colorScheme.secondary;
 
     return TextFormField(
       controller: widget.controller,
       obscureText: _obscureText,
       keyboardType: widget.keyboardType,
       validator: widget.validator,
+      focusNode: _focusNode,
       style: Theme.of(context).textTheme.bodyMedium,
       decoration: InputDecoration(
         labelText: widget.label,
         hintText: widget.hint,
-        border: const OutlineInputBorder(),
-        contentPadding: const EdgeInsets.symmetric(
-            horizontal: 16, vertical: 12),
         suffixIcon: isPassword
             ? IconButton(
                 icon: Icon(
                   _obscureText
                       ? Icons.visibility_off
                       : Icons.visibility,
-                  color: Theme.of(context).iconTheme.color,
+                  color: _hasFocus
+                      ? activeIconColor
+                      : baseIconColor,
                 ),
                 onPressed: _toggleVisibility,
               )
