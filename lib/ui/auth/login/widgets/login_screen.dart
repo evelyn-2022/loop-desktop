@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:loop/routes/routes.dart';
+import 'package:loop/theme/app_text_styles.dart';
 import 'package:loop/ui/auth/login/view_models/login_viewmodel.dart';
 import 'package:loop/ui/shared/widgets/app_text_field.dart';
 import 'package:loop/ui/shared/widgets/app_button.dart';
@@ -74,7 +75,16 @@ class _LoginScreenState extends State<LoginScreen> {
                 ? const Center(
                     child: CircularProgressIndicator())
                 : Column(
+                    crossAxisAlignment:
+                        CrossAxisAlignment.stretch,
                     children: [
+                      const SizedBox(height: 48),
+                      Text(
+                        'Welcome back',
+                        style: AppTextStyles.heading,
+                        textAlign: TextAlign.center,
+                      ),
+                      const SizedBox(height: 32),
                       Expanded(
                         child: Form(
                           key: _formKey,
@@ -109,7 +119,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               ),
                               const SizedBox(height: 24.0),
                               AppButton(
-                                label: 'Login',
+                                label: 'Log in',
                                 onPressed: _login,
                               ),
                               if (viewModel.errorMessage !=
@@ -137,7 +147,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         mainAxisAlignment:
                             MainAxisAlignment.center,
                         children: [
-                          Text("No account? ",
+                          Text("Don't have an account? ",
                               style: textTheme.bodyMedium),
                           GestureDetector(
                             onTap: () =>

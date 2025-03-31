@@ -9,6 +9,7 @@ import 'ui/auth/login/widgets/login_screen.dart';
 import 'ui/auth/signup/widgets/signup_screen.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
   runApp(const AppProviders(child: App()));
 }
 

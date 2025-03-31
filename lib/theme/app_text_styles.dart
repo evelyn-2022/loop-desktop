@@ -1,33 +1,29 @@
 import 'package:flutter/material.dart';
-import 'app_colors.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class AppTextStyles {
-  static const TextStyle heading = TextStyle(
-    fontSize: 24,
-    fontWeight: FontWeight.bold,
-    color: AppColors.text,
+  static final TextStyle heading = GoogleFonts.bitter(
+    fontSize: 36,
+    fontWeight: FontWeight.w500,
   );
 
-  static const TextStyle subheading = TextStyle(
-    fontSize: 20,
-    fontWeight: FontWeight.w600,
-    color: AppColors.text,
+  static final TextStyle subheading = GoogleFonts.bitter(
+    fontSize: 28,
+    fontWeight: FontWeight.w500,
   );
 
-  static const TextStyle body = TextStyle(
+  static final TextStyle body = GoogleFonts.inter(
     fontSize: 16,
     fontWeight: FontWeight.normal,
-    color: AppColors.text,
   );
 
-  static const TextStyle label = TextStyle(
+  static final TextStyle label = GoogleFonts.inter(
     fontSize: 14,
     fontWeight: FontWeight.w500,
-    color: AppColors.text,
   );
 
-  static const TextStyle caption = TextStyle(
+  static final TextStyle caption = GoogleFonts.inter(
     fontSize: 12,
-    color: AppColors.grey,
+    fontWeight: FontWeight.w400,
   );
 }

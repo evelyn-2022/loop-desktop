@@ -44,3 +44,7 @@ app.*.map.json
 /android/app/debug
 /android/app/profile
 /android/app/release
+
+# macOS
+# Build directory created by macOS
+macos/Flutter/GeneratedPluginRegistrant.swift
