@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:loop/theme/app_dimensions.dart';
 import 'package:loop/ui/shared/widgets/app_link.dart';
+import 'package:loop/ui/shared/widgets/app_snack_bar.dart';
 import 'package:provider/provider.dart';
 import 'package:loop/routes/routes.dart';
 import 'package:loop/ui/auth/login/view_models/login_viewmodel.dart';
@@ -46,13 +47,13 @@ class _LoginScreenState extends State<LoginScreen> {
       final success =
           await viewModel.login(email, password);
 
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(success
-              ? 'Login Successful'
-              : 'Login Failed'),
-        ),
-      );
+      AppSnackBar.show(context,
+          message:
+              success ? 'Login Successful' : 'Login Failed',
+          type: success
+              ? SnackBarType.success
+              : SnackBarType.error,
+          horizontalOffset: 50);
     }
   }
 

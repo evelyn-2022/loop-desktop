@@ -39,12 +39,6 @@ class AppTheme {
             fontWeight: FontWeight.w400,
             color: AppColors.grey_300,
           ),
-          // Button text style
-          labelLarge: GoogleFonts.inter(
-            fontSize: 16,
-            fontWeight: FontWeight.normal,
-            color: AppColors.black_800,
-          ),
           // Link text style
           labelSmall: GoogleFonts.inter(
             fontSize: 16,
@@ -54,6 +48,18 @@ class AppTheme {
             decorationColor: AppColors.yellow_400,
             decorationThickness:
                 AppDimensions.strokeWidthMd,
+          ),
+          // SnackBar text style
+          labelMedium: GoogleFonts.inter(
+            fontSize: 14,
+            fontWeight: FontWeight.normal,
+            color: AppColors.white_700,
+          ),
+          // Button text style
+          labelLarge: GoogleFonts.inter(
+            fontSize: 16,
+            fontWeight: FontWeight.normal,
+            color: AppColors.black_800,
           ),
         ),
         inputDecorationTheme: InputDecorationTheme(
@@ -186,6 +192,12 @@ class AppTheme {
           // Button text style
           labelLarge: GoogleFonts.inter(
             fontSize: 16,
+            fontWeight: FontWeight.normal,
+            color: AppColors.white_700,
+          ),
+          // SnackBar text style
+          labelMedium: GoogleFonts.inter(
+            fontSize: 14,
             fontWeight: FontWeight.normal,
             color: AppColors.white_700,
           ),
