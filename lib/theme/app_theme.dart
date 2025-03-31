@@ -216,6 +216,22 @@ class AppTheme {
               color: AppColors.grey_200,
             ),
           ),
+          errorBorder: OutlineInputBorder(
+            borderSide: BorderSide(
+              color: AppColors.red_200,
+              // width: 1.5,
+            ),
+          ),
+          focusedErrorBorder: OutlineInputBorder(
+            borderSide: BorderSide(
+              color: AppColors.red_200,
+              width: AppDimensions.strokeWidthLg,
+            ),
+          ),
+          errorStyle: TextStyle(
+            fontSize: 12,
+            color: AppColors.red_200,
+          ),
           hintStyle: TextStyle(
             color: AppColors.grey_400,
           ),

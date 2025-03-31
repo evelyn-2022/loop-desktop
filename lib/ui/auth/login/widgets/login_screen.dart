@@ -19,6 +19,10 @@ class _LoginScreenState extends State<LoginScreen> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
+  final _emailFieldKey =
+      GlobalKey<FormFieldState<String>>();
+  final _passwordFieldKey =
+      GlobalKey<FormFieldState<String>>();
 
   @override
   void initState() {
@@ -92,6 +96,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     mainAxisSize: MainAxisSize.min,
                     children: <Widget>[
                       AppTextField(
+                        fieldKey: _emailFieldKey,
                         controller: _emailController,
                         label: 'Email',
                         hint: 'Enter your email',
@@ -100,8 +105,9 @@ class _LoginScreenState extends State<LoginScreen> {
                         validator: Validators.validateEmail,
                       ),
                       const SizedBox(
-                          height: AppDimensions.gapMd),
+                          height: AppDimensions.gapSm),
                       AppTextField(
+                        fieldKey: _passwordFieldKey,
                         controller: _passwordController,
                         label: 'Password',
                         hint: 'Enter your password',
@@ -116,7 +122,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             'assets/icons/eye_hidden.svg',
                       ),
                       const SizedBox(
-                          height: AppDimensions.gapMd),
+                          height: AppDimensions.gapSm),
                       AppButton(
                         label: 'Log in',
                         onPressed: _login,
