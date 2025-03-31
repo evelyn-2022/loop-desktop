@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:loop/theme/app_dimensions.dart';
+import 'package:loop/ui/shared/widgets/app_link.dart';
 import 'package:provider/provider.dart';
 import 'package:loop/routes/routes.dart';
 import 'package:loop/ui/auth/login/view_models/login_viewmodel.dart';
@@ -146,35 +147,28 @@ class _LoginScreenState extends State<LoginScreen> {
                       style: theme.textTheme.bodyMedium,
                     ),
                     GestureDetector(
-                      onTap: () => Navigator.pushNamed(
-                          context, AppRoutes.signup),
-                      child: Text(
-                        "Create an account",
-                        style: theme.textTheme.labelSmall,
-                      ),
-                    ),
+                        onTap: () => Navigator.pushNamed(
+                            context, AppRoutes.signup),
+                        child: AppLink(
+                          text: "Create an account",
+                          onTap: () => Navigator.pushNamed(
+                              context, AppRoutes.signup),
+                        )),
                   ],
                 ),
                 const SizedBox(height: AppDimensions.gapMd),
                 GestureDetector(
-                  onTap: () => Navigator.pushNamed(
-                      context, AppRoutes.home),
-                  child: Text(
-                    "Continue as guest",
-                    style: Theme.of(context)
-                        .textTheme
-                        .labelSmall
-                        ?.copyWith(
-                          color: Theme.of(context)
-                              .colorScheme
-                              .secondary,
-                          fontSize: 14,
-                          decorationColor: Theme.of(context)
-                              .colorScheme
-                              .secondary,
-                        ),
-                  ),
-                ),
+                    onTap: () => Navigator.pushNamed(
+                        context, AppRoutes.home),
+                    child: AppLink(
+                      text: "Continue as guest",
+                      color: Theme.of(context)
+                          .colorScheme
+                          .secondary,
+                      fontSize: 14,
+                      onTap: () => Navigator.pushNamed(
+                          context, AppRoutes.home),
+                    )),
               ],
             ),
           ),
