@@ -71,102 +71,93 @@ class _LoginScreenState extends State<LoginScreen> {
           constraints: const BoxConstraints(maxWidth: 400),
           child: Padding(
             padding: const EdgeInsets.all(24.0),
-            child: viewModel.isLoading
-                ? const Center(
-                    child: CircularProgressIndicator())
-                : Column(
-                    crossAxisAlignment:
-                        CrossAxisAlignment.stretch,
-                    children: [
-                      const SizedBox(height: 48),
-                      Text(
-                        'Welcome back',
-                        style: AppTextStyles.heading,
-                        textAlign: TextAlign.center,
-                      ),
-                      const SizedBox(height: 32),
-                      Expanded(
-                        child: Form(
-                          key: _formKey,
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            children: <Widget>[
-                              AppTextField(
-                                controller:
-                                    _emailController,
-                                label: 'Email',
-                                hint: 'Enter your email',
-                                keyboardType: TextInputType
-                                    .emailAddress,
-                                validator: Validators
-                                    .validateEmail,
-                              ),
-                              const SizedBox(height: 16.0),
-                              AppTextField(
-                                controller:
-                                    _passwordController,
-                                label: 'Password',
-                                hint: 'Enter your password',
-                                obscure: true,
-                                keyboardType: TextInputType
-                                    .visiblePassword,
-                                validator: Validators
-                                    .validatePassword,
-                                visibleSvgAsset:
-                                    'assets/icons/eye_open.svg',
-                                hiddenSvgAsset:
-                                    'assets/icons/eye_hidden.svg',
-                              ),
-                              const SizedBox(height: 24.0),
-                              AppButton(
-                                label: 'Log in',
-                                onPressed: _login,
-                              ),
-                              if (viewModel.errorMessage !=
-                                  null)
-                                Padding(
-                                  padding:
-                                      const EdgeInsets.only(
-                                          top: 12.0),
-                                  child: Text(
-                                    viewModel.errorMessage!,
-                                    style: textTheme
-                                        .bodyMedium
-                                        ?.copyWith(
-                                      color:
-                                          colorScheme.error,
-                                    ),
-                                  ),
-                                ),
-                            ],
-                          ),
+            child: Column(
+              crossAxisAlignment:
+                  CrossAxisAlignment.stretch,
+              children: [
+                const SizedBox(height: 48),
+                Text(
+                  'Welcome back',
+                  style: AppTextStyles.heading,
+                  textAlign: TextAlign.center,
+                ),
+                const SizedBox(height: 32),
+                Expanded(
+                  child: Form(
+                    key: _formKey,
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: <Widget>[
+                        AppTextField(
+                          controller: _emailController,
+                          label: 'Email',
+                          hint: 'Enter your email',
+                          keyboardType:
+                              TextInputType.emailAddress,
+                          validator:
+                              Validators.validateEmail,
                         ),
-                      ),
-                      const SizedBox(height: 16),
-                      Row(
-                        mainAxisAlignment:
-                            MainAxisAlignment.center,
-                        children: [
-                          Text("Don't have an account? ",
-                              style: textTheme.bodyMedium),
-                          GestureDetector(
-                            onTap: () =>
-                                Navigator.pushNamed(context,
-                                    AppRoutes.signup),
+                        const SizedBox(height: 16.0),
+                        AppTextField(
+                          controller: _passwordController,
+                          label: 'Password',
+                          hint: 'Enter your password',
+                          obscure: true,
+                          keyboardType:
+                              TextInputType.visiblePassword,
+                          validator:
+                              Validators.validatePassword,
+                          visibleSvgAsset:
+                              'assets/icons/eye_open.svg',
+                          hiddenSvgAsset:
+                              'assets/icons/eye_hidden.svg',
+                        ),
+                        const SizedBox(height: 24.0),
+                        AppButton(
+                          label: 'Log in',
+                          onPressed: _login,
+                          isLoading: viewModel.isLoading,
+                        ),
+                        if (viewModel.errorMessage != null)
+                          Padding(
+                            padding: const EdgeInsets.only(
+                                top: 12.0),
                             child: Text(
-                              "Sign up",
+                              viewModel.errorMessage!,
                               style: textTheme.bodyMedium
                                   ?.copyWith(
-                                color: colorScheme.primary,
-                                fontWeight: FontWeight.bold,
+                                color: colorScheme.error,
                               ),
                             ),
                           ),
-                        ],
-                      ),
-                      const SizedBox(height: 16),
-                    ],
+                      ],
+                    ),
                   ),
+                ),
+                const SizedBox(height: 16),
+                Row(
+                  mainAxisAlignment:
+                      MainAxisAlignment.center,
+                  children: [
+                    Text("Don't have an account? ",
+                        style: textTheme.bodyMedium),
+                    GestureDetector(
+                      onTap: () => Navigator.pushNamed(
+                          context, AppRoutes.signup),
+                      child: Text(
+                        "Sign up",
+                        style:
+                            textTheme.bodyMedium?.copyWith(
+                          color: colorScheme.primary,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 16),
+              ],
+            ),
           ),
         ),
       ),

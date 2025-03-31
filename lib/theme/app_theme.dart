@@ -73,19 +73,35 @@ class AppTheme {
               AppColors.primary, // draggable dot
         ),
         elevatedButtonTheme: ElevatedButtonThemeData(
-          style: ElevatedButton.styleFrom(
-            backgroundColor: AppColors.green_800,
-            foregroundColor: AppColors.white_800,
-            padding: const EdgeInsets.symmetric(
-              vertical: 16,
-              horizontal: 20,
+          style: ButtonStyle(
+            backgroundColor:
+                WidgetStateProperty.resolveWith<Color>(
+                    (states) {
+              if (states.contains(WidgetState.disabled)) {
+                return AppColors.green_700;
+              }
+              return AppColors.green_800;
+            }),
+            foregroundColor:
+                WidgetStateProperty.resolveWith<Color>(
+                    (states) {
+              if (states.contains(WidgetState.disabled)) {
+                return AppColors.white_700;
+              }
+              return AppColors.white_800;
+            }),
+            padding: WidgetStateProperty.all(
+              const EdgeInsets.symmetric(
+                  vertical: 16, horizontal: 20),
             ),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(4),
+            shape: WidgetStateProperty.all(
+              RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(4)),
             ),
-            textStyle: const TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.normal,
+            textStyle: WidgetStateProperty.all(
+              const TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w500),
             ),
           ),
         ),
@@ -176,20 +192,37 @@ class AppTheme {
           selectionHandleColor: AppColors.primary,
         ),
         elevatedButtonTheme: ElevatedButtonThemeData(
-          style: ElevatedButton.styleFrom(
-              backgroundColor: AppColors.yellow_300,
-              foregroundColor: AppColors.black_800,
-              padding: const EdgeInsets.symmetric(
-                vertical: 16,
-                horizontal: 20,
-              ),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(4),
-              ),
-              textStyle: const TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.normal,
-              )),
+          style: ButtonStyle(
+            backgroundColor:
+                WidgetStateProperty.resolveWith<Color>(
+                    (states) {
+              if (states.contains(WidgetState.disabled)) {
+                return AppColors.yellow_200;
+              }
+              return AppColors.yellow_300;
+            }),
+            foregroundColor:
+                WidgetStateProperty.resolveWith<Color>(
+                    (states) {
+              if (states.contains(WidgetState.disabled)) {
+                return AppColors.black_700;
+              }
+              return AppColors.black_800;
+            }),
+            padding: WidgetStateProperty.all(
+              const EdgeInsets.symmetric(
+                  vertical: 16, horizontal: 20),
+            ),
+            shape: WidgetStateProperty.all(
+              RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(4)),
+            ),
+            textStyle: WidgetStateProperty.all(
+              const TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w500),
+            ),
+          ),
         ),
         iconTheme: const IconThemeData(
           color: AppColors.grey_400,
