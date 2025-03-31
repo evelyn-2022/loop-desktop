@@ -11,7 +11,7 @@ class AppTheme {
         scaffoldBackgroundColor: AppColors.white_800,
         colorScheme: ColorScheme.light(
             primary: AppColors.green_800,
-            secondary: AppColors.grey_300,
+            secondary: AppColors.grey_200,
             surface: AppColors.yellow_100,
             error: AppColors.red_200,
             onPrimary: AppColors.white_800,
@@ -49,9 +49,9 @@ class AppTheme {
           labelSmall: GoogleFonts.inter(
             fontSize: 16,
             fontWeight: FontWeight.normal,
-            color: AppColors.yellow_500,
+            color: AppColors.yellow_400,
             decoration: TextDecoration.underline,
-            decorationColor: AppColors.yellow_500,
+            decorationColor: AppColors.yellow_400,
             decorationThickness:
                 AppDimensions.strokeWidthMd,
           ),

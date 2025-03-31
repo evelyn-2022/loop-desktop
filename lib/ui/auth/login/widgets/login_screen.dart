@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:loop/theme/app_dimensions.dart';
 import 'package:provider/provider.dart';
 import 'package:loop/routes/routes.dart';
 import 'package:loop/ui/auth/login/view_models/login_viewmodel.dart';
@@ -7,7 +8,7 @@ import 'package:loop/ui/shared/widgets/app_button.dart';
 import 'package:loop/utils/validators.dart';
 
 class LoginScreen extends StatefulWidget {
-  const LoginScreen({Key? key}) : super(key: key);
+  const LoginScreen({super.key});
 
   @override
   State<LoginScreen> createState() => _LoginScreenState();
@@ -67,97 +68,113 @@ class _LoginScreenState extends State<LoginScreen> {
     return Scaffold(
       body: Center(
         child: ConstrainedBox(
-          constraints: const BoxConstraints(maxWidth: 400),
+          constraints: const BoxConstraints(
+            maxWidth: AppDimensions.formWidth,
+          ),
           child: Padding(
-            padding: const EdgeInsets.all(24.0),
+            padding:
+                const EdgeInsets.all(AppDimensions.gapMd),
             child: Column(
-              crossAxisAlignment:
-                  CrossAxisAlignment.stretch,
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                const SizedBox(height: 48),
                 Text(
                   'Welcome back',
-                  style: Theme.of(context)
-                      .textTheme
-                      .displayLarge,
+                  style: theme.textTheme.displayLarge,
                   textAlign: TextAlign.center,
                 ),
-                const SizedBox(height: 32),
-                Expanded(
-                  child: Form(
-                    key: _formKey,
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: <Widget>[
-                        AppTextField(
-                          controller: _emailController,
-                          label: 'Email',
-                          hint: 'Enter your email',
-                          keyboardType:
-                              TextInputType.emailAddress,
-                          validator:
-                              Validators.validateEmail,
-                        ),
-                        const SizedBox(height: 24.0),
-                        AppTextField(
-                          controller: _passwordController,
-                          label: 'Password',
-                          hint: 'Enter your password',
-                          obscure: true,
-                          keyboardType:
-                              TextInputType.visiblePassword,
-                          validator:
-                              Validators.validatePassword,
-                          visibleSvgAsset:
-                              'assets/icons/eye_open.svg',
-                          hiddenSvgAsset:
-                              'assets/icons/eye_hidden.svg',
-                        ),
-                        const SizedBox(height: 24.0),
-                        AppButton(
-                          label: 'Log in',
-                          onPressed: _login,
-                          isLoading: viewModel.isLoading,
-                        ),
-                        if (viewModel.errorMessage != null)
-                          Padding(
-                            padding: const EdgeInsets.only(
-                                top: 12.0),
-                            child: Text(
-                              viewModel.errorMessage!,
-                              style: textTheme.bodyMedium
-                                  ?.copyWith(
-                                color: colorScheme.error,
-                              ),
+                const SizedBox(height: AppDimensions.gapMd),
+                Form(
+                  key: _formKey,
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: <Widget>[
+                      AppTextField(
+                        controller: _emailController,
+                        label: 'Email',
+                        hint: 'Enter your email',
+                        keyboardType:
+                            TextInputType.emailAddress,
+                        validator: Validators.validateEmail,
+                      ),
+                      const SizedBox(
+                          height: AppDimensions.gapMd),
+                      AppTextField(
+                        controller: _passwordController,
+                        label: 'Password',
+                        hint: 'Enter your password',
+                        obscure: true,
+                        keyboardType:
+                            TextInputType.visiblePassword,
+                        validator:
+                            Validators.validatePassword,
+                        visibleSvgAsset:
+                            'assets/icons/eye_open.svg',
+                        hiddenSvgAsset:
+                            'assets/icons/eye_hidden.svg',
+                      ),
+                      const SizedBox(
+                          height: AppDimensions.gapMd),
+                      AppButton(
+                        label: 'Log in',
+                        onPressed: _login,
+                        isLoading: viewModel.isLoading,
+                      ),
+                      if (viewModel.errorMessage != null)
+                        Padding(
+                          padding: const EdgeInsets.only(
+                              top: 12.0),
+                          child: Text(
+                            viewModel.errorMessage!,
+                            style: textTheme.bodyMedium
+                                ?.copyWith(
+                              color: colorScheme.error,
                             ),
                           ),
-                      ],
-                    ),
+                        ),
+                    ],
                   ),
                 ),
+                const SizedBox(height: AppDimensions.gapMd),
                 Row(
                   mainAxisAlignment:
                       MainAxisAlignment.center,
                   children: [
                     Text(
-                      "Don't have an account? ",
-                      style: Theme.of(context)
-                          .textTheme
-                          .bodyMedium,
+                      "New here? ",
+                      style: theme.textTheme.bodyMedium,
                     ),
                     GestureDetector(
                       onTap: () => Navigator.pushNamed(
                           context, AppRoutes.signup),
                       child: Text(
-                        "Sign up",
-                        style: Theme.of(context)
-                            .textTheme
-                            .labelSmall,
+                        "Create an account",
+                        style: theme.textTheme.labelSmall,
                       ),
                     ),
                   ],
                 ),
-                const SizedBox(height: 16),
+                const SizedBox(height: AppDimensions.gapMd),
+                GestureDetector(
+                  onTap: () => Navigator.pushNamed(
+                      context, AppRoutes.home),
+                  child: Text(
+                    "Continue as guest",
+                    style: Theme.of(context)
+                        .textTheme
+                        .labelSmall
+                        ?.copyWith(
+                          color: Theme.of(context)
+                              .colorScheme
+                              .secondary,
+                          fontSize: 14,
+                          decorationColor: Theme.of(context)
+                              .colorScheme
+                              .secondary,
+                        ),
+                  ),
+                ),
               ],
             ),
           ),

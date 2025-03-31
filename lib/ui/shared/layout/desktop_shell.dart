@@ -4,7 +4,6 @@ import 'package:loop/ui/auth/login/widgets/login_screen.dart';
 import 'package:loop/ui/home/widgets/home_screen.dart';
 import 'package:loop/ui/search/widgets/search_screen.dart';
 import 'package:loop/ui/settings/widgets/settings_screen.dart';
-import 'package:loop/ui/profile/widgets/profile_screen.dart';
 
 class DesktopShell extends StatefulWidget {
   const DesktopShell({super.key});
@@ -17,11 +16,9 @@ class _DesktopShellState extends State<DesktopShell> {
   int _selectedIndex = 0;
 
   final List<Widget> _screens = [
-    // HomeScreen(),
-    LoginScreen(),
-    SearchScreen(),
-    SettingsScreen(),
-    ProfileScreen(),
+    const LoginScreen(key: ValueKey('login')),
+    const SearchScreen(key: ValueKey('search')),
+    const SettingsScreen(key: ValueKey('settings')),
   ];
 
   @override
@@ -69,28 +66,14 @@ class _DesktopShellState extends State<DesktopShell> {
                 label: Text('Settings'),
               ),
             ],
-            trailing: Column(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                const Divider(),
-                IconButton(
-                  icon: Icon(Icons.person_outline,
-                      color: _selectedIndex == 3
-                          ? colorScheme.primary
-                          : colorScheme.onSurface
-                              .withOpacity(0.6)),
-                  tooltip: 'Profile',
-                  onPressed: () {
-                    setState(() {
-                      _selectedIndex = 3;
-                    });
-                  },
-                ),
-              ],
-            ),
           ),
           const VerticalDivider(width: 1),
-          Expanded(child: _screens[_selectedIndex]),
+          Expanded(
+            child: IndexedStack(
+              index: _selectedIndex,
+              children: _screens,
+            ),
+          )
         ],
       ),
     );
