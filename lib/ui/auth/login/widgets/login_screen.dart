@@ -48,12 +48,14 @@ class _LoginScreenState extends State<LoginScreen> {
           await viewModel.login(email, password);
 
       AppSnackBar.show(context,
-          message:
+          title:
               success ? 'Login Successful' : 'Login Failed',
+          body: success ? '' : 'Please check your input',
           type: success
               ? SnackBarType.success
               : SnackBarType.error,
-          horizontalOffset: 50);
+          horizontalOffset:
+              50); // TODO: Need to adjust offset based on navbar state later
     }
   }
 

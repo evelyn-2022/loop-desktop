@@ -8,7 +8,7 @@ class AppDimensions {
   static const double strokeWidthMd = 1.5;
   static const double strokeWidthLg = 2;
 
-  static const double textFieldHeight = 68;
+  static const double textFieldHeight = 72;
   static const double textFieldBorderRadius = 4;
   static const double textFieldPaddingHorizontal = 20;
   static const double textFieldPaddingVertical = 20;

@@ -6,7 +6,8 @@ enum SnackBarType { success, error }
 class AppSnackBar {
   static void show(
     BuildContext context, {
-    required String message,
+    required String title,
+    String? body,
     SnackBarType type = SnackBarType.success,
     double horizontalOffset = 0.0,
   }) {
@@ -16,6 +17,12 @@ class AppSnackBar {
         ? AppColors.green_600
         : colorScheme.error;
 
+    final icon = type == SnackBarType.success
+        ? Icons.check_circle_outline
+        : Icons.error_outline;
+
+    final iconColor = borderColor;
+
     // Clear any existing snackbars
     ScaffoldMessenger.of(context).clearSnackBars();
 
@@ -24,37 +31,64 @@ class AppSnackBar {
       builder: (context) => Positioned(
         left: 0,
         right: 0,
-        bottom: 16,
+        bottom: 20,
         child: Transform.translate(
           offset: Offset(horizontalOffset, 0),
           child: Center(
             child: Material(
-              elevation: 3,
               color: colorScheme.surface,
-              borderRadius: BorderRadius.circular(8),
+              elevation: 2,
+              borderRadius: BorderRadius.circular(4),
               child: Container(
                 width: 360,
-                padding: const EdgeInsets.symmetric(
-                  vertical: 14,
-                  horizontal: 16,
-                ),
                 decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(4),
                   border: Border(
-                    bottom: BorderSide(
+                    left: BorderSide(
                       color: borderColor,
-                      width: 2,
+                      width: 4,
                     ),
                   ),
+                  borderRadius: BorderRadius.circular(4),
                 ),
-                child: Text(
-                  message,
-                  style: Theme.of(context)
-                      .textTheme
-                      .labelMedium,
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
-                  textAlign: TextAlign.center,
+                padding: const EdgeInsets.symmetric(
+                  vertical: 12,
+                  horizontal: 16,
+                ),
+                child: Row(
+                  crossAxisAlignment:
+                      CrossAxisAlignment.start,
+                  children: [
+                    Icon(
+                      icon,
+                      color: iconColor,
+                      size: 18,
+                    ),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment:
+                            CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            title,
+                            style: Theme.of(context)
+                                .textTheme
+                                .labelMedium,
+                          ),
+                          if (body != null &&
+                              body != '') ...[
+                            const SizedBox(height: 4),
+                            Text(
+                              body,
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .bodySmall,
+                            ),
+                          ],
+                        ],
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ),

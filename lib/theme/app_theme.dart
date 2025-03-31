@@ -22,7 +22,7 @@ class AppTheme {
           displayLarge: GoogleFonts.bitter(
             fontSize: 32,
             fontWeight: FontWeight.w500,
-            color: AppColors.black_800,
+            color: AppColors.black_700,
           ),
           headlineMedium: GoogleFonts.bitter(
             fontSize: 28,
@@ -32,10 +32,10 @@ class AppTheme {
           bodyMedium: GoogleFonts.inter(
             fontSize: 16,
             fontWeight: FontWeight.normal,
-            color: AppColors.black_800,
+            color: AppColors.black_700,
           ),
           bodySmall: GoogleFonts.inter(
-            fontSize: 12,
+            fontSize: 14,
             fontWeight: FontWeight.w400,
             color: AppColors.grey_300,
           ),
@@ -53,13 +53,13 @@ class AppTheme {
           labelMedium: GoogleFonts.inter(
             fontSize: 14,
             fontWeight: FontWeight.normal,
-            color: AppColors.white_700,
+            color: AppColors.black_700,
           ),
           // Button text style
           labelLarge: GoogleFonts.inter(
             fontSize: 16,
             fontWeight: FontWeight.normal,
-            color: AppColors.black_800,
+            color: AppColors.black_700,
           ),
         ),
         inputDecorationTheme: InputDecorationTheme(
@@ -185,9 +185,9 @@ class AppTheme {
             color: AppColors.white_700,
           ),
           bodySmall: GoogleFonts.inter(
-            fontSize: 12,
+            fontSize: 14,
             fontWeight: FontWeight.w400,
-            color: AppColors.grey_300,
+            color: AppColors.grey_200,
           ),
           // Button text style
           labelLarge: GoogleFonts.inter(
