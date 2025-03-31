@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:loop/theme/app_dimensions.dart';
 
 class AppButton extends StatelessWidget {
   final String label;
@@ -16,7 +17,7 @@ class AppButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return SizedBox(
       width: double.infinity,
-      height: 48,
+      height: AppDimensions.buttonHeight,
       child: ElevatedButton(
         onPressed: isLoading
             ? null
@@ -27,10 +28,11 @@ class AppButton extends StatelessWidget {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   SizedBox(
-                    width: 20,
-                    height: 20,
+                    width: AppDimensions.iconSizeSm,
+                    height: AppDimensions.iconSizeSm,
                     child: CircularProgressIndicator(
-                      strokeWidth: 1.5,
+                      strokeWidth:
+                          AppDimensions.strokeWidthMd,
                       strokeCap: StrokeCap.round,
                       valueColor:
                           AlwaysStoppedAnimation<Color>(

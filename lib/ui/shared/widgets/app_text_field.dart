@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:loop/theme/app_colors.dart';
+import 'package:loop/theme/app_dimensions.dart';
 
 class AppTextField extends StatefulWidget {
   final TextEditingController controller;
@@ -64,7 +65,7 @@ class _AppTextFieldState extends State<AppTextField> {
 
     return SizedBox(
       width: double.infinity,
-      height: 48,
+      height: AppDimensions.textFieldHeight,
       child: TextFormField(
         controller: widget.controller,
         obscureText: _obscureText,
@@ -94,16 +95,13 @@ class _AppTextFieldState extends State<AppTextField> {
     final activeIconColor = AppColors.grey_300;
 
     if (assetPath == null) return const SizedBox.shrink();
-    return Padding(
-      padding: const EdgeInsets.all(12.0),
-      child: SvgPicture.asset(
-        assetPath,
-        width: 20,
-        height: 20,
-        colorFilter: ColorFilter.mode(
-          _hasFocus ? activeIconColor : baseIconColor!,
-          BlendMode.srcIn,
-        ),
+    return SvgPicture.asset(
+      assetPath,
+      width: AppDimensions.iconSizeSm,
+      height: AppDimensions.iconSizeSm,
+      colorFilter: ColorFilter.mode(
+        _hasFocus ? activeIconColor : baseIconColor!,
+        BlendMode.srcIn,
       ),
     );
   }

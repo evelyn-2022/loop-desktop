@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:loop/theme/app_dimensions.dart';
+
 import 'app_colors.dart';
 
 class AppTheme {
@@ -10,25 +13,47 @@ class AppTheme {
             primary: AppColors.green_800,
             secondary: AppColors.grey_300,
             surface: AppColors.yellow_100,
-            error: AppColors.error,
+            error: AppColors.red_200,
             onPrimary: AppColors.white_800,
             onSurface: AppColors.black_700,
             outline: AppColors.grey_100,
             outlineVariant: AppColors.grey_300),
-        textTheme: const TextTheme(
-          bodyMedium: TextStyle(
-            fontSize: 16,
-            color: AppColors.black_700,
-          ),
-          headlineMedium: TextStyle(
-            fontSize: 24,
-            fontWeight: FontWeight.bold,
-            color: AppColors.text,
-          ),
-          labelLarge: TextStyle(
-            fontSize: 14,
+        textTheme: TextTheme(
+          displayLarge: GoogleFonts.bitter(
+            fontSize: 32,
             fontWeight: FontWeight.w500,
-            color: AppColors.text,
+            color: AppColors.black_800,
+          ),
+          headlineMedium: GoogleFonts.bitter(
+            fontSize: 28,
+            fontWeight: FontWeight.w500,
+            color: AppColors.black_800,
+          ),
+          bodyMedium: GoogleFonts.inter(
+            fontSize: 16,
+            fontWeight: FontWeight.normal,
+            color: AppColors.black_800,
+          ),
+          bodySmall: GoogleFonts.inter(
+            fontSize: 12,
+            fontWeight: FontWeight.w400,
+            color: AppColors.grey_300,
+          ),
+          // Button text style
+          labelLarge: GoogleFonts.inter(
+            fontSize: 16,
+            fontWeight: FontWeight.normal,
+            color: AppColors.black_800,
+          ),
+          // Link text style
+          labelSmall: GoogleFonts.inter(
+            fontSize: 16,
+            fontWeight: FontWeight.normal,
+            color: AppColors.yellow_500,
+            decoration: TextDecoration.underline,
+            decorationColor: AppColors.yellow_500,
+            decorationThickness:
+                AppDimensions.strokeWidthMd,
           ),
         ),
         inputDecorationTheme: InputDecorationTheme(
@@ -69,8 +94,7 @@ class AppTheme {
           cursorColor: AppColors.yellow_400,
           selectionColor:
               AppColors.yellow_200.withValues(alpha: 96),
-          selectionHandleColor:
-              AppColors.primary, // draggable dot
+          selectionHandleColor: AppColors.yellow_400,
         ),
         elevatedButtonTheme: ElevatedButtonThemeData(
           style: ButtonStyle(
@@ -92,16 +116,17 @@ class AppTheme {
             }),
             padding: WidgetStateProperty.all(
               const EdgeInsets.symmetric(
-                  vertical: 16, horizontal: 20),
+                vertical:
+                    AppDimensions.buttonPaddingVertical,
+                horizontal:
+                    AppDimensions.buttonPaddingHorizontal,
+              ),
             ),
             shape: WidgetStateProperty.all(
               RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(4)),
-            ),
-            textStyle: WidgetStateProperty.all(
-              const TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w500),
+                borderRadius: BorderRadius.circular(
+                    AppDimensions.buttonBorderRadius),
+              ),
             ),
           ),
         ),
@@ -131,42 +156,64 @@ class AppTheme {
           primary: AppColors.yellow_400,
           secondary: AppColors.grey_300,
           surface: AppColors.black_700,
-          error: AppColors.error,
+          error: AppColors.red_200,
           onPrimary: AppColors.black_800,
-          onSurface: Colors.white,
+          onSurface: AppColors.white_700,
           outline: AppColors.grey_400,
           outlineVariant: AppColors.grey_200,
         ),
-        textTheme: const TextTheme(
-          bodyMedium: TextStyle(
-              fontSize: 16, color: AppColors.white_700),
-          headlineMedium: TextStyle(
-            fontSize: 24,
-            fontWeight: FontWeight.bold,
-            color: Colors.white,
-          ),
-          labelLarge: TextStyle(
-            fontSize: 14,
+        textTheme: TextTheme(
+          displayLarge: GoogleFonts.bitter(
+            fontSize: 32,
             fontWeight: FontWeight.w500,
-            color: Colors.red,
+            color: AppColors.white_700,
+          ),
+          headlineMedium: GoogleFonts.bitter(
+            fontSize: 28,
+            fontWeight: FontWeight.w500,
+            color: AppColors.white_700,
+          ),
+          bodyMedium: GoogleFonts.inter(
+            fontSize: 16,
+            fontWeight: FontWeight.normal,
+            color: AppColors.white_700,
+          ),
+          bodySmall: GoogleFonts.inter(
+            fontSize: 12,
+            fontWeight: FontWeight.w400,
+            color: AppColors.grey_300,
+          ),
+          // Button text style
+          labelLarge: GoogleFonts.inter(
+            fontSize: 16,
+            fontWeight: FontWeight.normal,
+            color: AppColors.white_700,
+          ),
+          // Link text style
+          labelSmall: GoogleFonts.inter(
+            fontSize: 16,
+            fontWeight: FontWeight.normal,
+            color: AppColors.yellow_300,
+            decoration: TextDecoration.underline,
+            decorationColor: AppColors.yellow_300,
+            decorationThickness:
+                AppDimensions.strokeWidthMd,
           ),
         ),
         inputDecorationTheme: InputDecorationTheme(
           border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(4),
-          ),
+              borderRadius: BorderRadius.circular(
+                  AppDimensions.textFieldBorderRadius),
+              borderSide: BorderSide(
+                  width: AppDimensions.strokeWidthMd)),
           enabledBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(4),
             borderSide: BorderSide(
               color: AppColors.grey_400,
-              width: 1.5,
             ),
           ),
           focusedBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(4),
             borderSide: BorderSide(
               color: AppColors.grey_200,
-              width: 1.5,
             ),
           ),
           hintStyle: TextStyle(
@@ -183,13 +230,16 @@ class AppTheme {
             return TextStyle(color: AppColors.grey_300);
           }),
           contentPadding: EdgeInsets.symmetric(
-              horizontal: 20, vertical: 16),
+              horizontal:
+                  AppDimensions.textFieldPaddingHorizontal,
+              vertical:
+                  AppDimensions.textFieldPaddingVertical),
         ),
         textSelectionTheme: TextSelectionThemeData(
           cursorColor: AppColors.yellow_200,
           selectionColor:
               AppColors.yellow_200.withValues(alpha: 96),
-          selectionHandleColor: AppColors.primary,
+          selectionHandleColor: AppColors.yellow_200,
         ),
         elevatedButtonTheme: ElevatedButtonThemeData(
           style: ButtonStyle(
@@ -211,16 +261,17 @@ class AppTheme {
             }),
             padding: WidgetStateProperty.all(
               const EdgeInsets.symmetric(
-                  vertical: 16, horizontal: 20),
+                vertical:
+                    AppDimensions.buttonPaddingVertical,
+                horizontal:
+                    AppDimensions.buttonPaddingHorizontal,
+              ),
             ),
             shape: WidgetStateProperty.all(
               RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(4)),
-            ),
-            textStyle: WidgetStateProperty.all(
-              const TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w500),
+                borderRadius: BorderRadius.circular(
+                    AppDimensions.buttonBorderRadius),
+              ),
             ),
           ),
         ),

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:loop/routes/routes.dart';
-import 'package:loop/theme/app_text_styles.dart';
 import 'package:loop/ui/auth/login/view_models/login_viewmodel.dart';
 import 'package:loop/ui/shared/widgets/app_text_field.dart';
 import 'package:loop/ui/shared/widgets/app_button.dart';
@@ -78,7 +77,9 @@ class _LoginScreenState extends State<LoginScreen> {
                 const SizedBox(height: 48),
                 Text(
                   'Welcome back',
-                  style: AppTextStyles.heading,
+                  style: Theme.of(context)
+                      .textTheme
+                      .displayLarge,
                   textAlign: TextAlign.center,
                 ),
                 const SizedBox(height: 32),
@@ -97,7 +98,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           validator:
                               Validators.validateEmail,
                         ),
-                        const SizedBox(height: 16.0),
+                        const SizedBox(height: 24.0),
                         AppTextField(
                           controller: _passwordController,
                           label: 'Password',
@@ -134,23 +135,24 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                   ),
                 ),
-                const SizedBox(height: 16),
                 Row(
                   mainAxisAlignment:
                       MainAxisAlignment.center,
                   children: [
-                    Text("Don't have an account? ",
-                        style: textTheme.bodyMedium),
+                    Text(
+                      "Don't have an account? ",
+                      style: Theme.of(context)
+                          .textTheme
+                          .bodyMedium,
+                    ),
                     GestureDetector(
                       onTap: () => Navigator.pushNamed(
                           context, AppRoutes.signup),
                       child: Text(
                         "Sign up",
-                        style:
-                            textTheme.bodyMedium?.copyWith(
-                          color: colorScheme.primary,
-                          fontWeight: FontWeight.bold,
-                        ),
+                        style: Theme.of(context)
+                            .textTheme
+                            .labelSmall,
                       ),
                     ),
                   ],
