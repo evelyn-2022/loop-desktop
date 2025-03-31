@@ -102,6 +102,10 @@ class _LoginScreenState extends State<LoginScreen> {
                                     .visiblePassword,
                                 validator: Validators
                                     .validatePassword,
+                                visibleSvgAsset:
+                                    'assets/icons/eye_open.svg',
+                                hiddenSvgAsset:
+                                    'assets/icons/eye_hidden.svg',
                               ),
                               const SizedBox(height: 24.0),
                               AppButton(

@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:loop/theme/app_colors.dart';
 
 class AppTextField extends StatefulWidget {
   final TextEditingController controller;
@@ -7,6 +9,8 @@ class AppTextField extends StatefulWidget {
   final bool obscure;
   final TextInputType keyboardType;
   final String? Function(String?)? validator;
+  final String? visibleSvgAsset;
+  final String? hiddenSvgAsset;
 
   const AppTextField({
     super.key,
@@ -16,6 +20,8 @@ class AppTextField extends StatefulWidget {
     this.obscure = false,
     this.keyboardType = TextInputType.text,
     this.validator,
+    this.visibleSvgAsset,
+    this.hiddenSvgAsset,
   });
 
   @override
@@ -55,9 +61,6 @@ class _AppTextFieldState extends State<AppTextField> {
   @override
   Widget build(BuildContext context) {
     final isPassword = widget.obscure;
-    final baseIconColor = Theme.of(context).iconTheme.color;
-    final activeIconColor =
-        Theme.of(context).colorScheme.secondary;
 
     return SizedBox(
       width: double.infinity,
@@ -74,17 +77,32 @@ class _AppTextFieldState extends State<AppTextField> {
           hintText: widget.hint,
           suffixIcon: isPassword
               ? IconButton(
-                  icon: Icon(
-                    _obscureText
-                        ? Icons.visibility_off
-                        : Icons.visibility,
-                    color: _hasFocus
-                        ? activeIconColor
-                        : baseIconColor,
-                  ),
                   onPressed: _toggleVisibility,
+                  icon: _obscureText
+                      ? _buildSvgIcon(widget.hiddenSvgAsset)
+                      : _buildSvgIcon(
+                          widget.visibleSvgAsset),
                 )
               : null,
+        ),
+      ),
+    );
+  }
+
+  Widget _buildSvgIcon(String? assetPath) {
+    final baseIconColor = Theme.of(context).iconTheme.color;
+    final activeIconColor = AppColors.grey_300;
+
+    if (assetPath == null) return const SizedBox.shrink();
+    return Padding(
+      padding: const EdgeInsets.all(12.0),
+      child: SvgPicture.asset(
+        assetPath,
+        width: 20,
+        height: 20,
+        colorFilter: ColorFilter.mode(
+          _hasFocus ? activeIconColor : baseIconColor!,
+          BlendMode.srcIn,
         ),
       ),
     );
