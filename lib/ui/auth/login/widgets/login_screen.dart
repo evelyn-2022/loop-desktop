@@ -24,12 +24,32 @@ class _LoginScreenState extends State<LoginScreen> {
       GlobalKey<FormFieldState<String>>();
   final _passwordFieldKey =
       GlobalKey<FormFieldState<String>>();
+  bool _isFormValid = false;
 
   @override
   void initState() {
     super.initState();
-    _emailController.addListener(_clearErrorOnInput);
-    _passwordController.addListener(_clearErrorOnInput);
+    _emailController.addListener(() {
+      _clearErrorOnInput();
+      _updateFormValidState();
+    });
+    _passwordController.addListener(() {
+      _clearErrorOnInput();
+      _updateFormValidState();
+    });
+  }
+
+  void _updateFormValidState() {
+    final emailValid =
+        Validators.validateEmail(_emailController.text) ==
+            null;
+    final passwordValid = Validators.validatePassword(
+            _passwordController.text) ==
+        null;
+
+    setState(() {
+      _isFormValid = emailValid && passwordValid;
+    });
   }
 
   void _clearErrorOnInput() {
@@ -41,22 +61,24 @@ class _LoginScreenState extends State<LoginScreen> {
   void _login() async {
     final viewModel =
         Provider.of<LoginViewModel>(context, listen: false);
-    if (_formKey.currentState?.validate() ?? false) {
-      final email = _emailController.text;
-      final password = _passwordController.text;
-      final success =
-          await viewModel.login(email, password);
 
-      AppSnackBar.show(context,
-          title:
-              success ? 'Login Successful' : 'Login Failed',
-          body: success ? '' : viewModel.errorMessage,
-          type: success
-              ? SnackBarType.success
-              : SnackBarType.error,
-          horizontalOffset:
-              50); // TODO: Need to adjust offset based on navbar state later
+    if (!_isFormValid || viewModel.isLoading) {
+      return;
     }
+
+    final email = _emailController.text;
+    final password = _passwordController.text;
+    final success = await viewModel.login(email, password);
+
+    AppSnackBar.show(context,
+        title:
+            success ? 'Login Successful' : 'Login Failed',
+        body: success ? '' : viewModel.errorMessage,
+        type: success
+            ? SnackBarType.success
+            : SnackBarType.error,
+        horizontalOffset:
+            50); // TODO: Need to adjust offset based on navbar state later
   }
 
   @override
