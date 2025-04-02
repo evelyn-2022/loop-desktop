@@ -50,7 +50,7 @@ class _LoginScreenState extends State<LoginScreen> {
       AppSnackBar.show(context,
           title:
               success ? 'Login Successful' : 'Login Failed',
-          body: success ? '' : 'Please check your input',
+          body: success ? '' : viewModel.errorMessage,
           type: success
               ? SnackBarType.success
               : SnackBarType.error,
@@ -70,8 +70,6 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget build(BuildContext context) {
     final viewModel = Provider.of<LoginViewModel>(context);
     final theme = Theme.of(context);
-    final textTheme = theme.textTheme;
-    final colorScheme = theme.colorScheme;
 
     return Scaffold(
       body: Center(
@@ -131,18 +129,6 @@ class _LoginScreenState extends State<LoginScreen> {
                         onPressed: _login,
                         isLoading: viewModel.isLoading,
                       ),
-                      if (viewModel.errorMessage != null)
-                        Padding(
-                          padding: const EdgeInsets.only(
-                              top: 12.0),
-                          child: Text(
-                            viewModel.errorMessage!,
-                            style: textTheme.bodyMedium
-                                ?.copyWith(
-                              color: colorScheme.error,
-                            ),
-                          ),
-                        ),
                     ],
                   ),
                 ),

@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 class LoginRequest {
   final String email;
   final String password;
@@ -7,12 +5,8 @@ class LoginRequest {
   LoginRequest(
       {required this.email, required this.password});
 
-  Map<String, dynamic> toMap() {
-    return {
-      'email': email,
-      'password': password,
-    };
-  }
-
-  String toJson() => json.encode(toMap());
+  Map<String, dynamic> toMap() => {
+        'email': email,
+        'password': password,
+      };
 }

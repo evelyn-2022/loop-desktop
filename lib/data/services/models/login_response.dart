@@ -1,19 +1,17 @@
-import 'dart:convert';
-
 class LoginResponse {
-  final String token;
-  final String message;
+  final int userId;
+  final String accessToken;
 
-  LoginResponse(
-      {required this.token, required this.message});
+  LoginResponse({
+    required this.userId,
+    required this.accessToken,
+  });
 
-  factory LoginResponse.fromMap(Map<String, dynamic> map) {
+  factory LoginResponse.fromJson(
+      Map<String, dynamic> json) {
     return LoginResponse(
-      token: map['token'] ?? '',
-      message: map['message'] ?? '',
+      userId: json['userId'] as int,
+      accessToken: json['accessToken'] as String,
     );
   }
-
-  factory LoginResponse.fromJson(String source) =>
-      LoginResponse.fromMap(json.decode(source));
 }
