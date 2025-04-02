@@ -82,7 +82,7 @@ class _AppTextFieldState extends State<AppTextField> {
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisSize: MainAxisSize.min,
       children: [
-        Container(
+        SizedBox(
           width: double.infinity,
           height: AppDimensions.textFieldHeight,
           child: TextFormField(
@@ -133,7 +133,10 @@ class _AppTextFieldState extends State<AppTextField> {
         SizedBox(
           height: 16, // Fixed height for error area
           child: Padding(
-            padding: const EdgeInsets.only(left: 0, top: 2),
+            padding: const EdgeInsets.only(
+                left: AppDimensions
+                    .textFieldPaddingHorizontal,
+                top: 2),
             child: errorMessage != null
                 ? Text(
                     errorMessage!,
