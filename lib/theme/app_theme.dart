@@ -237,7 +237,7 @@ class AppTheme {
           focusedErrorBorder: OutlineInputBorder(
             borderSide: BorderSide(
               color: AppColors.red_200,
-              width: AppDimensions.strokeWidthLg,
+              // width: AppDimensions.strokeWidthLg,
             ),
           ),
           errorStyle: TextStyle(

@@ -35,7 +35,7 @@ class _AppTextFieldState extends State<AppTextField> {
   late bool _obscureText;
   late FocusNode _focusNode;
   bool _hasFocus = false;
-  bool _showError = true;
+  bool _showError = false;
 
   @override
   void initState() {
@@ -72,56 +72,80 @@ class _AppTextFieldState extends State<AppTextField> {
   Widget build(BuildContext context) {
     final isPassword = widget.obscure;
 
-    return SizedBox(
-      width: double.infinity,
-      height: AppDimensions.textFieldHeight,
-      child: TextFormField(
-        key: widget.fieldKey,
-        controller: widget.controller,
-        obscureText: _obscureText,
-        keyboardType: widget.keyboardType,
-        validator: (value) {
-          if (!_showError) {
-            return null;
-          }
-          return widget.validator?.call(value);
-        },
-        focusNode: _focusNode,
-        style: Theme.of(context).textTheme.bodyMedium,
-        decoration: InputDecoration(
-            labelText: widget.label,
-            hintText: widget.hint,
-            suffixIcon: isPassword
-                ? IconButton(
-                    onPressed: _toggleVisibility,
-                    icon: _obscureText
-                        ? _buildSvgIcon(
-                            widget.hiddenSvgAsset)
-                        : _buildSvgIcon(
-                            widget.visibleSvgAsset),
+    String? errorMessage;
+    if (_showError) {
+      errorMessage =
+          widget.validator?.call(widget.controller.text);
+    }
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Container(
+          width: double.infinity,
+          height: AppDimensions.textFieldHeight,
+          child: TextFormField(
+            key: widget.fieldKey,
+            controller: widget.controller,
+            obscureText: _obscureText,
+            keyboardType: widget.keyboardType,
+            validator: (_) => null,
+            focusNode: _focusNode,
+            style: Theme.of(context).textTheme.bodyMedium,
+            decoration: InputDecoration(
+              labelText: widget.label,
+              hintText: widget.hint,
+              suffixIcon: isPassword
+                  ? IconButton(
+                      onPressed: _toggleVisibility,
+                      icon: _obscureText
+                          ? _buildSvgIcon(
+                              widget.hiddenSvgAsset)
+                          : _buildSvgIcon(
+                              widget.visibleSvgAsset),
+                    )
+                  : null,
+            ),
+            onTap: () {
+              if (widget.fieldKey
+                  is GlobalKey<FormFieldState<String>>) {
+                WidgetsBinding.instance
+                    .addPostFrameCallback((_) {
+                  setState(() {
+                    // Update error message when tapped
+                    if (_showError) {
+                      errorMessage = widget.validator
+                          ?.call(widget.controller.text);
+                    }
+                  });
+
+                  final currentPosition =
+                      widget.controller.selection;
+                  widget.controller.selection =
+                      currentPosition;
+                });
+              }
+            },
+          ),
+        ),
+        // Separate container for error display with fixed height
+        SizedBox(
+          height: 16, // Fixed height for error area
+          child: Padding(
+            padding: const EdgeInsets.only(left: 0, top: 2),
+            child: errorMessage != null
+                ? Text(
+                    errorMessage!,
+                    style: TextStyle(
+                      color: AppColors.red_200,
+                      fontSize: 12,
+                    ),
                   )
                 : null,
-            helperText: ' '), // Prevents jumping
-        onTap: () {
-          // Clear validation error without triggering selection
-          if (widget.fieldKey
-              is GlobalKey<FormFieldState<String>>) {
-            // Schedule this after the tap has been processed
-            WidgetsBinding.instance
-                .addPostFrameCallback((_) {
-              (widget.fieldKey
-                      as GlobalKey<FormFieldState<String>>)
-                  .currentState
-                  ?.validate();
-
-              // Maintain cursor position instead of selecting all text
-              final currentPosition =
-                  widget.controller.selection;
-              widget.controller.selection = currentPosition;
-            });
-          }
-        },
-      ),
+          ),
+        ),
+      ],
     );
   }
 
