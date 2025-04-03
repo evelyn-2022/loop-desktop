@@ -1,15 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:loop/routes/routes.dart';
-import 'package:loop/theme/theme_provider.dart';
-import 'package:provider/provider.dart';
 
 class HomeScreen extends StatelessWidget {
+  const HomeScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
     final textTheme = Theme.of(context).textTheme;
-    final themeProvider =
-        Provider.of<ThemeProvider>(context);
 
     return Scaffold(
       body: Center(
