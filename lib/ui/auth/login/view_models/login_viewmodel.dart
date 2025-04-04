@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:loop/data/repositories/auth_repository.dart';
 import 'package:loop/data/services/models/api_response.dart';
 import 'package:loop/data/services/models/login_response.dart';
+import 'package:loop/providers/auth_state.dart';
 
 class LoginViewModel extends ChangeNotifier {
   final AuthRepository authRepository;
+  final AuthState authState;
 
   bool _isLoading = false;
   String? _errorMessage;
@@ -14,7 +16,10 @@ class LoginViewModel extends ChangeNotifier {
   String? get errorMessage => _errorMessage;
   String? get successMessage => _successMessage;
 
-  LoginViewModel({required this.authRepository});
+  LoginViewModel({
+    required this.authRepository,
+    required this.authState,
+  });
 
   Future<bool> login(String email, String password) async {
     _isLoading = true;
@@ -23,12 +28,15 @@ class LoginViewModel extends ChangeNotifier {
 
     final response =
         await authRepository.login(email, password);
-
     _isLoading = false;
 
     if (response is ApiSuccess<LoginResponse>) {
-      final loginData = response.data;
-      // TODO: Save token or userId
+      final accessToken = response.data?.accessToken;
+
+      if (accessToken != null) {
+        authState.updateToken(accessToken);
+      }
+
       notifyListeners();
       return true;
     } else if (response is ApiError) {

@@ -58,6 +58,27 @@ class _LoginScreenState extends State<LoginScreen> {
     viewModel.clearError();
   }
 
+  // void _login() async {
+  //   final viewModel =
+  //       Provider.of<LoginViewModel>(context, listen: false);
+
+  //   if (!_isFormValid || viewModel.isLoading) {
+  //     return;
+  //   }
+
+  //   final email = _emailController.text;
+  //   final password = _passwordController.text;
+  //   final success = await viewModel.login(email, password);
+
+  //   AppSnackBar.show(context,
+  //       title:
+  //           success ? 'Login Successful' : 'Login Failed',
+  //       body: success ? '' : viewModel.errorMessage,
+  //       type: success
+  //           ? SnackBarType.success
+  //           : SnackBarType.error,
+  //       horizontalOffset: AppDimensions.navBarWidth);
+  // }
   void _login() async {
     final viewModel =
         Provider.of<LoginViewModel>(context, listen: false);
@@ -70,15 +91,20 @@ class _LoginScreenState extends State<LoginScreen> {
     final password = _passwordController.text;
     final success = await viewModel.login(email, password);
 
-    AppSnackBar.show(context,
-        title:
-            success ? 'Login Successful' : 'Login Failed',
-        body: success ? '' : viewModel.errorMessage,
-        type: success
-            ? SnackBarType.success
-            : SnackBarType.error,
-        horizontalOffset:
-            50); // TODO: Need to adjust offset based on navbar state later
+    AppSnackBar.show(
+      context,
+      title: success ? 'Login Successful' : 'Login Failed',
+      body: success ? '' : viewModel.errorMessage,
+      type: success
+          ? SnackBarType.success
+          : SnackBarType.error,
+      horizontalOffset: AppDimensions.navBarWidth,
+    );
+
+    if (success) {
+      Navigator.pushReplacementNamed(
+          context, AppRoutes.home);
+    }
   }
 
   @override

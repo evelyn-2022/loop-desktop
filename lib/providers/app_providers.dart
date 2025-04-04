@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:loop/data/services/auth_token_manager.dart';
-import 'package:loop/theme/theme_provider.dart';
+import 'package:loop/providers/auth_state.dart';
+import 'package:loop/providers/theme_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:loop/data/repositories/auth_repository.dart';
 import 'package:loop/data/services/auth_api_client.dart';
@@ -26,9 +27,13 @@ class AppProviders extends StatelessWidget {
             tokenManager: context.read<AuthTokenManager>(),
           ),
         ),
+        ChangeNotifierProvider<AuthState>(
+          create: (_) => AuthState(),
+        ),
         ChangeNotifierProvider<LoginViewModel>(
           create: (context) => LoginViewModel(
             authRepository: context.read<AuthRepository>(),
+            authState: context.read<AuthState>(),
           ),
         ),
         ChangeNotifierProvider<ThemeProvider>(

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:loop/theme/theme_provider.dart';
 import 'package:provider/provider.dart';
-import 'config/dependencies.dart';
+import 'providers/theme_provider.dart';
+import 'providers/app_providers.dart';
 import 'routes/routes.dart';
 import 'theme/app_theme.dart';
 import 'ui/shared/layout/desktop_shell.dart';
