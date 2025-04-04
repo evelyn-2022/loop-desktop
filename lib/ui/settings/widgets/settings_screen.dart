@@ -8,10 +8,8 @@ class SettingsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final themeProvider =
-        Provider.of<ThemeProvider>(context);
-    final isDarkMode = themeProvider.isDarkMode;
-    final colorScheme = Theme.of(context).colorScheme;
+    final themeProvider = context.watch<ThemeProvider>();
+    final themeMode = themeProvider.themeMode;
     final textTheme = Theme.of(context).textTheme;
 
     return Padding(
@@ -25,13 +23,28 @@ class SettingsScreen extends StatelessWidget {
             mainAxisAlignment:
                 MainAxisAlignment.spaceBetween,
             children: [
-              Text('Dark Mode',
-                  style: textTheme.bodyMedium),
-              Switch(
-                value: isDarkMode,
-                activeColor: colorScheme.primary,
-                onChanged: (_) =>
-                    themeProvider.toggleTheme(),
+              Text('Theme', style: textTheme.bodyMedium),
+              DropdownButton<ThemeMode>(
+                value: themeMode,
+                onChanged: (ThemeMode? newMode) {
+                  if (newMode != null) {
+                    themeProvider.setThemeMode(newMode);
+                  }
+                },
+                items: const [
+                  DropdownMenuItem(
+                    value: ThemeMode.light,
+                    child: Text('Light'),
+                  ),
+                  DropdownMenuItem(
+                    value: ThemeMode.dark,
+                    child: Text('Dark'),
+                  ),
+                  DropdownMenuItem(
+                    value: ThemeMode.system,
+                    child: Text('System'),
+                  ),
+                ],
               ),
             ],
           ),
