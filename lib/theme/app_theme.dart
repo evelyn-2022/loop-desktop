@@ -62,6 +62,7 @@ class AppTheme {
             color: AppColors.black_700,
           ),
         ),
+        dividerColor: AppColors.yellow_100,
         inputDecorationTheme: InputDecorationTheme(
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(4),
@@ -168,6 +169,7 @@ class AppTheme {
           outline: AppColors.grey_400,
           outlineVariant: AppColors.grey_200,
         ),
+        dividerColor: AppColors.black_700,
         textTheme: TextTheme(
           displayLarge: GoogleFonts.bitter(
             fontSize: 32,
