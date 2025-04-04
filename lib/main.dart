@@ -14,30 +14,24 @@ void main() {
 }
 
 class App extends StatelessWidget {
-  const App({Key? key}) : super(key: key);
+  const App({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (_) => ThemeProvider(),
-      child: Consumer<ThemeProvider>(
-        builder: (context, themeProvider, _) {
-          return MaterialApp(
-            title: 'Loop',
-            theme: AppTheme.light,
-            darkTheme: AppTheme.dark,
-            themeMode: themeProvider.themeMode,
-            debugShowCheckedModeBanner: false,
-            initialRoute: AppRoutes.home,
-            routes: {
-              AppRoutes.home: (context) =>
-                  const DesktopShell(),
-              AppRoutes.login: (context) => LoginScreen(),
-              AppRoutes.signup: (context) => SignupScreen(),
-            },
-          );
-        },
-      ),
+    final themeProvider = context.watch<ThemeProvider>();
+
+    return MaterialApp(
+      title: 'Loop',
+      theme: AppTheme.light,
+      darkTheme: AppTheme.dark,
+      themeMode: themeProvider.themeMode,
+      debugShowCheckedModeBanner: false,
+      initialRoute: AppRoutes.home,
+      routes: {
+        AppRoutes.home: (context) => const DesktopShell(),
+        AppRoutes.login: (context) => LoginScreen(),
+        AppRoutes.signup: (context) => SignupScreen(),
+      },
     );
   }
 }
