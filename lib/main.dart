@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:loop/app_initializer.dart';
 import 'package:provider/provider.dart';
 import 'providers/theme_provider.dart';
 import 'providers/app_providers.dart';
@@ -10,7 +11,7 @@ import 'ui/auth/signup/widgets/signup_screen.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
-  runApp(const AppProviders(child: App()));
+  runApp(const AppProviders(child: AppInitializer()));
 }
 
 class App extends StatelessWidget {
