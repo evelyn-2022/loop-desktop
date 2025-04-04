@@ -18,4 +18,11 @@ class AppDimensions {
   static const double gapLg = 32;
 
   static const double formWidth = 400;
+
+  static const double navBarWidth = 70;
+
+  static const double pagePaddingVertical = 20;
+
+  static const double navBarIconSize = 24;
+  static const double navBarIconSizespacing = 10;
 }
