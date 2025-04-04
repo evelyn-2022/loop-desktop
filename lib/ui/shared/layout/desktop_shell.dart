@@ -27,12 +27,11 @@ class _DesktopShellState extends State<DesktopShell> {
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
-
     return Scaffold(
       body: Row(
         children: [
           SizedBox(
-            width: 80, // or whatever width you like
+            width: 80,
             child: Column(
               children: [
                 Expanded(
@@ -85,29 +84,22 @@ class _DesktopShellState extends State<DesktopShell> {
                         label: Text('Expand'),
                       ),
                     ],
-                    trailing: Padding(
-                      padding: const EdgeInsets.only(
-                          bottom: 16.0),
-                      child: Column(
-                        mainAxisAlignment:
-                            MainAxisAlignment.end,
-                        children: [
-                          IconButton(
-                            onPressed: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (_) =>
-                                        const ProfileScreen()),
-                              );
-                            },
-                            icon: const Icon(
-                                Icons.person_outline),
-                            tooltip: 'Profile',
-                          ),
-                        ],
-                      ),
-                    ),
+                  ),
+                ),
+                Padding(
+                  padding:
+                      const EdgeInsets.only(bottom: 16),
+                  child: IconButton(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (_) =>
+                                const ProfileScreen()),
+                      );
+                    },
+                    icon: const Icon(Icons.person_outline),
+                    tooltip: 'Profile',
                   ),
                 ),
               ],
@@ -119,7 +111,7 @@ class _DesktopShellState extends State<DesktopShell> {
               index: _selectedIndex,
               children: _screens,
             ),
-          )
+          ),
         ],
       ),
     );
