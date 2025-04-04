@@ -1,6 +1,7 @@
 // lib/config/providers.dart
 
 import 'package:flutter/material.dart';
+import 'package:loop/data/services/auth_token_manager.dart';
 import 'package:provider/provider.dart';
 import 'package:loop/data/repositories/auth_repository.dart';
 import 'package:loop/data/services/auth_api_client.dart';
@@ -14,8 +15,9 @@ class AppProviders extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final authApiClient = AuthApiClient();
-    final authRepository =
-        AuthRepository(apiClient: authApiClient);
+    final authRepository = AuthRepository(
+        apiClient: authApiClient,
+        tokenManager: AuthTokenManager());
 
     return MultiProvider(
       providers: [
