@@ -14,4 +14,8 @@ class LoginResponse {
       accessToken: json['accessToken'] as String,
     );
   }
+
+  factory LoginResponse.empty() {
+    return LoginResponse(userId: 0, accessToken: '');
+  }
 }
