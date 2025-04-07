@@ -1,10 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import 'package:loop/data/services/auth_token_manager.dart';
-import 'package:loop/main.dart';
-import 'package:loop/providers/auth_state.dart';
-import 'package:loop/ui/splash/splash_screen.dart';
+import 'data/services/auth_token_manager.dart';
+import 'main.dart';
+import 'providers/theme_provider.dart';
+import 'providers/auth_state.dart';
+import 'routes/routes.dart';
+import 'theme/app_theme.dart';
+import 'ui/shared/layout/desktop_shell.dart';
+import 'ui/auth/login/widgets/login_screen.dart';
+import 'ui/auth/signup/widgets/signup_screen.dart';
+import 'ui/splash/splash_screen.dart';
 
 class AppInitializer extends StatefulWidget {
   const AppInitializer({super.key});
@@ -28,14 +34,30 @@ class _AppInitializerState extends State<AppInitializer> {
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder(
+    final themeProvider = context.watch<ThemeProvider>();
+
+    return FutureBuilder<void>(
       future: _initFuture,
       builder: (context, snapshot) {
-        if (snapshot.connectionState !=
-            ConnectionState.done) {
-          return const SplashScreen();
-        }
-        return const App();
+        final showSplash = snapshot.connectionState !=
+            ConnectionState.done;
+
+        return MaterialApp(
+          title: 'Loop',
+          theme: AppTheme.light,
+          darkTheme: AppTheme.dark,
+          themeMode: themeProvider.themeMode,
+          debugShowCheckedModeBanner: false,
+          home: showSplash
+              ? const SplashScreen()
+              : const App(),
+          routes: {
+            AppRoutes.login: (context) => LoginScreen(),
+            AppRoutes.signup: (context) => SignupScreen(),
+            AppRoutes.home: (context) =>
+                const DesktopShell(),
+          },
+        );
       },
     );
   }
