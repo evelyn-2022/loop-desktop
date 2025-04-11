@@ -10,25 +10,13 @@ class AuthApiClient {
   final Dio dio;
 
   AuthApiClient({Dio? dioClient})
-      : dio = dioClient ?? Dio();
+      : dio = dioClient ??
+            Dio(BaseOptions(baseUrl: AppConfig.baseUrl));
 
   Future<ApiResponse<LoginResponse>> login(
       LoginRequest request) async {
-    final url = '${AppConfig.baseUrl}/auth/login';
-
     return handleDioRequest<LoginResponse>(
-      dio.post(url, data: request.toMap()),
-      (data) => LoginResponse.fromJson(
-          data as Map<String, dynamic>),
-      () => LoginResponse.empty(),
-    );
-  }
-
-  Future<ApiResponse<LoginResponse>> refreshToken() async {
-    final url = '${AppConfig.baseUrl}/auth/refresh';
-
-    return handleDioRequest<LoginResponse>(
-      dio.post(url),
+      dio.post('/auth/login', data: request.toMap()),
       (data) => LoginResponse.fromJson(
           data as Map<String, dynamic>),
       () => LoginResponse.empty(),
