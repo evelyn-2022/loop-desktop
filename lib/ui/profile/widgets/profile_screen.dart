@@ -4,7 +4,9 @@ import 'package:loop/ui/profile/view_models/profile_viewmodel.dart';
 import 'package:provider/provider.dart';
 
 class ProfileScreen extends StatefulWidget {
-  const ProfileScreen({super.key});
+  final bool shouldLoad;
+  const ProfileScreen(
+      {super.key, required this.shouldLoad});
 
   @override
   State<ProfileScreen> createState() =>
@@ -12,12 +14,19 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
+  bool _hasLoaded = false;
+
   @override
-  void initState() {
-    super.initState();
-    Future.microtask(() {
-      context.read<ProfileViewModel>().loadProfile();
-    });
+  void didUpdateWidget(covariant ProfileScreen oldWidget) {
+    super.didUpdateWidget(oldWidget);
+
+    if (widget.shouldLoad && !_hasLoaded) {
+      _hasLoaded = true;
+      Future.microtask(() {
+        if (!mounted) return;
+        context.read<ProfileViewModel>().loadProfile();
+      });
+    }
   }
 
   @override

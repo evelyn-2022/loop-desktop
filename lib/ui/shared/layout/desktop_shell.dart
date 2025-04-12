@@ -19,13 +19,16 @@ class DesktopShell extends StatefulWidget {
 class _DesktopShellState extends State<DesktopShell> {
   int _selectedIndex = 0;
 
-  final List<Widget> _screens = [
-    const HomeScreen(key: ValueKey('home')),
-    const SearchScreen(key: ValueKey('search')),
-    const LibraryScreen(key: ValueKey('library')),
-    const SettingsScreen(key: ValueKey('settings')),
-    const ProfileScreen(key: ValueKey('profile')),
-  ];
+  List<Widget> get _screens => [
+        const HomeScreen(key: ValueKey('home')),
+        const SearchScreen(key: ValueKey('search')),
+        const LibraryScreen(key: ValueKey('library')),
+        const SettingsScreen(key: ValueKey('settings')),
+        ProfileScreen(
+          key: ValueKey('profile'),
+          shouldLoad: _selectedIndex == 4,
+        ),
+      ];
 
   @override
   Widget build(BuildContext context) {

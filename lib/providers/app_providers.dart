@@ -25,18 +25,31 @@ class AppProviders extends StatelessWidget {
         Provider<AuthTokenManager>(
           create: (_) => AuthTokenManager(),
         ),
-        ProxyProvider<AuthTokenManager, Dio>(
-          update: (_, tokenManager, __) {
+        ChangeNotifierProvider<AuthState>(
+          create: (_) => AuthState(),
+        ),
+        ProxyProvider2<AuthTokenManager, AuthState, Dio>(
+          update: (_, tokenManager, authState, __) {
             final dio = Dio(
                 BaseOptions(baseUrl: AppConfig.baseUrl));
 
             final authDio = Dio(
                 BaseOptions(baseUrl: AppConfig.baseUrl));
 
+            authDio.interceptors.add(LogInterceptor(
+              requestBody: true,
+              responseBody: true,
+            ));
+            dio.interceptors.add(LogInterceptor(
+              requestBody: true,
+              responseBody: true,
+            ));
+
             dio.interceptors.add(
               DioInterceptor(
                 tokenManager: tokenManager,
                 authDio: authDio,
+                authState: authState,
               ),
             );
             return dio;
@@ -50,9 +63,6 @@ class AppProviders extends StatelessWidget {
             apiClient: context.read<AuthApiClient>(),
             tokenManager: context.read<AuthTokenManager>(),
           ),
-        ),
-        ChangeNotifierProvider<AuthState>(
-          create: (_) => AuthState(),
         ),
         ChangeNotifierProvider<LoginViewModel>(
           create: (context) => LoginViewModel(

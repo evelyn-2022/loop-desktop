@@ -4,7 +4,6 @@ import 'package:provider/provider.dart';
 import 'package:loop/routes/routes.dart';
 import 'package:loop/ui/shared/widgets/app_link.dart';
 import 'package:loop/providers/auth_state.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -19,82 +18,33 @@ class HomeScreen extends StatelessWidget {
         final username =
             authState.currentUser?.username ?? 'Guest';
 
-        // return Scaffold(
-        //   body: Center(
-        //     child: isLoggedIn
-        //         ? Text(
-        //             'Welcome, $username!',
-        //             style: textTheme.bodyMedium,
-        //           )
-        //         : Wrap(
-        //             alignment: WrapAlignment.center,
-        //             crossAxisAlignment:
-        //                 WrapCrossAlignment.center,
-        //             children: [
-        //               AppLink(
-        //                 text: 'Log in',
-        //                 onTap: () {
-        //                   Navigator.pushNamed(
-        //                       context, AppRoutes.login);
-        //                 },
-        //                 fontSize:
-        //                     textTheme.bodyMedium?.fontSize,
-        //               ),
-        //               Text(
-        //                 ' to create your own music space',
-        //                 style: textTheme.bodyMedium,
-        //               ),
-        //             ],
-        //           ),
-        //   ),
-        // );
         return Scaffold(
           body: Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                isLoggedIn
-                    ? Text(
-                        'Welcome, $username!',
-                        style: textTheme.bodyMedium,
-                      )
-                    : Wrap(
-                        alignment: WrapAlignment.center,
-                        crossAxisAlignment:
-                            WrapCrossAlignment.center,
-                        children: [
-                          AppLink(
-                            text: 'Log in',
-                            onTap: () {
-                              Navigator.pushNamed(
-                                  context, AppRoutes.login);
-                            },
-                            fontSize: textTheme
-                                .bodyMedium?.fontSize,
-                          ),
-                          Text(
-                            ' to create your own music space',
-                            style: textTheme.bodyMedium,
-                          ),
-                        ],
+            child: isLoggedIn
+                ? Text(
+                    'Welcome, $username!',
+                    style: textTheme.bodyMedium,
+                  )
+                : Wrap(
+                    alignment: WrapAlignment.center,
+                    crossAxisAlignment:
+                        WrapCrossAlignment.center,
+                    children: [
+                      AppLink(
+                        text: 'Log in',
+                        onTap: () {
+                          Navigator.pushNamed(
+                              context, AppRoutes.login);
+                        },
+                        fontSize:
+                            textTheme.bodyMedium?.fontSize,
                       ),
-                const SizedBox(height: 20),
-                TextButton(
-                  onPressed: () async {
-                    await SharedPreferences.getInstance()
-                        .then((prefs) =>
-                            prefs.remove('access_token'));
-                    ScaffoldMessenger.of(context)
-                        .showSnackBar(
-                      const SnackBar(
-                          content:
-                              Text('Access token removed')),
-                    );
-                  },
-                  child: const Text('Clear Access Token'),
-                ),
-              ],
-            ),
+                      Text(
+                        ' to create your own music space',
+                        style: textTheme.bodyMedium,
+                      ),
+                    ],
+                  ),
           ),
         );
       },

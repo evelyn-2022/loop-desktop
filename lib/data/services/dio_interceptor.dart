@@ -1,22 +1,31 @@
 import 'package:dio/dio.dart';
 import 'package:loop/data/services/auth_token_manager.dart';
+import 'package:loop/providers/auth_state.dart';
 
 class DioInterceptor extends Interceptor {
   final AuthTokenManager tokenManager;
   final Dio authDio;
+  final AuthState authState;
 
   DioInterceptor({
     required this.tokenManager,
     required this.authDio,
+    required this.authState,
   });
 
   @override
   Future<void> onRequest(RequestOptions options,
       RequestInterceptorHandler handler) async {
-    final token = await tokenManager.loadAccessToken();
-    if (token != null) {
-      options.headers['Authorization'] = 'Bearer $token';
+    final requiresAuth =
+        options.extra['requiresAuth'] == true;
+
+    if (requiresAuth) {
+      final token = await tokenManager.loadAccessToken();
+      if (token != null) {
+        options.headers['Authorization'] = 'Bearer $token';
+      }
     }
+
     handler.next(options);
   }
 
@@ -49,6 +58,8 @@ class DioInterceptor extends Interceptor {
 
         if (newAccessToken != null &&
             newRefreshToken != null) {
+          authState.updateToken(newAccessToken);
+
           await tokenManager.saveTokens(
             accessToken: newAccessToken,
             refreshToken: newRefreshToken,
