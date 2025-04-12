@@ -1,7 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:cookie_jar/cookie_jar.dart';
-import 'package:dio_cookie_manager/dio_cookie_manager.dart';
+
 import 'package:loop/config/app_config.dart';
 import 'package:loop/data/repositories/profile_repository.dart';
 import 'package:loop/data/services/auth_token_manager.dart';
@@ -33,10 +32,6 @@ class AppProviders extends StatelessWidget {
 
             final authDio = Dio(
                 BaseOptions(baseUrl: AppConfig.baseUrl));
-            authDio.options.extra['withCredentials'] = true;
-            final cookieJar = CookieJar();
-            authDio.interceptors
-                .add(CookieManager(cookieJar));
 
             dio.interceptors.add(
               DioInterceptor(

@@ -13,7 +13,7 @@ class DioInterceptor extends Interceptor {
   @override
   Future<void> onRequest(RequestOptions options,
       RequestInterceptorHandler handler) async {
-    final token = await tokenManager.loadToken();
+    final token = await tokenManager.loadAccessToken();
     if (token != null) {
       options.headers['Authorization'] = 'Bearer $token';
     }
@@ -23,49 +23,47 @@ class DioInterceptor extends Interceptor {
   @override
   Future<void> onError(DioException err,
       ErrorInterceptorHandler handler) async {
-    print('❌ Dio error: ${err.message}');
     if (err.response?.statusCode == 401) {
-      print('🔁 Token expired, attempting refresh...');
-
       try {
-        // Log the outgoing refresh request
-        print('📤 Sending /auth/refresh request...');
-        print(
-            'authDio options.extra: ${authDio.options.extra}');
-        print(
-            'authDio options.headers: ${authDio.options.headers}');
+        final refreshToken =
+            await tokenManager.loadRefreshToken();
+        if (refreshToken == null) {
+          await tokenManager.clearTokens();
+          return handler.next(err);
+        }
 
-        final response =
-            await authDio.post('/auth/refresh');
+        final response = await authDio.post(
+          '/auth/refresh',
+          data: {'refreshToken': refreshToken},
+          options: Options(
+            headers: {'Content-Type': 'application/json'},
+          ),
+        );
 
-        print(
-            '✅ Refresh response status: ${response.statusCode}');
-        print('✅ Refresh response data: ${response.data}');
+        print('Refresh token response: ${response.data}');
 
-        final newToken =
+        final newAccessToken =
             response.data['data']['accessToken'];
+        final newRefreshToken =
+            response.data['data']['refreshToken'];
 
-        if (newToken != null) {
-          await tokenManager.saveToken(newToken);
+        if (newAccessToken != null &&
+            newRefreshToken != null) {
+          await tokenManager.saveTokens(
+            accessToken: newAccessToken,
+            refreshToken: newRefreshToken,
+          );
 
           final requestOptions = err.requestOptions;
           requestOptions.headers['Authorization'] =
-              'Bearer $newToken';
-
-          print(
-              '🔁 Retrying original request with new token...');
+              'Bearer $newAccessToken';
 
           final retryResponse =
               await authDio.fetch(requestOptions);
           return handler.resolve(retryResponse);
-        } else {
-          print(
-              '⚠️ No accessToken found in refresh response');
         }
-      } catch (e, stack) {
-        print('❌ Refresh token request failed: $e');
-        print(stack);
-        await tokenManager.clearToken();
+      } catch (e) {
+        await tokenManager.clearTokens();
       }
     }
 

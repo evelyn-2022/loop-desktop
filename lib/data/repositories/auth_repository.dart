@@ -22,8 +22,9 @@ class AuthRepository {
     final response = await apiClient.login(loginRequest);
 
     if (response is ApiSuccess<LoginResponse>) {
-      await tokenManager
-          .saveToken(response.data!.accessToken);
+      await tokenManager.saveTokens(
+          accessToken: response.data!.accessToken,
+          refreshToken: response.data!.refreshToken);
     }
 
     return response;

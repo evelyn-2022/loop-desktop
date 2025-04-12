@@ -9,7 +9,7 @@ class AuthState extends ChangeNotifier {
 
   Future<void> loadInitialAuthState(
       AuthTokenManager tokenManager) async {
-    final token = await tokenManager.loadToken();
+    final token = await tokenManager.loadAccessToken();
 
     if (token != null && !JwtDecoder.isExpired(token)) {
       final payload = JwtDecoder.decode(token);
