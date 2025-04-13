@@ -40,7 +40,7 @@ class AppTextField extends StatefulWidget {
 class _AppTextFieldState extends State<AppTextField> {
   late bool _obscureText;
   late FocusNode _focusNode;
-  bool _hasFocus = false;
+
   bool _showError = false;
   late VoidCallback _controllerListener;
   late String _lastValue;
@@ -54,13 +54,8 @@ class _AppTextFieldState extends State<AppTextField> {
 
     _focusNode.addListener(() {
       setState(() {
-        _hasFocus = _focusNode.hasFocus;
-
         if (!_focusNode.hasFocus) {
           _showError = true;
-          WidgetsBinding.instance.addPostFrameCallback((_) {
-            setState(() {});
-          });
         }
       });
     });
@@ -68,7 +63,7 @@ class _AppTextFieldState extends State<AppTextField> {
     _controllerListener = () {
       final currentValue = widget.controller.text;
 
-      if (_hasFocus &&
+      if (_focusNode.hasFocus &&
           _showError &&
           currentValue != _lastValue) {
         setState(() {
@@ -147,7 +142,7 @@ class _AppTextFieldState extends State<AppTextField> {
             ),
             child: errorMessage != null
                 ? Text(
-                    errorMessage!,
+                    errorMessage,
                     style: TextStyle(
                       color: AppColors.red_200,
                       fontSize: 12,
@@ -170,7 +165,9 @@ class _AppTextFieldState extends State<AppTextField> {
       width: AppDimensions.iconSizeSm,
       height: AppDimensions.iconSizeSm,
       colorFilter: ColorFilter.mode(
-        _hasFocus ? activeIconColor : baseIconColor!,
+        _focusNode.hasFocus
+            ? activeIconColor
+            : baseIconColor!,
         BlendMode.srcIn,
       ),
     );
