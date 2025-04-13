@@ -14,6 +14,8 @@ class AppTextField extends StatefulWidget {
   final String? hiddenSvgAsset;
   final Key? fieldKey;
   final bool autofocus;
+  final FocusNode? focusNode;
+  final KeyEventResult Function(KeyEvent)? onKeyEvent;
 
   const AppTextField({
     super.key,
@@ -27,6 +29,8 @@ class AppTextField extends StatefulWidget {
     this.hiddenSvgAsset,
     this.fieldKey,
     this.autofocus = false,
+    this.focusNode,
+    this.onKeyEvent,
   });
 
   @override
@@ -93,7 +97,7 @@ class _AppTextFieldState extends State<AppTextField> {
             obscureText: _obscureText,
             keyboardType: widget.keyboardType,
             validator: (_) => null,
-            focusNode: _focusNode,
+            focusNode: widget.focusNode ?? _focusNode,
             style: Theme.of(context).textTheme.bodyMedium,
             autofocus: widget.autofocus,
             decoration: InputDecoration(
@@ -116,7 +120,6 @@ class _AppTextFieldState extends State<AppTextField> {
                 WidgetsBinding.instance
                     .addPostFrameCallback((_) {
                   setState(() {
-                    // Update error message when tapped
                     if (_showError) {
                       errorMessage = widget.validator
                           ?.call(widget.controller.text);
@@ -132,14 +135,14 @@ class _AppTextFieldState extends State<AppTextField> {
             },
           ),
         ),
-        // Separate container for error display with fixed height
         SizedBox(
-          height: 16, // Fixed height for error area
+          height: 16,
           child: Padding(
             padding: const EdgeInsets.only(
-                left: AppDimensions
-                    .textFieldPaddingHorizontal,
-                top: 2),
+              left:
+                  AppDimensions.textFieldPaddingHorizontal,
+              top: 2,
+            ),
             child: errorMessage != null
                 ? Text(
                     errorMessage!,

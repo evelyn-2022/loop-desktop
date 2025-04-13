@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:loop/theme/app_dimensions.dart';
 import 'package:loop/ui/shared/widgets/app_link.dart';
 import 'package:loop/ui/shared/widgets/app_snack_bar.dart';
@@ -26,9 +27,18 @@ class _LoginScreenState extends State<LoginScreen> {
       GlobalKey<FormFieldState<String>>();
   bool _isFormValid = false;
 
+  final FocusNode _emailFocus = FocusNode();
+  final FocusNode _passwordFocus = FocusNode();
+  final FocusNode _keyboardListenerFocus = FocusNode();
+
   @override
   void initState() {
     super.initState();
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _emailFocus.requestFocus();
+    });
+
     _emailController.addListener(() {
       _clearErrorOnInput();
       _updateFormValidState();
@@ -90,6 +100,7 @@ class _LoginScreenState extends State<LoginScreen> {
   void dispose() {
     _emailController.dispose();
     _passwordController.dispose();
+    _keyboardListenerFocus.dispose();
     super.dispose();
   }
 
@@ -99,88 +110,117 @@ class _LoginScreenState extends State<LoginScreen> {
     final theme = Theme.of(context);
 
     return Scaffold(
-      body: Center(
-        child: ConstrainedBox(
-          constraints: const BoxConstraints(
-            maxWidth: AppDimensions.formWidth,
-          ),
-          child: Padding(
-            padding:
-                const EdgeInsets.all(AppDimensions.gapMd),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Text(
-                  'Welcome back',
-                  style: theme.textTheme.displayLarge,
-                  textAlign: TextAlign.center,
-                ),
-                const SizedBox(height: AppDimensions.gapMd),
-                Form(
-                  key: _formKey,
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: <Widget>[
-                      AppTextField(
-                        fieldKey: _emailFieldKey,
-                        controller: _emailController,
-                        label: 'Email',
-                        hint: 'Enter your email',
-                        keyboardType:
-                            TextInputType.emailAddress,
-                        validator: Validators.validateEmail,
-                        autofocus: true,
-                      ),
-                      const SizedBox(
-                          height: AppDimensions.gapSm),
-                      AppTextField(
-                        fieldKey: _passwordFieldKey,
-                        controller: _passwordController,
-                        label: 'Password',
-                        hint: 'Enter your password',
-                        obscure: true,
-                        keyboardType:
-                            TextInputType.visiblePassword,
-                        validator:
-                            Validators.validatePassword,
-                        visibleSvgAsset:
-                            'assets/icons/eye_open.svg',
-                        hiddenSvgAsset:
-                            'assets/icons/eye_hidden.svg',
-                      ),
-                      const SizedBox(
-                          height: AppDimensions.gapSm),
-                      AppButton(
-                        label: 'Log in',
-                        onPressed: _login,
-                        isLoading: viewModel.isLoading,
-                      ),
-                    ],
+      body: Focus(
+        focusNode: _keyboardListenerFocus,
+        autofocus: true,
+        onKeyEvent: (FocusNode node, KeyEvent event) {
+          if (event is KeyDownEvent) {
+            if (event.logicalKey ==
+                LogicalKeyboardKey.arrowDown) {
+              _passwordFocus.requestFocus();
+              return KeyEventResult.handled;
+            } else if (event.logicalKey ==
+                LogicalKeyboardKey.arrowUp) {
+              _emailFocus.requestFocus();
+              return KeyEventResult.handled;
+            } else if (event.logicalKey ==
+                    LogicalKeyboardKey.enter &&
+                _passwordFocus.hasFocus) {
+              _login();
+              return KeyEventResult.handled;
+            }
+          }
+          return KeyEventResult.ignored;
+        },
+        child: Center(
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(
+              maxWidth: AppDimensions.formWidth,
+            ),
+            child: Padding(
+              padding:
+                  const EdgeInsets.all(AppDimensions.gapMd),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment:
+                    CrossAxisAlignment.center,
+                children: [
+                  Text(
+                    'Welcome back',
+                    style: theme.textTheme.displayLarge,
+                    textAlign: TextAlign.center,
                   ),
-                ),
-                const SizedBox(height: AppDimensions.gapMd),
-                Row(
-                  mainAxisAlignment:
-                      MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      "New here? ",
-                      style: theme.textTheme.bodyMedium,
+                  const SizedBox(
+                      height: AppDimensions.gapMd),
+                  Form(
+                    key: _formKey,
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: <Widget>[
+                        AppTextField(
+                          fieldKey: _emailFieldKey,
+                          focusNode: _emailFocus,
+                          controller: _emailController,
+                          label: 'Email',
+                          hint: 'Enter your email',
+                          keyboardType:
+                              TextInputType.emailAddress,
+                          validator:
+                              Validators.validateEmail,
+                        ),
+                        const SizedBox(
+                            height: AppDimensions.gapSm),
+                        AppTextField(
+                          fieldKey: _passwordFieldKey,
+                          focusNode: _passwordFocus,
+                          controller: _passwordController,
+                          label: 'Password',
+                          hint: 'Enter your password',
+                          obscure: true,
+                          keyboardType:
+                              TextInputType.visiblePassword,
+                          validator:
+                              Validators.validatePassword,
+                          visibleSvgAsset:
+                              'assets/icons/eye_open.svg',
+                          hiddenSvgAsset:
+                              'assets/icons/eye_hidden.svg',
+                        ),
+                        const SizedBox(
+                            height: AppDimensions.gapSm),
+                        AppButton(
+                          label: 'Log in',
+                          onPressed: _login,
+                          isLoading: viewModel.isLoading,
+                        ),
+                      ],
                     ),
-                    GestureDetector(
+                  ),
+                  const SizedBox(
+                      height: AppDimensions.gapMd),
+                  Row(
+                    mainAxisAlignment:
+                        MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        "New here? ",
+                        style: theme.textTheme.bodyMedium,
+                      ),
+                      GestureDetector(
                         onTap: () => Navigator.pushNamed(
                             context, AppRoutes.signup),
                         child: AppLink(
                           text: "Create an account",
                           onTap: () => Navigator.pushNamed(
                               context, AppRoutes.signup),
-                        )),
-                  ],
-                ),
-                const SizedBox(height: AppDimensions.gapMd),
-                GestureDetector(
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(
+                      height: AppDimensions.gapMd),
+                  GestureDetector(
                     onTap: () => Navigator.pushNamed(
                         context, AppRoutes.home),
                     child: AppLink(
@@ -191,8 +231,10 @@ class _LoginScreenState extends State<LoginScreen> {
                       fontSize: 14,
                       onTap: () => Navigator.pushNamed(
                           context, AppRoutes.home),
-                    )),
-              ],
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
         ),
