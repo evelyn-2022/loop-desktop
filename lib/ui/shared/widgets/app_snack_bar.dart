@@ -4,6 +4,8 @@ import 'package:loop/theme/app_colors.dart';
 enum SnackBarType { success, error }
 
 class AppSnackBar {
+  static OverlayEntry? _currentSnackbar;
+
   static void show(
     BuildContext context, {
     required String title,
@@ -23,8 +25,9 @@ class AppSnackBar {
 
     final iconColor = borderColor;
 
-    // Clear any existing snackbars
-    ScaffoldMessenger.of(context).clearSnackBars();
+    // Remove any existing snackbar overlay before inserting a new one
+    _currentSnackbar?.remove();
+    _currentSnackbar = null;
 
     final overlay = Overlay.of(context);
     final entry = OverlayEntry(
@@ -76,7 +79,7 @@ class AppSnackBar {
                                 .labelMedium,
                           ),
                           if (body != null &&
-                              body != '') ...[
+                              body.isNotEmpty) ...[
                             const SizedBox(height: 4),
                             Text(
                               body,
@@ -98,8 +101,12 @@ class AppSnackBar {
     );
 
     overlay.insert(entry);
+    _currentSnackbar = entry;
+
+    // Automatically remove the snackbar after a delay
     Future.delayed(const Duration(seconds: 3), () {
-      entry.remove();
+      _currentSnackbar?.remove();
+      _currentSnackbar = null;
     });
   }
 }

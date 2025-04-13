@@ -87,7 +87,6 @@ class _LoginScreenState extends State<LoginScreen> {
       type: success
           ? SnackBarType.success
           : SnackBarType.error,
-      horizontalOffset: AppDimensions.navBarWidth,
     );
 
     if (success) {
