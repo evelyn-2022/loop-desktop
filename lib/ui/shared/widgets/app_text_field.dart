@@ -42,33 +42,49 @@ class _AppTextFieldState extends State<AppTextField> {
   late FocusNode _focusNode;
   bool _hasFocus = false;
   bool _showError = false;
+  late VoidCallback _controllerListener;
+  late String _lastValue;
 
   @override
   void initState() {
     super.initState();
     _obscureText = widget.obscure;
-
     _focusNode = widget.focusNode ?? FocusNode();
+    _lastValue = widget.controller.text;
 
     _focusNode.addListener(() {
       setState(() {
         _hasFocus = _focusNode.hasFocus;
 
-        if (_focusNode.hasFocus) {
-          _showError = false;
-        } else {
+        if (!_focusNode.hasFocus) {
           _showError = true;
-
           WidgetsBinding.instance.addPostFrameCallback((_) {
             setState(() {});
           });
         }
       });
     });
+
+    _controllerListener = () {
+      final currentValue = widget.controller.text;
+
+      if (_hasFocus &&
+          _showError &&
+          currentValue != _lastValue) {
+        setState(() {
+          _showError = false;
+        });
+      }
+
+      _lastValue = currentValue;
+    };
+
+    widget.controller.addListener(_controllerListener);
   }
 
   @override
   void dispose() {
+    widget.controller.removeListener(_controllerListener);
     _focusNode.dispose();
     super.dispose();
   }
@@ -119,25 +135,6 @@ class _AppTextFieldState extends State<AppTextField> {
                     )
                   : null,
             ),
-            onTap: () {
-              if (widget.fieldKey
-                  is GlobalKey<FormFieldState<String>>) {
-                WidgetsBinding.instance
-                    .addPostFrameCallback((_) {
-                  setState(() {
-                    if (_showError) {
-                      errorMessage = widget.validator
-                          ?.call(widget.controller.text);
-                    }
-                  });
-
-                  final currentPosition =
-                      widget.controller.selection;
-                  widget.controller.selection =
-                      currentPosition;
-                });
-              }
-            },
           ),
         ),
         SizedBox(

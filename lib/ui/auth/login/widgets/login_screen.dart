@@ -110,9 +110,6 @@ class _LoginScreenState extends State<LoginScreen> {
     });
 
     if (!_isFormValid) {
-      // Force the AppTextField error displays to update by simulating a focus change
-      // This works because your AppTextField shows errors when focus is lost
-
       // Save current focus
       final hasFocus = _passwordFocus.hasFocus;
 
