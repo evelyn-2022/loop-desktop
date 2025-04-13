@@ -47,7 +47,8 @@ class _AppTextFieldState extends State<AppTextField> {
   void initState() {
     super.initState();
     _obscureText = widget.obscure;
-    _focusNode = FocusNode();
+
+    _focusNode = widget.focusNode ?? FocusNode();
 
     _focusNode.addListener(() {
       setState(() {
@@ -57,6 +58,10 @@ class _AppTextFieldState extends State<AppTextField> {
           _showError = false;
         } else {
           _showError = true;
+
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            setState(() {});
+          });
         }
       });
     });
