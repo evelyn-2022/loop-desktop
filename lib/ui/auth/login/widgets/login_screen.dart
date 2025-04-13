@@ -124,9 +124,13 @@ class _LoginScreenState extends State<LoginScreen> {
               _emailFocus.requestFocus();
               return KeyEventResult.handled;
             } else if (event.logicalKey ==
-                    LogicalKeyboardKey.enter &&
-                _passwordFocus.hasFocus) {
-              _login();
+                LogicalKeyboardKey.enter) {
+              if (_emailFocus.hasFocus) {
+                _passwordFocus.requestFocus();
+              } else if (_passwordFocus.hasFocus &&
+                  _isFormValid) {
+                _login();
+              }
               return KeyEventResult.handled;
             }
           }
