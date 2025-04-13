@@ -13,6 +13,7 @@ class AppTextField extends StatefulWidget {
   final String? visibleSvgAsset;
   final String? hiddenSvgAsset;
   final Key? fieldKey;
+  final bool autofocus;
 
   const AppTextField({
     super.key,
@@ -25,6 +26,7 @@ class AppTextField extends StatefulWidget {
     this.visibleSvgAsset,
     this.hiddenSvgAsset,
     this.fieldKey,
+    this.autofocus = false,
   });
 
   @override
@@ -93,6 +95,7 @@ class _AppTextFieldState extends State<AppTextField> {
             validator: (_) => null,
             focusNode: _focusNode,
             style: Theme.of(context).textTheme.bodyMedium,
+            autofocus: widget.autofocus,
             decoration: InputDecoration(
               labelText: widget.label,
               hintText: widget.hint,

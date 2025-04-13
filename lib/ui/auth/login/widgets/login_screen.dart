@@ -131,6 +131,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         keyboardType:
                             TextInputType.emailAddress,
                         validator: Validators.validateEmail,
+                        autofocus: true,
                       ),
                       const SizedBox(
                           height: AppDimensions.gapSm),
