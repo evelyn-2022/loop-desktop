@@ -96,6 +96,38 @@ class _LoginScreenState extends State<LoginScreen> {
     }
   }
 
+  void _validateAndShowErrors() {
+    // First check if the form is valid
+    final emailValid =
+        Validators.validateEmail(_emailController.text) ==
+            null;
+    final passwordValid = Validators.validatePassword(
+            _passwordController.text) ==
+        null;
+
+    setState(() {
+      _isFormValid = emailValid && passwordValid;
+    });
+
+    if (!_isFormValid) {
+      // Force the AppTextField error displays to update by simulating a focus change
+      // This works because your AppTextField shows errors when focus is lost
+
+      // Save current focus
+      final hasFocus = _passwordFocus.hasFocus;
+
+      // Remove focus temporarily
+      _keyboardListenerFocus.requestFocus();
+
+      // Schedule to restore focus after the frame
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (hasFocus) {
+          _passwordFocus.requestFocus();
+        }
+      });
+    }
+  }
+
   @override
   void dispose() {
     _emailController.dispose();
@@ -127,9 +159,12 @@ class _LoginScreenState extends State<LoginScreen> {
                 LogicalKeyboardKey.enter) {
               if (_emailFocus.hasFocus) {
                 _passwordFocus.requestFocus();
-              } else if (_passwordFocus.hasFocus &&
-                  _isFormValid) {
-                _login();
+              } else if (_passwordFocus.hasFocus) {
+                _validateAndShowErrors();
+
+                if (_isFormValid) {
+                  _login();
+                }
               }
               return KeyEventResult.handled;
             }
