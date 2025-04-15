@@ -53,7 +53,7 @@ class _AppInitializerState extends State<AppInitializer> {
               : const App(),
           routes: {
             AppRoutes.login: (context) => LoginScreen(),
-            AppRoutes.signup: (context) => SignupScreen(),
+            AppRoutes.signup: (context) => SignUpScreen(),
             AppRoutes.home: (context) =>
                 const DesktopShell(),
           },
