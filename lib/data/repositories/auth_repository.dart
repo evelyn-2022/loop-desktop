@@ -29,4 +29,21 @@ class AuthRepository {
 
     return response;
   }
+
+  Future<ApiResponse<void>> logout() async {
+    final refreshToken =
+        await tokenManager.loadRefreshToken();
+    if (refreshToken == null) {
+      return ApiError<void>(
+          code: 401,
+          message: 'No refresh token found',
+          status: 'ERROR');
+    }
+
+    final response = await apiClient.logout(refreshToken);
+    if (response is ApiSuccess) {
+      await tokenManager.clearTokens();
+    }
+    return response;
+  }
 }

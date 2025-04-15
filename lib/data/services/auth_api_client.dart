@@ -22,4 +22,18 @@ class AuthApiClient {
       () => LoginResponse.empty(),
     );
   }
+
+  Future<ApiResponse<void>> logout(
+      String refreshToken) async {
+    return handleDioRequest<void>(
+      dio.post(
+        '/auth/logout',
+        options: Options(headers: {
+          'Authorization': 'Bearer $refreshToken'
+        }),
+      ),
+      (_) {},
+      () {},
+    );
+  }
 }

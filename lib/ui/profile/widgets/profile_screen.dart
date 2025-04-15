@@ -1,7 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:loop/ui/profile/view_models/profile_viewmodel.dart';
-
 import 'package:provider/provider.dart';
+
+import 'package:loop/data/repositories/auth_repository.dart';
+import 'package:loop/data/services/models/api_response.dart';
+import 'package:loop/providers/auth_state.dart';
+import 'package:loop/ui/profile/view_models/profile_viewmodel.dart';
+import 'package:loop/ui/shared/widgets/app_button.dart';
+import 'package:loop/ui/shared/widgets/app_snack_bar.dart';
 
 class ProfileScreen extends StatefulWidget {
   final bool shouldLoad;
@@ -66,6 +71,39 @@ class _ProfileScreenState extends State<ProfileScreen> {
             const SizedBox(height: 8),
             Text('Email: ${user.email}',
                 style: textTheme.bodyMedium),
+            const SizedBox(height: 8),
+            AppButton(
+              label: "Logout",
+              onPressed: () async {
+                final authRepository =
+                    context.read<AuthRepository>();
+                final authState = context.read<AuthState>();
+
+                final result =
+                    await authRepository.logout();
+
+                if (!context.mounted) return;
+
+                if (result is ApiSuccess) {
+                  authState.clear();
+
+                  Navigator.pushReplacementNamed(
+                      context, '/home');
+                  AppSnackBar.show(
+                    context,
+                    title: "Logged out",
+                    type: SnackBarType.success,
+                  );
+                } else if (result is ApiError) {
+                  AppSnackBar.show(
+                    context,
+                    title: "Logout failed",
+                    body: result.message,
+                    type: SnackBarType.error,
+                  );
+                }
+              },
+            ),
           ],
         ],
       ),
