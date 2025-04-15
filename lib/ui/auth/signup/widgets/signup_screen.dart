@@ -15,6 +15,14 @@ class SignUpScreen extends StatefulWidget {
 
 class _SignUpScreenState extends State<SignUpScreen> {
   final _formKey = GlobalKey<FormState>();
+  final _emailFieldKey =
+      GlobalKey<FormFieldState<String>>();
+  final _passwordFieldKey =
+      GlobalKey<FormFieldState<String>>();
+  final _confirmFieldKey =
+      GlobalKey<FormFieldState<String>>();
+  final _usernameFieldKey =
+      GlobalKey<FormFieldState<String>>();
 
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
@@ -29,6 +37,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
   final _keyboardListenerFocus = FocusNode();
 
   int _currentStep = 0;
+  bool _submitAttempted = false;
 
   @override
   void initState() {
@@ -40,6 +49,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
   void _validateAndContinue() {
     bool isValid = false;
+
+    setState(() {
+      _submitAttempted = true;
+    });
 
     switch (_currentStep) {
       case 0:
@@ -101,15 +114,21 @@ class _SignUpScreenState extends State<SignUpScreen> {
     switch (_currentStep) {
       case 0:
         return AppTextField(
+          key: ValueKey('step-$_currentStep'),
+          fieldKey: _emailFieldKey,
           controller: _emailController,
           focusNode: _emailFocus,
           label: 'Email',
           hint: 'Enter your email',
           keyboardType: TextInputType.emailAddress,
           validator: Validators.validateEmail,
+          submitAttempted: _submitAttempted,
         );
       case 1:
         return AppTextField(
+          key: ValueKey('step-$_currentStep'),
+          fieldKey: _passwordFieldKey,
+          focusNode: _passwordFocus,
           controller: _passwordController,
           label: 'Password',
           hint: 'Create a password',
@@ -118,9 +137,13 @@ class _SignUpScreenState extends State<SignUpScreen> {
           keyboardType: TextInputType.visiblePassword,
           visibleSvgAsset: 'assets/icons/eye_open.svg',
           hiddenSvgAsset: 'assets/icons/eye_hidden.svg',
+          submitAttempted: _submitAttempted,
         );
       case 2:
         return AppTextField(
+          key: ValueKey('step-$_currentStep'),
+          fieldKey: _confirmFieldKey,
+          focusNode: _confirmFocus,
           controller: _confirmController,
           label: 'Confirm Password',
           hint: 'Re-enter your password',
@@ -129,9 +152,16 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   _passwordController.text
               ? "Passwords do not match"
               : null,
+          keyboardType: TextInputType.visiblePassword,
+          visibleSvgAsset: 'assets/icons/eye_open.svg',
+          hiddenSvgAsset: 'assets/icons/eye_hidden.svg',
+          submitAttempted: _submitAttempted,
         );
       case 3:
         return AppTextField(
+          key: ValueKey('step-$_currentStep'),
+          fieldKey: _usernameFieldKey,
+          focusNode: _usernameFocus,
           controller: _usernameController,
           label: 'Username',
           hint: 'Choose a username',
@@ -139,6 +169,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
               val == null || val.trim().isEmpty
                   ? "Username is required"
                   : null,
+          keyboardType: TextInputType.text,
+          submitAttempted: _submitAttempted,
         );
       default:
         return const SizedBox.shrink();
