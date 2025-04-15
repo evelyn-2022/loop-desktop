@@ -15,57 +15,142 @@ class SignUpScreen extends StatefulWidget {
 
 class _SignUpScreenState extends State<SignUpScreen> {
   final _formKey = GlobalKey<FormState>();
-  final _emailFocus = FocusNode();
+
   final _emailController = TextEditingController();
+  final _passwordController = TextEditingController();
+  final _confirmController = TextEditingController();
+  final _usernameController = TextEditingController();
+
+  final _emailFocus = FocusNode();
+  final _passwordFocus = FocusNode();
+  final _confirmFocus = FocusNode();
+  final _usernameFocus = FocusNode();
+
   final _keyboardListenerFocus = FocusNode();
 
-  bool _isFormValid = false;
+  int _currentStep = 0;
 
   @override
   void initState() {
     super.initState();
-
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _emailFocus.requestFocus();
     });
   }
 
-  void _validateAndShowErrors() {
-    final error =
-        Validators.validateEmail(_emailController.text) ==
+  void _validateAndContinue() {
+    bool isValid = false;
+
+    switch (_currentStep) {
+      case 0:
+        isValid = Validators.validateEmail(
+                _emailController.text) ==
             null;
+        break;
+      case 1:
+        isValid = Validators.validatePassword(
+                _passwordController.text) ==
+            null;
+        break;
+      case 2:
+        isValid = _confirmController.text ==
+            _passwordController.text;
+        break;
+      case 3:
+        isValid =
+            _usernameController.text.trim().isNotEmpty;
+        break;
+    }
 
-    setState(() {
-      _isFormValid = error;
-    });
-
-    if (!_isFormValid) {
-      // Save current focus
-      final hasFocus = _emailFocus.hasFocus;
-
-      // Remove focus temporarily
+    if (!isValid) {
       _keyboardListenerFocus.requestFocus();
+      return;
+    }
 
-      // Schedule to restore focus after the frame
+    if (_currentStep < 3) {
+      setState(() => _currentStep++);
       WidgetsBinding.instance.addPostFrameCallback((_) {
-        if (hasFocus) {
-          _emailFocus.requestFocus();
+        switch (_currentStep) {
+          case 0:
+            _emailFocus.requestFocus();
+            break;
+          case 1:
+            _passwordFocus.requestFocus();
+            break;
+          case 2:
+            _confirmFocus.requestFocus();
+            break;
+          case 3:
+            _usernameFocus.requestFocus();
+            break;
         }
       });
+    } else {
+      _submit();
     }
   }
 
-  void _goToNextStep() {
-    _validateAndShowErrors();
-    if (_isFormValid) {
-      // TODO: Go to next step (e.g., setState to switch UI or navigate)
-      print("Email: ${_emailController.text}");
+  void _submit() {
+    print("✅ Sign Up Info:");
+    print("Email: ${_emailController.text}");
+    print("Password: ${_passwordController.text}");
+    print("Username: ${_usernameController.text}");
+  }
+
+  Widget _buildStepContent(BuildContext context) {
+    switch (_currentStep) {
+      case 0:
+        return AppTextField(
+          controller: _emailController,
+          focusNode: _emailFocus,
+          label: 'Email',
+          hint: 'Enter your email',
+          keyboardType: TextInputType.emailAddress,
+          validator: Validators.validateEmail,
+        );
+      case 1:
+        return AppTextField(
+          controller: _passwordController,
+          label: 'Password',
+          hint: 'Create a password',
+          obscure: true,
+          validator: Validators.validatePassword,
+          keyboardType: TextInputType.visiblePassword,
+          visibleSvgAsset: 'assets/icons/eye_open.svg',
+          hiddenSvgAsset: 'assets/icons/eye_hidden.svg',
+        );
+      case 2:
+        return AppTextField(
+          controller: _confirmController,
+          label: 'Confirm Password',
+          hint: 'Re-enter your password',
+          obscure: true,
+          validator: (_) => _confirmController.text !=
+                  _passwordController.text
+              ? "Passwords do not match"
+              : null,
+        );
+      case 3:
+        return AppTextField(
+          controller: _usernameController,
+          label: 'Username',
+          hint: 'Choose a username',
+          validator: (val) =>
+              val == null || val.trim().isEmpty
+                  ? "Username is required"
+                  : null,
+        );
+      default:
+        return const SizedBox.shrink();
     }
   }
 
   @override
   void dispose() {
     _emailController.dispose();
+    _passwordController.dispose();
+    _confirmController.dispose();
+    _usernameController.dispose();
     _emailFocus.dispose();
     _keyboardListenerFocus.dispose();
     super.dispose();
@@ -83,7 +168,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
           if (event is KeyDownEvent &&
               event.logicalKey ==
                   LogicalKeyboardKey.enter) {
-            _goToNextStep();
+            _validateAndContinue();
             return KeyEventResult.handled;
           }
           return KeyEventResult.ignored;
@@ -108,21 +193,15 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       height: AppDimensions.gapMd),
                   Form(
                     key: _formKey,
-                    child: AppTextField(
-                      focusNode: _emailFocus,
-                      controller: _emailController,
-                      label: 'Email',
-                      hint: 'Enter your email',
-                      keyboardType:
-                          TextInputType.emailAddress,
-                      validator: Validators.validateEmail,
-                    ),
+                    child: _buildStepContent(context),
                   ),
                   const SizedBox(
                       height: AppDimensions.gapMd),
                   AppButton(
-                    label: 'Next',
-                    onPressed: _goToNextStep,
+                    label: _currentStep < 3
+                        ? 'Next'
+                        : 'Sign Up',
+                    onPressed: _validateAndContinue,
                   ),
                   const SizedBox(
                       height: AppDimensions.gapMd),

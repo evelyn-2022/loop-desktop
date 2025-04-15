@@ -16,6 +16,7 @@ class AppTextField extends StatefulWidget {
   final bool autofocus;
   final FocusNode? focusNode;
   final KeyEventResult Function(KeyEvent)? onKeyEvent;
+  final bool submitAttempted;
 
   const AppTextField({
     super.key,
@@ -31,6 +32,7 @@ class AppTextField extends StatefulWidget {
     this.autofocus = false,
     this.focusNode,
     this.onKeyEvent,
+    this.submitAttempted = false,
   });
 
   @override
@@ -42,6 +44,7 @@ class _AppTextFieldState extends State<AppTextField> {
   late FocusNode _focusNode;
 
   bool _showError = false;
+  bool _wasTouched = false;
   late VoidCallback _controllerListener;
   late String _lastValue;
 
@@ -53,15 +56,23 @@ class _AppTextFieldState extends State<AppTextField> {
     _lastValue = widget.controller.text;
 
     _focusNode.addListener(() {
-      setState(() {
-        if (!_focusNode.hasFocus) {
+      if (!_focusNode.hasFocus &&
+          (_wasTouched || widget.submitAttempted)) {
+        setState(() {
           _showError = true;
-        }
-      });
+        });
+      }
     });
 
     _controllerListener = () {
       final currentValue = widget.controller.text;
+
+      // Mark as touched if user edits
+      if (!_wasTouched &&
+          _focusNode.hasFocus &&
+          currentValue != _lastValue) {
+        _wasTouched = true;
+      }
 
       if (_focusNode.hasFocus &&
           _showError &&
@@ -82,6 +93,22 @@ class _AppTextFieldState extends State<AppTextField> {
     widget.controller.removeListener(_controllerListener);
     _focusNode.dispose();
     super.dispose();
+  }
+
+  @override
+  void didUpdateWidget(covariant AppTextField oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (_focusNode.hasFocus) {
+      _showError = false;
+    } else if (widget.submitAttempted && !_showError) {
+      final error =
+          widget.validator?.call(widget.controller.text);
+      if (error != null) {
+        setState(() {
+          _showError = true;
+        });
+      }
+    }
   }
 
   void _toggleVisibility() {

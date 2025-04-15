@@ -26,6 +26,7 @@ class _LoginScreenState extends State<LoginScreen> {
   final _passwordFieldKey =
       GlobalKey<FormFieldState<String>>();
   bool _isFormValid = false;
+  bool _submitAttempted = false;
 
   final FocusNode _emailFocus = FocusNode();
   final FocusNode _passwordFocus = FocusNode();
@@ -71,6 +72,8 @@ class _LoginScreenState extends State<LoginScreen> {
   void _login() async {
     final viewModel =
         Provider.of<LoginViewModel>(context, listen: false);
+    _submitAttempted = true;
+    _validateAndShowErrors();
 
     if (!_isFormValid || viewModel.isLoading) {
       return;
@@ -156,11 +159,7 @@ class _LoginScreenState extends State<LoginScreen> {
               if (_emailFocus.hasFocus) {
                 _passwordFocus.requestFocus();
               } else if (_passwordFocus.hasFocus) {
-                _validateAndShowErrors();
-
-                if (_isFormValid) {
-                  _login();
-                }
+                _login();
               }
               return KeyEventResult.handled;
             }
@@ -203,6 +202,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               TextInputType.emailAddress,
                           validator:
                               Validators.validateEmail,
+                          submitAttempted: _submitAttempted,
                         ),
                         const SizedBox(
                             height: AppDimensions.gapSm),
@@ -221,6 +221,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               'assets/icons/eye_open.svg',
                           hiddenSvgAsset:
                               'assets/icons/eye_hidden.svg',
+                          submitAttempted: _submitAttempted,
                         ),
                         const SizedBox(
                             height: AppDimensions.gapSm),
@@ -242,31 +243,23 @@ class _LoginScreenState extends State<LoginScreen> {
                         "New here? ",
                         style: theme.textTheme.bodyMedium,
                       ),
-                      GestureDetector(
+                      AppLink(
+                        text: "Create an account",
                         onTap: () => Navigator.pushNamed(
                             context, AppRoutes.signup),
-                        child: AppLink(
-                          text: "Create an account",
-                          onTap: () => Navigator.pushNamed(
-                              context, AppRoutes.signup),
-                        ),
                       ),
                     ],
                   ),
                   const SizedBox(
                       height: AppDimensions.gapMd),
-                  GestureDetector(
+                  AppLink(
+                    text: "Continue as guest",
+                    color: Theme.of(context)
+                        .colorScheme
+                        .secondary,
+                    fontSize: 14,
                     onTap: () => Navigator.pushNamed(
                         context, AppRoutes.home),
-                    child: AppLink(
-                      text: "Continue as guest",
-                      color: Theme.of(context)
-                          .colorScheme
-                          .secondary,
-                      fontSize: 14,
-                      onTap: () => Navigator.pushNamed(
-                          context, AppRoutes.home),
-                    ),
                   ),
                 ],
               ),
