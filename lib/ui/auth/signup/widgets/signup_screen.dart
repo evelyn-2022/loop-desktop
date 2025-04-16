@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:loop/theme/app_dimensions.dart';
+import 'package:loop/ui/auth/signup/widgets/progress_bar.dart';
 import 'package:loop/ui/shared/widgets/app_button.dart';
 import 'package:loop/ui/shared/widgets/app_link.dart';
 import 'package:loop/ui/shared/widgets/app_text_field.dart';
@@ -38,6 +39,13 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
   int _currentStep = 0;
   bool _submitAttempted = false;
+
+  final List<String> _stepInstructions = [
+    "Enter your email",
+    "Create a password",
+    "Confirm your password",
+    "Choose a username",
+  ];
 
   @override
   void initState() {
@@ -103,11 +111,64 @@ class _SignUpScreenState extends State<SignUpScreen> {
     }
   }
 
+  @override
+  void dispose() {
+    _emailController.dispose();
+    _passwordController.dispose();
+    _confirmController.dispose();
+    _usernameController.dispose();
+    _emailFocus.dispose();
+    _passwordFocus.dispose();
+    _confirmFocus.dispose();
+    _usernameFocus.dispose();
+    _keyboardListenerFocus.dispose();
+    super.dispose();
+  }
+
   void _submit() {
     print("✅ Sign Up Info:");
     print("Email: ${_emailController.text}");
     print("Password: ${_passwordController.text}");
     print("Username: ${_usernameController.text}");
+  }
+
+  Widget _buildTopBar() {
+    final theme = Theme.of(context);
+
+    return Row(
+      children: [
+        IconButton(
+          icon: const Icon(Icons.chevron_left),
+          onPressed: () {
+            setState(() {
+              _currentStep--;
+              _submitAttempted = false;
+            });
+            WidgetsBinding.instance
+                .addPostFrameCallback((_) {
+              switch (_currentStep) {
+                case 0:
+                  _emailFocus.requestFocus();
+                  break;
+                case 1:
+                  _passwordFocus.requestFocus();
+                  break;
+                case 2:
+                  _confirmFocus.requestFocus();
+                  break;
+                case 3:
+                  _usernameFocus.requestFocus();
+                  break;
+              }
+            });
+          },
+        ),
+        Text(
+          _stepInstructions[_currentStep],
+          style: theme.textTheme.titleMedium,
+        ),
+      ],
+    );
   }
 
   Widget _buildStepContent(BuildContext context) {
@@ -178,17 +239,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
   }
 
   @override
-  void dispose() {
-    _emailController.dispose();
-    _passwordController.dispose();
-    _confirmController.dispose();
-    _usernameController.dispose();
-    _emailFocus.dispose();
-    _keyboardListenerFocus.dispose();
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
@@ -223,6 +273,15 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   ),
                   const SizedBox(
                       height: AppDimensions.gapMd),
+                  ProgressBar(
+                    currentStep: _currentStep,
+                    totalSteps: 4,
+                  ),
+                  const SizedBox(
+                      height: AppDimensions.gapSm),
+                  _buildTopBar(),
+                  const SizedBox(
+                      height: AppDimensions.gapMd),
                   Form(
                     key: _formKey,
                     child: _buildStepContent(context),
@@ -237,30 +296,32 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   ),
                   const SizedBox(
                       height: AppDimensions.gapMd),
-                  Row(
-                    mainAxisAlignment:
-                        MainAxisAlignment.center,
-                    children: [
-                      Text("Already have an account? ",
-                          style:
-                              theme.textTheme.bodyMedium),
-                      AppLink(
-                        text: "Log in",
-                        onTap: () => Navigator.pushNamed(
-                            context, '/login'),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(
-                      height: AppDimensions.gapMd),
-                  AppLink(
-                    text: "Continue as guest",
-                    fontSize: 14,
-                    color: theme.colorScheme.secondary,
-                    onTap: () =>
-                        Navigator.pushReplacementNamed(
-                            context, '/home'),
-                  ),
+                  if (_currentStep == 0) ...[
+                    Row(
+                      mainAxisAlignment:
+                          MainAxisAlignment.center,
+                      children: [
+                        Text("Already have an account? ",
+                            style:
+                                theme.textTheme.bodyMedium),
+                        AppLink(
+                          text: "Log in",
+                          onTap: () => Navigator.pushNamed(
+                              context, '/login'),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(
+                        height: AppDimensions.gapMd),
+                    AppLink(
+                      text: "Continue as guest",
+                      fontSize: 14,
+                      color: theme.colorScheme.secondary,
+                      onTap: () =>
+                          Navigator.pushReplacementNamed(
+                              context, '/home'),
+                    ),
+                  ],
                 ],
               ),
             ),

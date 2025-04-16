@@ -58,9 +58,11 @@ class _AppTextFieldState extends State<AppTextField> {
     _focusNode.addListener(() {
       if (!_focusNode.hasFocus &&
           (_wasTouched || widget.submitAttempted)) {
-        setState(() {
-          _showError = true;
-        });
+        if (mounted) {
+          setState(() {
+            _showError = true;
+          });
+        }
       }
     });
 
@@ -91,7 +93,9 @@ class _AppTextFieldState extends State<AppTextField> {
   @override
   void dispose() {
     widget.controller.removeListener(_controllerListener);
-    _focusNode.dispose();
+    if (widget.focusNode == null) {
+      _focusNode.dispose();
+    }
     super.dispose();
   }
 
