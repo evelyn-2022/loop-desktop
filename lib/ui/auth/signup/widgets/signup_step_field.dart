@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:loop/ui/auth/signup/widgets/password_requirements.dart';
+import 'package:loop/ui/shared/widgets/app_password_requirements.dart';
 import 'package:loop/ui/shared/widgets/app_text_field.dart';
 import 'package:loop/utils/validators.dart';
 

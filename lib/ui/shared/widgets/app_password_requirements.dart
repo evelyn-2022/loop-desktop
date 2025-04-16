@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:loop/theme/app_dimensions.dart';
 
 class AppPasswordRequirements extends StatelessWidget {
@@ -15,27 +16,32 @@ class AppPasswordRequirements extends StatelessWidget {
 
   Widget _buildItem(
       BuildContext context, bool met, String text) {
-    final colorScheme = Theme.of(context).colorScheme;
-    final iconColor =
-        met ? colorScheme.primary : Colors.grey;
-    final textColor =
-        met ? colorScheme.onSurface : Colors.grey;
+    final theme = Theme.of(context);
+    final textColor = met
+        ? theme.colorScheme.onSurface
+        : theme.textTheme.bodySmall!.color;
 
     return Row(
       children: [
-        Icon(
+        SvgPicture.asset(
           met
-              ? Icons.check_circle
-              : Icons.radio_button_unchecked,
-          size: 16,
-          color: iconColor,
+              ? 'assets/icons/checked_circle.svg'
+              : 'assets/icons/circle.svg',
+          width: AppDimensions.iconSizeXs,
+          height: AppDimensions.iconSizeXs,
+          colorFilter: ColorFilter.mode(
+            met
+                ? theme.colorScheme.primary
+                : theme.colorScheme.outlineVariant,
+            BlendMode.srcIn,
+          ),
         ),
-        const SizedBox(width: 8),
+        const SizedBox(width: AppDimensions.gapXs),
         Text(
           text,
           style: TextStyle(
             color: textColor,
-            fontSize: 14,
+            fontSize: theme.textTheme.bodySmall!.fontSize,
           ),
         ),
       ],

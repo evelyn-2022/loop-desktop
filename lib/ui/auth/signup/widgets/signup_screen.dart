@@ -16,7 +16,10 @@ class SignUpScreen extends StatefulWidget {
 }
 
 class _SignUpScreenState extends State<SignUpScreen> {
+  static const int totalSteps = 4;
+
   final _formKey = GlobalKey<FormState>();
+
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   final _confirmController = TextEditingController();
@@ -26,8 +29,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
   final _passwordFocus = FocusNode();
   final _confirmFocus = FocusNode();
   final _usernameFocus = FocusNode();
-
   final _keyboardListenerFocus = FocusNode();
+
+  final Map<int, FocusNode> _focusMap = {};
 
   int _currentStep = 0;
   bool _submitAttempted = false;
@@ -47,17 +51,23 @@ class _SignUpScreenState extends State<SignUpScreen> {
   void initState() {
     super.initState();
 
+    _focusMap.addAll({
+      0: _emailFocus,
+      1: _passwordFocus,
+      2: _confirmFocus,
+      3: _usernameFocus,
+    });
+
     _passwordController
         .addListener(_updatePasswordRequirements);
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      _emailFocus.requestFocus();
+      _requestFocusForStep(0);
     });
   }
 
   void _updatePasswordRequirements() {
     final text = _passwordController.text;
-
     setState(() {
       _hasMinLength = text.length >= 8;
       _hasNumber = RegExp(r'\d').hasMatch(text);
@@ -65,60 +75,55 @@ class _SignUpScreenState extends State<SignUpScreen> {
     });
   }
 
-  void _validateAndContinue() {
-    bool isValid = false;
+  void _requestFocusForStep(int step) {
+    _focusMap[step]?.requestFocus();
+  }
 
-    setState(() {
-      _submitAttempted = true;
-    });
-
+  bool _isStepValid() {
     switch (_currentStep) {
       case 0:
-        isValid = Validators.validateEmail(
+        return Validators.validateEmail(
                 _emailController.text) ==
             null;
-        break;
       case 1:
-        isValid = Validators.validatePassword(
+        return Validators.validatePassword(
                 _passwordController.text) ==
             null;
-        break;
       case 2:
-        isValid = _confirmController.text ==
+        return _confirmController.text ==
             _passwordController.text;
-        break;
       case 3:
-        isValid =
-            _usernameController.text.trim().isNotEmpty;
-        break;
+        return _usernameController.text.trim().isNotEmpty;
+      default:
+        return false;
     }
+  }
+
+  void _validateAndContinue() {
+    setState(() => _submitAttempted = true);
+
+    final isValid = _isStepValid();
 
     if (!isValid) {
       _keyboardListenerFocus.requestFocus();
       return;
     }
 
-    if (_currentStep < 3) {
+    if (_currentStep < totalSteps - 1) {
       setState(() => _currentStep++);
       WidgetsBinding.instance.addPostFrameCallback((_) {
-        switch (_currentStep) {
-          case 0:
-            _emailFocus.requestFocus();
-            break;
-          case 1:
-            _passwordFocus.requestFocus();
-            break;
-          case 2:
-            _confirmFocus.requestFocus();
-            break;
-          case 3:
-            _usernameFocus.requestFocus();
-            break;
-        }
+        _requestFocusForStep(_currentStep);
       });
     } else {
       _submit();
     }
+  }
+
+  void _submit() {
+    print("✅ Sign Up Info:");
+    print("Email: ${_emailController.text}");
+    print("Password: ${_passwordController.text}");
+    print("Username: ${_usernameController.text}");
   }
 
   @override
@@ -135,30 +140,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
     _usernameFocus.dispose();
     _keyboardListenerFocus.dispose();
     super.dispose();
-  }
-
-  void _submit() {
-    print("✅ Sign Up Info:");
-    print("Email: ${_emailController.text}");
-    print("Password: ${_passwordController.text}");
-    print("Username: ${_usernameController.text}");
-  }
-
-  void _requestFocusForStep(int step) {
-    switch (step) {
-      case 0:
-        _emailFocus.requestFocus();
-        break;
-      case 1:
-        _passwordFocus.requestFocus();
-        break;
-      case 2:
-        _confirmFocus.requestFocus();
-        break;
-      case 3:
-        _usernameFocus.requestFocus();
-        break;
-    }
   }
 
   @override
@@ -181,73 +162,78 @@ class _SignUpScreenState extends State<SignUpScreen> {
         child: Center(
           child: ConstrainedBox(
             constraints: const BoxConstraints(
-              maxWidth: AppDimensions.formWidth,
-            ),
+                maxWidth: AppDimensions.formWidth),
             child: Padding(
               padding:
                   const EdgeInsets.all(AppDimensions.gapMd),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text(
-                    'Create your account',
-                    style: theme.textTheme.displayLarge,
-                    textAlign: TextAlign.center,
-                  ),
-                  const SizedBox(
-                      height: AppDimensions.gapMd),
-                  AppProgressBar(
-                    currentStep: _currentStep,
-                    totalSteps: 4,
-                  ),
-                  const SizedBox(
-                      height: AppDimensions.gapSm),
-                  SignUpTopBar(
-                    currentStep: _currentStep,
-                    stepInstructions: _stepInstructions,
-                    onBack: () {
-                      setState(() {
-                        _currentStep--;
-                        _submitAttempted = false;
-                      });
-                      _requestFocusForStep(_currentStep);
-                    },
-                  ),
-                  const SizedBox(
-                      height: AppDimensions.gapMd),
-                  Form(
-                      key: _formKey,
-                      child: SignUpStepField(
-                          step: _currentStep,
-                          submitAttempted: _submitAttempted,
-                          emailController: _emailController,
-                          passwordController:
-                              _passwordController,
-                          confirmController:
-                              _confirmController,
-                          usernameController:
-                              _usernameController,
-                          emailFocus: _emailFocus,
-                          passwordFocus: _passwordFocus,
-                          confirmFocus: _confirmFocus,
-                          usernameFocus: _usernameFocus,
-                          hasMinLength: _hasMinLength,
-                          hasNumber: _hasNumber,
-                          hasLowercase: _hasLowercase)),
-                  const SizedBox(
-                      height: AppDimensions.gapMd),
-                  AppButton(
-                    label: _currentStep < 3
-                        ? 'Next'
-                        : 'Sign Up',
-                    onPressed: _validateAndContinue,
-                  ),
-                  if (_currentStep == 0) ...[
+              child: SizedBox(
+                height: 400,
+                child: Column(
+                  mainAxisAlignment:
+                      MainAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Create your account',
+                      style: theme.textTheme.displayLarge,
+                      textAlign: TextAlign.center,
+                    ),
                     const SizedBox(
                         height: AppDimensions.gapMd),
-                    const SignUpFooter(),
+                    AppProgressBar(
+                      currentStep: _currentStep,
+                      totalSteps: totalSteps,
+                    ),
+                    const SizedBox(
+                        height: AppDimensions.gapSm),
+                    SignUpTopBar(
+                      currentStep: _currentStep,
+                      stepInstructions: _stepInstructions,
+                      onBack: () {
+                        setState(() {
+                          _currentStep--;
+                          _submitAttempted = false;
+                        });
+                        _requestFocusForStep(_currentStep);
+                      },
+                    ),
+                    const SizedBox(
+                        height: AppDimensions.gapMd),
+                    Form(
+                      key: _formKey,
+                      child: SignUpStepField(
+                        step: _currentStep,
+                        submitAttempted: _submitAttempted,
+                        emailController: _emailController,
+                        passwordController:
+                            _passwordController,
+                        confirmController:
+                            _confirmController,
+                        usernameController:
+                            _usernameController,
+                        emailFocus: _emailFocus,
+                        passwordFocus: _passwordFocus,
+                        confirmFocus: _confirmFocus,
+                        usernameFocus: _usernameFocus,
+                        hasMinLength: _hasMinLength,
+                        hasNumber: _hasNumber,
+                        hasLowercase: _hasLowercase,
+                      ),
+                    ),
+                    const SizedBox(
+                        height: AppDimensions.gapMd),
+                    AppButton(
+                      label: _currentStep < totalSteps - 1
+                          ? 'Next'
+                          : 'Sign Up',
+                      onPressed: _validateAndContinue,
+                    ),
+                    if (_currentStep == 0) ...[
+                      const SizedBox(
+                          height: AppDimensions.gapMd),
+                      const SignUpFooter(),
+                    ],
                   ],
-                ],
+                ),
               ),
             ),
           ),

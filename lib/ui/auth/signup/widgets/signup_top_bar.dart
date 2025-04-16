@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
+import 'package:loop/theme/app_dimensions.dart';
 
 class SignUpTopBar extends StatelessWidget {
   final int currentStep;
@@ -19,12 +21,21 @@ class SignUpTopBar extends StatelessWidget {
       children: [
         if (currentStep > 0)
           IconButton(
-            icon: const Icon(Icons.chevron_left),
             onPressed: onBack,
+            icon: SvgPicture.asset(
+              'assets/icons/chevron.svg',
+              width: AppDimensions.iconSizeXs,
+              height: AppDimensions.iconSizeXs,
+              colorFilter: ColorFilter.mode(
+                theme.colorScheme.onSurface,
+                BlendMode.srcIn,
+              ),
+            ),
           ),
+        const SizedBox(width: AppDimensions.gapXs),
         Text(
           stepInstructions[currentStep],
-          style: theme.textTheme.titleMedium,
+          style: theme.textTheme.bodyMedium,
         ),
       ],
     );
