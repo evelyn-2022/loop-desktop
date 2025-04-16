@@ -43,121 +43,106 @@ class _AppTextFieldState extends State<AppTextField> {
   late bool _obscureText;
   late FocusNode _focusNode;
 
-  bool _showError = false;
   bool _wasTouched = false;
-  late VoidCallback _controllerListener;
-  late String _lastValue;
+  bool _showError = false;
+  String _lastValue = '';
+  String? _errorMessage;
 
   @override
   void initState() {
     super.initState();
+
     _obscureText = widget.obscure;
     _focusNode = widget.focusNode ?? FocusNode();
     _lastValue = widget.controller.text;
 
-    _focusNode.addListener(() {
-      if (!_focusNode.hasFocus &&
-          (_wasTouched || widget.submitAttempted)) {
-        if (mounted) {
-          setState(() {
-            _showError = true;
-          });
-        }
-      }
-    });
+    _focusNode.addListener(_handleFocusChange);
+    widget.controller.addListener(_handleTextChanged);
+  }
 
-    _controllerListener = () {
-      final currentValue = widget.controller.text;
+  void _handleFocusChange() {
+    if (!_focusNode.hasFocus &&
+        (_wasTouched || widget.submitAttempted)) {
+      _validateAndShowError();
+    }
+  }
 
-      // Mark as touched if user edits
-      if (!_wasTouched &&
-          _focusNode.hasFocus &&
-          currentValue != _lastValue) {
-        _wasTouched = true;
-      }
+  void _handleTextChanged() {
+    final currentValue = widget.controller.text;
 
-      if (_focusNode.hasFocus &&
-          _showError &&
-          currentValue != _lastValue) {
-        setState(() {
-          _showError = false;
-        });
-      }
+    if (!_wasTouched &&
+        _focusNode.hasFocus &&
+        currentValue != _lastValue) {
+      _wasTouched = true;
+    }
 
-      _lastValue = currentValue;
-    };
+    if (_showError && currentValue != _lastValue) {
+      setState(() => _showError = false);
+    }
 
-    widget.controller.addListener(_controllerListener);
+    _lastValue = currentValue;
+  }
+
+  void _validateAndShowError() {
+    final error =
+        widget.validator?.call(widget.controller.text);
+    if (mounted) {
+      setState(() {
+        _errorMessage = error;
+        _showError = error != null;
+      });
+    }
+  }
+
+  @override
+  void didUpdateWidget(covariant AppTextField oldWidget) {
+    super.didUpdateWidget(oldWidget);
+
+    if (!_focusNode.hasFocus &&
+        widget.submitAttempted &&
+        !_showError) {
+      _validateAndShowError();
+    }
   }
 
   @override
   void dispose() {
-    widget.controller.removeListener(_controllerListener);
+    widget.controller.removeListener(_handleTextChanged);
     if (widget.focusNode == null) {
       _focusNode.dispose();
     }
     super.dispose();
   }
 
-  @override
-  void didUpdateWidget(covariant AppTextField oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    if (_focusNode.hasFocus) {
-      _showError = false;
-    } else if (widget.submitAttempted && !_showError) {
-      final error =
-          widget.validator?.call(widget.controller.text);
-      if (error != null) {
-        setState(() {
-          _showError = true;
-        });
-      }
-    }
-  }
-
   void _toggleVisibility() {
-    setState(() {
-      _obscureText = !_obscureText;
-    });
+    setState(() => _obscureText = !_obscureText);
   }
 
   @override
   Widget build(BuildContext context) {
-    final isPassword = widget.obscure;
-
-    String? errorMessage;
-    if (_showError) {
-      errorMessage =
-          widget.validator?.call(widget.controller.text);
-    }
+    final theme = Theme.of(context);
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
-      mainAxisSize: MainAxisSize.min,
       children: [
         SizedBox(
-          width: double.infinity,
           height: AppDimensions.textFieldHeight,
           child: TextFormField(
             key: widget.fieldKey,
             controller: widget.controller,
-            obscureText: _obscureText,
+            focusNode: _focusNode,
             keyboardType: widget.keyboardType,
-            validator: (_) => null,
-            focusNode: widget.focusNode ?? _focusNode,
-            style: Theme.of(context).textTheme.bodyMedium,
+            obscureText: _obscureText,
+            style: theme.textTheme.bodyMedium,
             autofocus: widget.autofocus,
+            validator: (_) => null,
             decoration: InputDecoration(
               labelText: widget.label,
               hintText: widget.hint,
-              suffixIcon: isPassword
+              suffixIcon: widget.obscure
                   ? IconButton(
                       onPressed: _toggleVisibility,
-                      icon: _obscureText
-                          ? _buildSvgIcon(
-                              widget.hiddenSvgAsset)
-                          : _buildSvgIcon(
-                              widget.visibleSvgAsset),
+                      icon: _buildVisibilityIcon(),
                     )
                   : null,
             ),
@@ -171,36 +156,42 @@ class _AppTextFieldState extends State<AppTextField> {
                   AppDimensions.textFieldPaddingHorizontal,
               top: 2,
             ),
-            child: errorMessage != null
-                ? Text(
-                    errorMessage,
-                    style: TextStyle(
-                      color: AppColors.red_200,
-                      fontSize: 12,
-                    ),
-                  )
-                : null,
+            child: AnimatedOpacity(
+              opacity: _showError && _errorMessage != null
+                  ? 1
+                  : 0,
+              duration: const Duration(milliseconds: 150),
+              child: Text(
+                _errorMessage ?? '',
+                style: TextStyle(
+                  color: AppColors.red_200,
+                  fontSize: 12,
+                ),
+              ),
+            ),
           ),
         ),
       ],
     );
   }
 
-  Widget _buildSvgIcon(String? assetPath) {
-    final baseIconColor = Theme.of(context).iconTheme.color;
-    final activeIconColor = AppColors.grey_300;
+  Widget _buildVisibilityIcon() {
+    final isVisible = !_obscureText;
+    final assetPath = isVisible
+        ? widget.visibleSvgAsset
+        : widget.hiddenSvgAsset;
 
     if (assetPath == null) return const SizedBox.shrink();
+
+    final color = _focusNode.hasFocus
+        ? AppColors.grey_300
+        : Theme.of(context).iconTheme.color!;
+
     return SvgPicture.asset(
       assetPath,
       width: AppDimensions.iconSizeSm,
       height: AppDimensions.iconSizeSm,
-      colorFilter: ColorFilter.mode(
-        _focusNode.hasFocus
-            ? activeIconColor
-            : baseIconColor!,
-        BlendMode.srcIn,
-      ),
+      colorFilter: ColorFilter.mode(color, BlendMode.srcIn),
     );
   }
 }
