@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:loop/theme/app_dimensions.dart';
 
-class ProgressBar extends StatelessWidget {
+class AppProgressBar extends StatelessWidget {
   final int currentStep;
   final int totalSteps;
 
-  const ProgressBar({
+  const AppProgressBar({
     super.key,
     required this.currentStep,
     required this.totalSteps,

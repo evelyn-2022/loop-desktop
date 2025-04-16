@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:loop/theme/app_dimensions.dart';
 
-class PasswordRequirements extends StatelessWidget {
+class AppPasswordRequirements extends StatelessWidget {
   final bool hasMinLength;
   final bool hasNumber;
   final bool hasLowercase;
 
-  const PasswordRequirements({
+  const AppPasswordRequirements({
     super.key,
     required this.hasMinLength,
     required this.hasNumber,

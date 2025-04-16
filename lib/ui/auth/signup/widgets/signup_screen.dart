@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:loop/theme/app_dimensions.dart';
-import 'package:loop/ui/auth/signup/widgets/progress_bar.dart';
+import 'package:loop/ui/shared/widgets/app_progress_bar.dart';
 import 'package:loop/ui/auth/signup/widgets/signup_footer.dart';
 import 'package:loop/ui/auth/signup/widgets/signup_step_field.dart';
 import 'package:loop/ui/auth/signup/widgets/signup_top_bar.dart';
@@ -196,7 +196,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   ),
                   const SizedBox(
                       height: AppDimensions.gapMd),
-                  ProgressBar(
+                  AppProgressBar(
                     currentStep: _currentStep,
                     totalSteps: 4,
                   ),

@@ -67,7 +67,7 @@ class SignUpStepField extends StatelessWidget {
               submitAttempted: submitAttempted,
             ),
             const SizedBox(height: 12),
-            PasswordRequirements(
+            AppPasswordRequirements(
               hasMinLength: hasMinLength,
               hasNumber: hasNumber,
               hasLowercase: hasLowercase,
