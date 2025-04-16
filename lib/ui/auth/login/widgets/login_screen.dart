@@ -99,7 +99,6 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   void _validateAndShowErrors() {
-    // First check if the form is valid
     final emailValid =
         Validators.validateEmail(_emailController.text) ==
             null;
@@ -112,19 +111,13 @@ class _LoginScreenState extends State<LoginScreen> {
     });
 
     if (!_isFormValid) {
-      // Save current focus
-      final hasFocus = _passwordFocus.hasFocus;
-
-      // Remove focus temporarily
       _keyboardListenerFocus.requestFocus();
-
-      // Schedule to restore focus after the frame
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        if (hasFocus) {
-          _passwordFocus.requestFocus();
-        }
-      });
+      return;
     }
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _passwordFocus.requestFocus();
+    });
   }
 
   @override
