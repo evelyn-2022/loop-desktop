@@ -13,6 +13,7 @@ class AppDimensions {
   static const double textFieldPaddingHorizontal = 20;
   static const double textFieldPaddingVertical = 20;
 
+  static const double gapXs = 8;
   static const double gapSm = 16;
   static const double gapMd = 24;
   static const double gapLg = 32;

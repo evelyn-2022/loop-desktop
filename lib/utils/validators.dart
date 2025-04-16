@@ -18,6 +18,12 @@ class Validators {
     if (value.length < 8) {
       return 'Password must be at least 8 characters';
     }
+    if (!RegExp(r'\d').hasMatch(value)) {
+      return 'Password must contain at least one number';
+    }
+    if (!RegExp(r'[a-z]').hasMatch(value)) {
+      return 'Password must contain at least one lowercase letter';
+    }
     return null;
   }
 }

@@ -32,6 +32,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
   int _currentStep = 0;
   bool _submitAttempted = false;
 
+  bool _hasMinLength = false;
+  bool _hasNumber = false;
+  bool _hasLowercase = false;
+
   final List<String> _stepInstructions = [
     "Enter your email",
     "Create a password",
@@ -42,8 +46,22 @@ class _SignUpScreenState extends State<SignUpScreen> {
   @override
   void initState() {
     super.initState();
+
+    _passwordController
+        .addListener(_updatePasswordRequirements);
+
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _emailFocus.requestFocus();
+    });
+  }
+
+  void _updatePasswordRequirements() {
+    final text = _passwordController.text;
+
+    setState(() {
+      _hasMinLength = text.length >= 8;
+      _hasNumber = RegExp(r'\d').hasMatch(text);
+      _hasLowercase = RegExp(r'[a-z]').hasMatch(text);
     });
   }
 
@@ -105,6 +123,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
   @override
   void dispose() {
+    _passwordController
+        .removeListener(_updatePasswordRequirements);
     _emailController.dispose();
     _passwordController.dispose();
     _confirmController.dispose();
@@ -210,7 +230,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           emailFocus: _emailFocus,
                           passwordFocus: _passwordFocus,
                           confirmFocus: _confirmFocus,
-                          usernameFocus: _usernameFocus)),
+                          usernameFocus: _usernameFocus,
+                          hasMinLength: _hasMinLength,
+                          hasNumber: _hasNumber,
+                          hasLowercase: _hasLowercase)),
                   const SizedBox(
                       height: AppDimensions.gapMd),
                   AppButton(

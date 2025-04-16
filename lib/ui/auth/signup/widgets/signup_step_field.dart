@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:loop/ui/auth/signup/widgets/password_requirements.dart';
 import 'package:loop/ui/shared/widgets/app_text_field.dart';
 import 'package:loop/utils/validators.dart';
 
@@ -13,6 +14,9 @@ class SignUpStepField extends StatelessWidget {
   final FocusNode passwordFocus;
   final FocusNode confirmFocus;
   final FocusNode usernameFocus;
+  final bool hasMinLength;
+  final bool hasNumber;
+  final bool hasLowercase;
 
   const SignUpStepField({
     super.key,
@@ -26,6 +30,9 @@ class SignUpStepField extends StatelessWidget {
     required this.passwordFocus,
     required this.confirmFocus,
     required this.usernameFocus,
+    required this.hasMinLength,
+    required this.hasNumber,
+    required this.hasLowercase,
   });
 
   @override
@@ -43,19 +50,31 @@ class SignUpStepField extends StatelessWidget {
           submitAttempted: submitAttempted,
         );
       case 1:
-        return AppTextField(
-          key: ValueKey('step-$step'),
-          controller: passwordController,
-          focusNode: passwordFocus,
-          label: 'Password',
-          hint: 'Create a password',
-          obscure: true,
-          keyboardType: TextInputType.visiblePassword,
-          validator: Validators.validatePassword,
-          visibleSvgAsset: 'assets/icons/eye_open.svg',
-          hiddenSvgAsset: 'assets/icons/eye_hidden.svg',
-          submitAttempted: submitAttempted,
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            AppTextField(
+              key: ValueKey('step-$step'),
+              focusNode: passwordFocus,
+              controller: passwordController,
+              label: 'Password',
+              hint: 'Create a password',
+              obscure: true,
+              validator: Validators.validatePassword,
+              keyboardType: TextInputType.visiblePassword,
+              visibleSvgAsset: 'assets/icons/eye_open.svg',
+              hiddenSvgAsset: 'assets/icons/eye_hidden.svg',
+              submitAttempted: submitAttempted,
+            ),
+            const SizedBox(height: 12),
+            PasswordRequirements(
+              hasMinLength: hasMinLength,
+              hasNumber: hasNumber,
+              hasLowercase: hasLowercase,
+            ),
+          ],
         );
+
       case 2:
         return AppTextField(
           key: ValueKey('step-$step'),
