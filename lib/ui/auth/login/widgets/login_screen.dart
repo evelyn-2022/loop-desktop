@@ -18,19 +18,16 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
+  final _formKey = GlobalKey<FormState>();
+
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
-  final _formKey = GlobalKey<FormState>();
-  final _emailFieldKey =
-      GlobalKey<FormFieldState<String>>();
-  final _passwordFieldKey =
-      GlobalKey<FormFieldState<String>>();
-  bool _isFormValid = false;
-  bool _submitAttempted = false;
 
-  final FocusNode _emailFocus = FocusNode();
-  final FocusNode _passwordFocus = FocusNode();
-  final FocusNode _keyboardListenerFocus = FocusNode();
+  final _emailFocus = FocusNode();
+  final _passwordFocus = FocusNode();
+  final _keyboardListenerFocus = FocusNode();
+
+  bool _submitAttempted = false;
 
   @override
   void initState() {
@@ -39,18 +36,12 @@ class _LoginScreenState extends State<LoginScreen> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _emailFocus.requestFocus();
     });
-
-    _emailController.addListener(() {
-      _clearErrorOnInput();
-      _updateFormValidState();
-    });
-    _passwordController.addListener(() {
-      _clearErrorOnInput();
-      _updateFormValidState();
-    });
   }
 
-  void _updateFormValidState() {
+  void _login() async {
+    final viewModel = context.read<LoginViewModel>();
+    setState(() => _submitAttempted = true);
+
     final emailValid =
         Validators.validateEmail(_emailController.text) ==
             null;
@@ -58,30 +49,17 @@ class _LoginScreenState extends State<LoginScreen> {
             _passwordController.text) ==
         null;
 
-    setState(() {
-      _isFormValid = emailValid && passwordValid;
-    });
-  }
+    final isFormValid = emailValid && passwordValid;
 
-  void _clearErrorOnInput() {
-    final viewModel =
-        Provider.of<LoginViewModel>(context, listen: false);
-    viewModel.clearError();
-  }
-
-  void _login() async {
-    final viewModel =
-        Provider.of<LoginViewModel>(context, listen: false);
-    _submitAttempted = true;
-    _validateAndShowErrors();
-
-    if (!_isFormValid || viewModel.isLoading) {
+    if (!isFormValid || viewModel.isLoading) {
+      _keyboardListenerFocus.requestFocus();
       return;
     }
 
-    final email = _emailController.text;
-    final password = _passwordController.text;
-    final success = await viewModel.login(email, password);
+    final success = await viewModel.login(
+      _emailController.text,
+      _passwordController.text,
+    );
 
     AppSnackBar.show(
       context,
@@ -98,162 +76,45 @@ class _LoginScreenState extends State<LoginScreen> {
     }
   }
 
-  void _validateAndShowErrors() {
-    final emailValid =
-        Validators.validateEmail(_emailController.text) ==
-            null;
-    final passwordValid = Validators.validatePassword(
-            _passwordController.text) ==
-        null;
-
-    setState(() {
-      _isFormValid = emailValid && passwordValid;
-    });
-
-    if (!_isFormValid) {
-      _keyboardListenerFocus.requestFocus();
-      return;
-    }
-
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      _passwordFocus.requestFocus();
-    });
-  }
-
   @override
   void dispose() {
     _emailController.dispose();
     _passwordController.dispose();
+    _emailFocus.dispose();
+    _passwordFocus.dispose();
     _keyboardListenerFocus.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    final viewModel = Provider.of<LoginViewModel>(context);
     final theme = Theme.of(context);
+    final viewModel = context.watch<LoginViewModel>();
 
     return Scaffold(
       body: Focus(
         focusNode: _keyboardListenerFocus,
         autofocus: true,
-        onKeyEvent: (FocusNode node, KeyEvent event) {
-          if (event is KeyDownEvent) {
-            if (event.logicalKey ==
-                LogicalKeyboardKey.arrowDown) {
-              _passwordFocus.requestFocus();
-              return KeyEventResult.handled;
-            } else if (event.logicalKey ==
-                LogicalKeyboardKey.arrowUp) {
-              _emailFocus.requestFocus();
-              return KeyEventResult.handled;
-            } else if (event.logicalKey ==
-                LogicalKeyboardKey.enter) {
-              if (_emailFocus.hasFocus) {
-                _passwordFocus.requestFocus();
-              } else if (_passwordFocus.hasFocus) {
-                _login();
-              }
-              return KeyEventResult.handled;
-            }
-          }
-          return KeyEventResult.ignored;
-        },
+        onKeyEvent: _handleKeyEvent,
         child: Center(
           child: ConstrainedBox(
             constraints: const BoxConstraints(
-              maxWidth: AppDimensions.formWidth,
-            ),
+                maxWidth: AppDimensions.formWidth),
             child: Padding(
               padding:
                   const EdgeInsets.all(AppDimensions.gapMd),
               child: Column(
                 mainAxisSize: MainAxisSize.min,
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment:
-                    CrossAxisAlignment.center,
                 children: [
-                  Text(
-                    'Welcome back',
-                    style: theme.textTheme.displayLarge,
-                    textAlign: TextAlign.center,
-                  ),
+                  Text('Welcome back',
+                      style: theme.textTheme.displayLarge,
+                      textAlign: TextAlign.center),
                   const SizedBox(
                       height: AppDimensions.gapMd),
-                  Form(
-                    key: _formKey,
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: <Widget>[
-                        AppTextField(
-                          fieldKey: _emailFieldKey,
-                          focusNode: _emailFocus,
-                          controller: _emailController,
-                          label: 'Email',
-                          hint: 'Enter your email',
-                          keyboardType:
-                              TextInputType.emailAddress,
-                          validator:
-                              Validators.validateEmail,
-                          submitAttempted: _submitAttempted,
-                        ),
-                        const SizedBox(
-                            height: AppDimensions.gapSm),
-                        AppTextField(
-                          fieldKey: _passwordFieldKey,
-                          focusNode: _passwordFocus,
-                          controller: _passwordController,
-                          label: 'Password',
-                          hint: 'Enter your password',
-                          obscure: true,
-                          keyboardType:
-                              TextInputType.visiblePassword,
-                          validator:
-                              Validators.validatePassword,
-                          visibleSvgAsset:
-                              'assets/icons/eye_open.svg',
-                          hiddenSvgAsset:
-                              'assets/icons/eye_hidden.svg',
-                          submitAttempted: _submitAttempted,
-                        ),
-                        const SizedBox(
-                            height: AppDimensions.gapSm),
-                        AppButton(
-                          label: 'Log in',
-                          onPressed: _login,
-                          isLoading: viewModel.isLoading,
-                        ),
-                      ],
-                    ),
-                  ),
+                  _buildLoginForm(viewModel),
                   const SizedBox(
                       height: AppDimensions.gapMd),
-                  Row(
-                    mainAxisAlignment:
-                        MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        "New here? ",
-                        style: theme.textTheme.bodyMedium,
-                      ),
-                      AppLink(
-                        text: "Create an account",
-                        onTap: () => Navigator.pushNamed(
-                            context, AppRoutes.signup),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(
-                      height: AppDimensions.gapMd),
-                  AppLink(
-                    text: "Continue as guest",
-                    color: Theme.of(context)
-                        .colorScheme
-                        .secondary,
-                    fontSize: 14,
-                    onTap: () => Navigator.pushNamed(
-                        context, AppRoutes.home),
-                  ),
+                  _buildFooter(context),
                 ],
               ),
             ),
@@ -261,5 +122,99 @@ class _LoginScreenState extends State<LoginScreen> {
         ),
       ),
     );
+  }
+
+  Widget _buildLoginForm(LoginViewModel viewModel) {
+    return Form(
+      key: _formKey,
+      child: Column(
+        children: [
+          AppTextField(
+            key: ValueKey('email'),
+            controller: _emailController,
+            focusNode: _emailFocus,
+            label: 'Email',
+            hint: 'Enter your email',
+            keyboardType: TextInputType.emailAddress,
+            validator: Validators.validateEmail,
+            submitAttempted: _submitAttempted,
+          ),
+          const SizedBox(height: AppDimensions.gapSm),
+          AppTextField(
+            key: ValueKey('password'),
+            controller: _passwordController,
+            focusNode: _passwordFocus,
+            label: 'Password',
+            hint: 'Enter your password',
+            obscure: true,
+            keyboardType: TextInputType.visiblePassword,
+            validator: Validators.validatePassword,
+            visibleSvgAsset: 'assets/icons/eye_open.svg',
+            hiddenSvgAsset: 'assets/icons/eye_hidden.svg',
+            submitAttempted: _submitAttempted,
+          ),
+          const SizedBox(height: AppDimensions.gapSm),
+          AppButton(
+            label: 'Log in',
+            onPressed: _login,
+            isLoading: viewModel.isLoading,
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildFooter(BuildContext context) {
+    final theme = Theme.of(context);
+
+    return Column(
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text("New here? ",
+                style: theme.textTheme.bodyMedium),
+            AppLink(
+              text: "Create an account",
+              onTap: () => Navigator.pushNamed(
+                  context, AppRoutes.signup),
+            ),
+          ],
+        ),
+        const SizedBox(height: AppDimensions.gapMd),
+        AppLink(
+          text: "Continue as guest",
+          color: theme.colorScheme.secondary,
+          fontSize: 14,
+          onTap: () =>
+              Navigator.pushNamed(context, AppRoutes.home),
+        ),
+      ],
+    );
+  }
+
+  KeyEventResult _handleKeyEvent(
+      FocusNode node, KeyEvent event) {
+    if (event is! KeyDownEvent)
+      return KeyEventResult.ignored;
+
+    if (event.logicalKey == LogicalKeyboardKey.arrowDown) {
+      _passwordFocus.requestFocus();
+      return KeyEventResult.handled;
+    } else if (event.logicalKey ==
+        LogicalKeyboardKey.arrowUp) {
+      _emailFocus.requestFocus();
+      return KeyEventResult.handled;
+    } else if (event.logicalKey ==
+        LogicalKeyboardKey.enter) {
+      if (_emailFocus.hasFocus) {
+        _passwordFocus.requestFocus();
+      } else if (_passwordFocus.hasFocus) {
+        _login();
+      }
+      return KeyEventResult.handled;
+    }
+
+    return KeyEventResult.ignored;
   }
 }
