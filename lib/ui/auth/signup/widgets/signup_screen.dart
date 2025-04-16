@@ -2,9 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:loop/theme/app_dimensions.dart';
 import 'package:loop/ui/auth/signup/widgets/progress_bar.dart';
+import 'package:loop/ui/auth/signup/widgets/signup_footer.dart';
+import 'package:loop/ui/auth/signup/widgets/signup_step_field.dart';
+import 'package:loop/ui/auth/signup/widgets/signup_top_bar.dart';
 import 'package:loop/ui/shared/widgets/app_button.dart';
-import 'package:loop/ui/shared/widgets/app_link.dart';
-import 'package:loop/ui/shared/widgets/app_text_field.dart';
 import 'package:loop/utils/validators.dart';
 
 class SignUpScreen extends StatefulWidget {
@@ -16,15 +17,6 @@ class SignUpScreen extends StatefulWidget {
 
 class _SignUpScreenState extends State<SignUpScreen> {
   final _formKey = GlobalKey<FormState>();
-  final _emailFieldKey =
-      GlobalKey<FormFieldState<String>>();
-  final _passwordFieldKey =
-      GlobalKey<FormFieldState<String>>();
-  final _confirmFieldKey =
-      GlobalKey<FormFieldState<String>>();
-  final _usernameFieldKey =
-      GlobalKey<FormFieldState<String>>();
-
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   final _confirmController = TextEditingController();
@@ -132,109 +124,20 @@ class _SignUpScreenState extends State<SignUpScreen> {
     print("Username: ${_usernameController.text}");
   }
 
-  Widget _buildTopBar() {
-    final theme = Theme.of(context);
-
-    return Row(
-      children: [
-        IconButton(
-          icon: const Icon(Icons.chevron_left),
-          onPressed: () {
-            setState(() {
-              _currentStep--;
-              _submitAttempted = false;
-            });
-            WidgetsBinding.instance
-                .addPostFrameCallback((_) {
-              switch (_currentStep) {
-                case 0:
-                  _emailFocus.requestFocus();
-                  break;
-                case 1:
-                  _passwordFocus.requestFocus();
-                  break;
-                case 2:
-                  _confirmFocus.requestFocus();
-                  break;
-                case 3:
-                  _usernameFocus.requestFocus();
-                  break;
-              }
-            });
-          },
-        ),
-        Text(
-          _stepInstructions[_currentStep],
-          style: theme.textTheme.titleMedium,
-        ),
-      ],
-    );
-  }
-
-  Widget _buildStepContent(BuildContext context) {
-    switch (_currentStep) {
+  void _requestFocusForStep(int step) {
+    switch (step) {
       case 0:
-        return AppTextField(
-          key: ValueKey('step-$_currentStep'),
-          fieldKey: _emailFieldKey,
-          controller: _emailController,
-          focusNode: _emailFocus,
-          label: 'Email',
-          hint: 'Enter your email',
-          keyboardType: TextInputType.emailAddress,
-          validator: Validators.validateEmail,
-          submitAttempted: _submitAttempted,
-        );
+        _emailFocus.requestFocus();
+        break;
       case 1:
-        return AppTextField(
-          key: ValueKey('step-$_currentStep'),
-          fieldKey: _passwordFieldKey,
-          focusNode: _passwordFocus,
-          controller: _passwordController,
-          label: 'Password',
-          hint: 'Create a password',
-          obscure: true,
-          validator: Validators.validatePassword,
-          keyboardType: TextInputType.visiblePassword,
-          visibleSvgAsset: 'assets/icons/eye_open.svg',
-          hiddenSvgAsset: 'assets/icons/eye_hidden.svg',
-          submitAttempted: _submitAttempted,
-        );
+        _passwordFocus.requestFocus();
+        break;
       case 2:
-        return AppTextField(
-          key: ValueKey('step-$_currentStep'),
-          fieldKey: _confirmFieldKey,
-          focusNode: _confirmFocus,
-          controller: _confirmController,
-          label: 'Confirm Password',
-          hint: 'Re-enter your password',
-          obscure: true,
-          validator: (_) => _confirmController.text !=
-                  _passwordController.text
-              ? "Passwords do not match"
-              : null,
-          keyboardType: TextInputType.visiblePassword,
-          visibleSvgAsset: 'assets/icons/eye_open.svg',
-          hiddenSvgAsset: 'assets/icons/eye_hidden.svg',
-          submitAttempted: _submitAttempted,
-        );
+        _confirmFocus.requestFocus();
+        break;
       case 3:
-        return AppTextField(
-          key: ValueKey('step-$_currentStep'),
-          fieldKey: _usernameFieldKey,
-          focusNode: _usernameFocus,
-          controller: _usernameController,
-          label: 'Username',
-          hint: 'Choose a username',
-          validator: (val) =>
-              val == null || val.trim().isEmpty
-                  ? "Username is required"
-                  : null,
-          keyboardType: TextInputType.text,
-          submitAttempted: _submitAttempted,
-        );
-      default:
-        return const SizedBox.shrink();
+        _usernameFocus.requestFocus();
+        break;
     }
   }
 
@@ -279,13 +182,35 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   ),
                   const SizedBox(
                       height: AppDimensions.gapSm),
-                  _buildTopBar(),
+                  SignUpTopBar(
+                    currentStep: _currentStep,
+                    stepInstructions: _stepInstructions,
+                    onBack: () {
+                      setState(() {
+                        _currentStep--;
+                        _submitAttempted = false;
+                      });
+                      _requestFocusForStep(_currentStep);
+                    },
+                  ),
                   const SizedBox(
                       height: AppDimensions.gapMd),
                   Form(
-                    key: _formKey,
-                    child: _buildStepContent(context),
-                  ),
+                      key: _formKey,
+                      child: SignUpStepField(
+                          step: _currentStep,
+                          submitAttempted: _submitAttempted,
+                          emailController: _emailController,
+                          passwordController:
+                              _passwordController,
+                          confirmController:
+                              _confirmController,
+                          usernameController:
+                              _usernameController,
+                          emailFocus: _emailFocus,
+                          passwordFocus: _passwordFocus,
+                          confirmFocus: _confirmFocus,
+                          usernameFocus: _usernameFocus)),
                   const SizedBox(
                       height: AppDimensions.gapMd),
                   AppButton(
@@ -294,33 +219,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         : 'Sign Up',
                     onPressed: _validateAndContinue,
                   ),
-                  const SizedBox(
-                      height: AppDimensions.gapMd),
                   if (_currentStep == 0) ...[
-                    Row(
-                      mainAxisAlignment:
-                          MainAxisAlignment.center,
-                      children: [
-                        Text("Already have an account? ",
-                            style:
-                                theme.textTheme.bodyMedium),
-                        AppLink(
-                          text: "Log in",
-                          onTap: () => Navigator.pushNamed(
-                              context, '/login'),
-                        ),
-                      ],
-                    ),
                     const SizedBox(
                         height: AppDimensions.gapMd),
-                    AppLink(
-                      text: "Continue as guest",
-                      fontSize: 14,
-                      color: theme.colorScheme.secondary,
-                      onTap: () =>
-                          Navigator.pushReplacementNamed(
-                              context, '/home'),
-                    ),
+                    const SignUpFooter(),
                   ],
                 ],
               ),
