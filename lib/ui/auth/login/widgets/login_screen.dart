@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:loop/theme/app_dimensions.dart';
-import 'package:loop/ui/shared/widgets/app_link.dart';
+import 'package:loop/ui/auth/login/widgets/login_footer.dart';
+import 'package:loop/ui/auth/login/widgets/login_form.dart';
 import 'package:loop/ui/shared/widgets/app_snack_bar.dart';
 import 'package:provider/provider.dart';
 import 'package:loop/routes/routes.dart';
 import 'package:loop/ui/auth/login/view_models/login_viewmodel.dart';
-import 'package:loop/ui/shared/widgets/app_text_field.dart';
-import 'package:loop/ui/shared/widgets/app_button.dart';
 import 'package:loop/utils/validators.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -109,85 +108,25 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                   const SizedBox(
                       height: AppDimensions.gapMd),
-                  _buildLoginForm(viewModel),
+                  LoginForm(
+                    formKey: _formKey,
+                    emailController: _emailController,
+                    passwordController: _passwordController,
+                    emailFocus: _emailFocus,
+                    passwordFocus: _passwordFocus,
+                    submitAttempted: _submitAttempted,
+                    onSubmit: _login,
+                    isLoading: viewModel.isLoading,
+                  ),
                   const SizedBox(
                       height: AppDimensions.gapMd),
-                  _buildFooter(context),
+                  const LoginFooter(),
                 ],
               ),
             ),
           ),
         ),
       ),
-    );
-  }
-
-  Widget _buildLoginForm(LoginViewModel viewModel) {
-    return Form(
-      key: _formKey,
-      child: Column(
-        children: [
-          AppTextField(
-            key: const ValueKey('email'),
-            controller: _emailController,
-            focusNode: _emailFocus,
-            label: 'Email',
-            hint: 'Enter your email',
-            keyboardType: TextInputType.emailAddress,
-            validator: Validators.validateEmail,
-            submitAttempted: _submitAttempted,
-          ),
-          const SizedBox(height: AppDimensions.gapSm),
-          AppTextField(
-            key: const ValueKey('password'),
-            controller: _passwordController,
-            focusNode: _passwordFocus,
-            label: 'Password',
-            hint: 'Enter your password',
-            obscure: true,
-            keyboardType: TextInputType.visiblePassword,
-            validator: Validators.validatePassword,
-            visibleSvgAsset: 'assets/icons/eye_open.svg',
-            hiddenSvgAsset: 'assets/icons/eye_hidden.svg',
-            submitAttempted: _submitAttempted,
-          ),
-          const SizedBox(height: AppDimensions.gapSm),
-          AppButton(
-            label: 'Log in',
-            onPressed: _login,
-            isLoading: viewModel.isLoading,
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildFooter(BuildContext context) {
-    final theme = Theme.of(context);
-
-    return Column(
-      children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text("New here? ",
-                style: theme.textTheme.bodyMedium),
-            AppLink(
-              text: "Create an account",
-              onTap: () => Navigator.pushNamed(
-                  context, AppRoutes.signup),
-            ),
-          ],
-        ),
-        const SizedBox(height: AppDimensions.gapMd),
-        AppLink(
-          text: "Continue as guest",
-          color: theme.colorScheme.secondary,
-          fontSize: 14,
-          onTap: () =>
-              Navigator.pushNamed(context, AppRoutes.home),
-        ),
-      ],
     );
   }
 
