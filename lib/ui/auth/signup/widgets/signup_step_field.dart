@@ -83,10 +83,11 @@ class SignUpStepField extends StatelessWidget {
           label: 'Confirm Password',
           hint: 'Re-enter your password',
           obscure: true,
-          validator: (_) => confirmController.text !=
-                  passwordController.text
-              ? "Passwords do not match"
-              : null,
+          validator: (_) =>
+              Validators.validateConfirmPassword(
+            confirmController.text,
+            passwordController.text,
+          ),
           keyboardType: TextInputType.visiblePassword,
           visibleSvgAsset: 'assets/icons/eye_open.svg',
           hiddenSvgAsset: 'assets/icons/eye_hidden.svg',
@@ -99,10 +100,7 @@ class SignUpStepField extends StatelessWidget {
           focusNode: usernameFocus,
           label: 'Username',
           hint: 'Choose a username',
-          validator: (val) =>
-              val == null || val.trim().isEmpty
-                  ? "Username is required"
-                  : null,
+          validator: Validators.validateUsername,
           keyboardType: TextInputType.text,
           submitAttempted: submitAttempted,
         );

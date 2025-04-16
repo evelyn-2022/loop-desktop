@@ -90,10 +90,14 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 _passwordController.text) ==
             null;
       case 2:
-        return _confirmController.text ==
-            _passwordController.text;
+        return Validators.validateConfirmPassword(
+                _confirmController.text,
+                _passwordController.text) ==
+            null;
       case 3:
-        return _usernameController.text.trim().isNotEmpty;
+        return Validators.validateUsername(
+                _usernameController.text) ==
+            null;
       default:
         return false;
     }

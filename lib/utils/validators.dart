@@ -26,4 +26,33 @@ class Validators {
     }
     return null;
   }
+
+  static String? validateConfirmPassword(
+      String? confirm, String? original) {
+    if (confirm == null || confirm.isEmpty) {
+      return 'Please confirm your password';
+    }
+    if (confirm != original) {
+      return 'Passwords do not match';
+    }
+    return null;
+  }
+
+  static String? validateUsername(String? value) {
+    if (value == null || value.trim().isEmpty) {
+      return 'Please enter a username';
+    }
+
+    final trimmed = value.trim();
+
+    if (trimmed.length > 20) {
+      return 'Username must be between 1 and 20 characters';
+    }
+
+    if (!RegExp(r'^[a-zA-Z0-9_]+$').hasMatch(trimmed)) {
+      return 'Only letters, numbers, and underscores allowed';
+    }
+
+    return null;
+  }
 }
