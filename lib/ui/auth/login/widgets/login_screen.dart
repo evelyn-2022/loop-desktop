@@ -32,34 +32,38 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   void initState() {
     super.initState();
-
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _emailFocus.requestFocus();
     });
   }
 
+  @override
+  void dispose() {
+    _emailController.dispose();
+    _passwordController.dispose();
+    _emailFocus.dispose();
+    _passwordFocus.dispose();
+    _keyboardListenerFocus.dispose();
+    super.dispose();
+  }
+
   void _login() async {
-    final viewModel = context.read<LoginViewModel>();
     setState(() => _submitAttempted = true);
+    final viewModel = context.read<LoginViewModel>();
 
-    final emailValid =
-        Validators.validateEmail(_emailController.text) ==
-            null;
-    final passwordValid = Validators.validatePassword(
-            _passwordController.text) ==
-        null;
+    final email = _emailController.text.trim();
+    final password = _passwordController.text.trim();
 
-    final isFormValid = emailValid && passwordValid;
+    final isFormValid =
+        Validators.validateEmail(email) == null &&
+            Validators.validatePassword(password) == null;
 
     if (!isFormValid || viewModel.isLoading) {
       _keyboardListenerFocus.requestFocus();
       return;
     }
 
-    final success = await viewModel.login(
-      _emailController.text,
-      _passwordController.text,
-    );
+    final success = await viewModel.login(email, password);
 
     AppSnackBar.show(
       context,
@@ -77,18 +81,7 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   @override
-  void dispose() {
-    _emailController.dispose();
-    _passwordController.dispose();
-    _emailFocus.dispose();
-    _passwordFocus.dispose();
-    _keyboardListenerFocus.dispose();
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
     final viewModel = context.watch<LoginViewModel>();
 
     return Scaffold(
@@ -99,16 +92,21 @@ class _LoginScreenState extends State<LoginScreen> {
         child: Center(
           child: ConstrainedBox(
             constraints: const BoxConstraints(
-                maxWidth: AppDimensions.formWidth),
+              maxWidth: AppDimensions.formWidth,
+            ),
             child: Padding(
               padding:
                   const EdgeInsets.all(AppDimensions.gapMd),
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Text('Welcome back',
-                      style: theme.textTheme.displayLarge,
-                      textAlign: TextAlign.center),
+                  Text(
+                    'Welcome back',
+                    style: Theme.of(context)
+                        .textTheme
+                        .displayLarge,
+                    textAlign: TextAlign.center,
+                  ),
                   const SizedBox(
                       height: AppDimensions.gapMd),
                   _buildLoginForm(viewModel),
@@ -130,7 +128,7 @@ class _LoginScreenState extends State<LoginScreen> {
       child: Column(
         children: [
           AppTextField(
-            key: ValueKey('email'),
+            key: const ValueKey('email'),
             controller: _emailController,
             focusNode: _emailFocus,
             label: 'Email',
@@ -141,7 +139,7 @@ class _LoginScreenState extends State<LoginScreen> {
           ),
           const SizedBox(height: AppDimensions.gapSm),
           AppTextField(
-            key: ValueKey('password'),
+            key: const ValueKey('password'),
             controller: _passwordController,
             focusNode: _passwordFocus,
             label: 'Password',
