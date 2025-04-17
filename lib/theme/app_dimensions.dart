@@ -27,4 +27,7 @@ class AppDimensions {
 
   static const double navBarIconSize = 24;
   static const double navBarIconSizespacing = 10;
+
+  static const double minSnackBarWidth = 360;
+  static const double maxSnackBarWidth = 520;
 }
