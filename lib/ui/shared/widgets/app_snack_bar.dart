@@ -59,6 +59,63 @@ class AppSnackBar {
           maxWidth: AppDimensions.maxSnackBarWidth,
         );
 
+    List<TextSpan> addLinksToMessage(
+        String message, BuildContext context) {
+      final Map<String, Function> keywordActions = {
+        'sign up': () =>
+            Navigator.pushNamed(context, '/signup'),
+        // Add more keywords and their actions as needed
+      };
+
+      // Split the message into parts
+      List<TextSpan> textSpans = [];
+      int start = 0;
+
+      // Iterate through the map of keyword actions
+      keywordActions.forEach((keyword, action) {
+        int index = message.indexOf(keyword, start);
+
+        while (index != -1) {
+          if (index > start) {
+            // Add the text before the keyword
+            textSpans.add(TextSpan(
+                text: message.substring(start, index)));
+          }
+
+          // Add the clickable keyword with a TapGestureRecognizer
+          textSpans.add(
+            TextSpan(
+              text: keyword,
+              style: Theme.of(context)
+                  .textTheme
+                  .bodySmall
+                  ?.copyWith(
+                    decoration: TextDecoration.underline,
+                    decorationColor: Theme.of(context)
+                        .textTheme
+                        .bodySmall!
+                        .color,
+                  ),
+              recognizer: TapGestureRecognizer()
+                ..onTap = () => action(),
+            ),
+          );
+
+          // Update the start index to after the keyword
+          start = index + keyword.length;
+          index = message.indexOf(keyword, start);
+        }
+      });
+
+      // Add the remaining part of the message after the last keyword
+      if (start < message.length) {
+        textSpans
+            .add(TextSpan(text: message.substring(start)));
+      }
+
+      return textSpans;
+    }
+
     final entry = OverlayEntry(
       builder: (context) => Positioned(
         left: 0,
@@ -172,9 +229,9 @@ class AppSnackBar {
                                                     ?.color,
                                               ),
                                           children: [
-                                            TextSpan(
-                                                text:
-                                                    displayedBody),
+                                            ...addLinksToMessage(
+                                                displayedBody,
+                                                context),
                                             if (needsTruncation)
                                               const TextSpan(
                                                   text:
