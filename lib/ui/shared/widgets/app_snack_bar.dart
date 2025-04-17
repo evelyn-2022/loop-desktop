@@ -20,103 +20,57 @@ class AppSnackBar {
     double horizontalOffset = 0.0,
   }) {
     final colorScheme = Theme.of(context).colorScheme;
-
     final borderColor = type == SnackBarType.success
         ? AppColors.green_600
         : colorScheme.error;
-
     final icon = type == SnackBarType.success
         ? Icons.check_circle_outline
         : Icons.error_outline;
-
     final iconColor = borderColor;
 
+    _removeSnackbar();
+
+    final overlay = Overlay.of(context);
+    final entry = _buildSnackbarEntry(
+      context,
+      title,
+      body,
+      icon,
+      iconColor,
+      borderColor,
+      horizontalOffset,
+      needsTruncation: body != null &&
+          _doesTextOverflow(
+            text: body,
+            style: Theme.of(context).textTheme.bodySmall!,
+            maxWidth: AppDimensions.maxSnackBarWidth,
+          ),
+    );
+
+    overlay.insert(entry);
+    _currentSnackbar = entry;
+    _startAutoHide();
+  }
+
+  static void _removeSnackbar() {
     _currentSnackbar?.remove();
     _hideTimer?.cancel();
     _currentSnackbar = null;
+  }
 
-    final overlay = Overlay.of(context);
+  static OverlayEntry _buildSnackbarEntry(
+    BuildContext context,
+    String title,
+    String? body,
+    IconData icon,
+    Color iconColor,
+    Color borderColor,
+    double horizontalOffset, {
+    required bool needsTruncation,
+  }) {
     bool expanded = false;
 
-    bool doesTextOverflow({
-      required String text,
-      required TextStyle style,
-      required double maxWidth,
-    }) {
-      final textPainter = TextPainter(
-        text: TextSpan(text: text, style: style),
-        maxLines: 1,
-        textDirection: TextDirection.ltr,
-      )..layout(maxWidth: maxWidth);
-
-      return textPainter.didExceedMaxLines;
-    }
-
-    final needsTruncation = body != null &&
-        doesTextOverflow(
-          text: body,
-          style: Theme.of(context).textTheme.bodySmall!,
-          maxWidth: AppDimensions.maxSnackBarWidth,
-        );
-
-    List<TextSpan> addLinksToMessage(
-        String message, BuildContext context) {
-      final Map<String, Function> keywordActions = {
-        'sign up': () =>
-            Navigator.pushNamed(context, '/signup'),
-        // Add more keywords and their actions as needed
-      };
-
-      // Split the message into parts
-      List<TextSpan> textSpans = [];
-      int start = 0;
-
-      // Iterate through the map of keyword actions
-      keywordActions.forEach((keyword, action) {
-        int index = message.indexOf(keyword, start);
-
-        while (index != -1) {
-          if (index > start) {
-            // Add the text before the keyword
-            textSpans.add(TextSpan(
-                text: message.substring(start, index)));
-          }
-
-          // Add the clickable keyword with a TapGestureRecognizer
-          textSpans.add(
-            TextSpan(
-              text: keyword,
-              style: Theme.of(context)
-                  .textTheme
-                  .bodySmall
-                  ?.copyWith(
-                    decoration: TextDecoration.underline,
-                    decorationColor: Theme.of(context)
-                        .textTheme
-                        .bodySmall!
-                        .color,
-                  ),
-              recognizer: TapGestureRecognizer()
-                ..onTap = () => action(),
-            ),
-          );
-
-          // Update the start index to after the keyword
-          start = index + keyword.length;
-          index = message.indexOf(keyword, start);
-        }
-      });
-
-      // Add the remaining part of the message after the last keyword
-      if (start < message.length) {
-        textSpans
-            .add(TextSpan(text: message.substring(start)));
-      }
-
-      return textSpans;
-    }
-
-    final entry = OverlayEntry(
+    return OverlayEntry(
       builder: (context) => Positioned(
         left: 0,
         right: 0,
@@ -134,7 +88,8 @@ class AppSnackBar {
                 _startAutoHide();
               },
               child: Material(
-                color: colorScheme.surface,
+                color:
+                    Theme.of(context).colorScheme.surface,
                 elevation: 2,
                 borderRadius: BorderRadius.circular(4),
                 child: Container(
@@ -162,21 +117,12 @@ class AppSnackBar {
                   ),
                   child: StatefulBuilder(
                     builder: (context, setState) {
-                      String truncateAtWord(
-                          String text, int maxChars) {
-                        if (text.length <= maxChars)
-                          return text;
-                        final index =
-                            text.lastIndexOf(' ', maxChars);
-                        return index == -1
-                            ? text.substring(0, maxChars)
-                            : text.substring(0, index);
-                      }
-
-                      final displayedBody = !expanded &&
-                              needsTruncation
-                          ? '${truncateAtWord(body, 62)}...'
-                          : body ?? '';
+                      final displayedBody =
+                          !expanded && needsTruncation
+                              ? _truncateAtWord(
+                                      body ?? '', 62) +
+                                  '...'
+                              : body ?? '';
 
                       return AnimatedSize(
                         duration: const Duration(
@@ -189,11 +135,9 @@ class AppSnackBar {
                                 CrossAxisAlignment.start,
                             mainAxisSize: MainAxisSize.min,
                             children: [
-                              Icon(
-                                icon,
-                                color: iconColor,
-                                size: 18,
-                              ),
+                              Icon(icon,
+                                  color: iconColor,
+                                  size: 18),
                               const SizedBox(width: 12),
                               Flexible(
                                 child: Column(
@@ -229,13 +173,14 @@ class AppSnackBar {
                                                     ?.color,
                                               ),
                                           children: [
-                                            ...addLinksToMessage(
-                                                displayedBody,
-                                                context),
+                                            ..._addLinksToMessage(
+                                              displayedBody,
+                                              context,
+                                            ),
                                             if (needsTruncation)
                                               const TextSpan(
                                                   text:
-                                                      ' '), // adds spacing before the "More"/"Show less" link
+                                                      ' '),
                                             if (needsTruncation)
                                               TextSpan(
                                                 text: expanded
@@ -264,7 +209,7 @@ class AppSnackBar {
                                               ),
                                           ],
                                         ),
-                                      )
+                                      ),
                                     ],
                                   ],
                                 ),
@@ -282,11 +227,79 @@ class AppSnackBar {
         ),
       ),
     );
+  }
 
-    overlay.insert(entry);
-    _currentSnackbar = entry;
+  static String _truncateAtWord(String text, int maxChars) {
+    if (text.length <= maxChars) return text;
+    final index = text.lastIndexOf(' ', maxChars);
+    return index == -1
+        ? text.substring(0, maxChars)
+        : text.substring(0, index);
+  }
 
-    _startAutoHide();
+  static bool _doesTextOverflow({
+    required String text,
+    required TextStyle style,
+    required double maxWidth,
+  }) {
+    final textPainter = TextPainter(
+      text: TextSpan(text: text, style: style),
+      maxLines: 1,
+      textDirection: TextDirection.ltr,
+    )..layout(maxWidth: maxWidth);
+
+    return textPainter.didExceedMaxLines;
+  }
+
+  static List<TextSpan> _addLinksToMessage(
+    String message,
+    BuildContext context,
+  ) {
+    final Map<String, Function> keywordActions = {
+      'sign up': () =>
+          Navigator.pushNamed(context, '/signup'),
+      // Add more keywords and their actions as needed
+    };
+
+    List<TextSpan> textSpans = [];
+    int start = 0;
+
+    keywordActions.forEach((keyword, action) {
+      int index = message.indexOf(keyword, start);
+
+      while (index != -1) {
+        if (index > start) {
+          textSpans.add(TextSpan(
+              text: message.substring(start, index)));
+        }
+
+        textSpans.add(TextSpan(
+          text: keyword,
+          style: Theme.of(context)
+              .textTheme
+              .bodySmall
+              ?.copyWith(
+                decoration: TextDecoration.underline,
+                decorationColor: Theme.of(context)
+                    .textTheme
+                    .bodySmall
+                    ?.color,
+              ),
+          recognizer: TapGestureRecognizer()
+            ..onTap = () => action(),
+        ));
+
+        start = index + keyword.length;
+        index = message.indexOf(keyword, start);
+      }
+    });
+
+    if (start < message.length) {
+      textSpans
+          .add(TextSpan(text: message.substring(start)));
+    }
+
+    return textSpans;
   }
 
   static void _startAutoHide() {
