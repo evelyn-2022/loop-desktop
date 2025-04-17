@@ -25,7 +25,6 @@ class AppSnackBar {
 
     final iconColor = borderColor;
 
-    // Remove any existing snackbar overlay before inserting a new one
     _currentSnackbar?.remove();
     _currentSnackbar = null;
 
@@ -43,7 +42,10 @@ class AppSnackBar {
               elevation: 2,
               borderRadius: BorderRadius.circular(4),
               child: Container(
-                width: 360,
+                constraints: const BoxConstraints(
+                  minWidth: 360,
+                  maxWidth: 600,
+                ),
                 decoration: BoxDecoration(
                   border: Border(
                     left: BorderSide(
@@ -57,41 +59,46 @@ class AppSnackBar {
                   vertical: 12,
                   horizontal: 16,
                 ),
-                child: Row(
-                  crossAxisAlignment:
-                      CrossAxisAlignment.start,
-                  children: [
-                    Icon(
-                      icon,
-                      color: iconColor,
-                      size: 18,
-                    ),
-                    const SizedBox(width: 12),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment:
-                            CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            title,
-                            style: Theme.of(context)
-                                .textTheme
-                                .labelMedium,
-                          ),
-                          if (body != null &&
-                              body.isNotEmpty) ...[
-                            const SizedBox(height: 4),
+                child: IntrinsicWidth(
+                  child: Row(
+                    crossAxisAlignment:
+                        CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(
+                        icon,
+                        color: iconColor,
+                        size: 18,
+                      ),
+                      const SizedBox(width: 12),
+                      Flexible(
+                        child: Column(
+                          crossAxisAlignment:
+                              CrossAxisAlignment.start,
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
                             Text(
-                              body,
+                              title,
                               style: Theme.of(context)
                                   .textTheme
-                                  .bodySmall,
+                                  .labelMedium,
                             ),
+                            if (body != null &&
+                                body.isNotEmpty) ...[
+                              const SizedBox(height: 4),
+                              Text(
+                                body,
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .bodySmall,
+                                softWrap: true,
+                              ),
+                            ],
                           ],
-                        ],
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
             ),
@@ -103,7 +110,6 @@ class AppSnackBar {
     overlay.insert(entry);
     _currentSnackbar = entry;
 
-    // Automatically remove the snackbar after a delay
     Future.delayed(const Duration(seconds: 3), () {
       _currentSnackbar?.remove();
       _currentSnackbar = null;
