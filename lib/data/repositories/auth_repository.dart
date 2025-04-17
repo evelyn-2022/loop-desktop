@@ -3,6 +3,7 @@ import 'package:loop/data/services/auth_token_manager.dart';
 import 'package:loop/data/services/models/login_request.dart';
 import 'package:loop/data/services/models/login_response.dart';
 import 'package:loop/data/services/models/api_response.dart';
+import 'package:loop/data/services/models/signup_request.dart';
 
 class AuthRepository {
   final AuthApiClient apiClient;
@@ -44,6 +45,17 @@ class AuthRepository {
     if (response is ApiSuccess) {
       await tokenManager.clearTokens();
     }
+    return response;
+  }
+
+  Future<ApiResponse<void>> signup(String email,
+      String password, String username) async {
+    final signupRequest = SignupRequest(
+        email: email,
+        password: password,
+        username: username);
+    final response = await apiClient.signup(signupRequest);
+
     return response;
   }
 }

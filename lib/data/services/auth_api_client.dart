@@ -5,6 +5,7 @@ import 'package:loop/data/services/dio_api_handler.dart';
 import 'package:loop/data/services/models/login_request.dart';
 import 'package:loop/data/services/models/login_response.dart';
 import 'package:loop/data/services/models/api_response.dart';
+import 'package:loop/data/services/models/signup_request.dart';
 
 class AuthApiClient {
   final Dio dio;
@@ -32,6 +33,15 @@ class AuthApiClient {
           'Authorization': 'Bearer $refreshToken'
         }),
       ),
+      (_) {},
+      () {},
+    );
+  }
+
+  Future<ApiResponse<void>> signup(
+      SignupRequest request) async {
+    return handleDioRequest<void>(
+      dio.post('/auth/signup', data: request.toMap()),
       (_) {},
       () {},
     );

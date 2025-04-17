@@ -8,6 +8,7 @@ import 'package:loop/data/services/dio_interceptor.dart';
 import 'package:loop/data/services/profile_api_client.dart';
 import 'package:loop/providers/auth_state.dart';
 import 'package:loop/providers/theme_provider.dart';
+import 'package:loop/ui/auth/signup/view_models/signup_viewmodel.dart';
 import 'package:loop/ui/profile/view_models/profile_viewmodel.dart';
 import 'package:provider/provider.dart';
 import 'package:loop/data/repositories/auth_repository.dart';
@@ -68,6 +69,11 @@ class AppProviders extends StatelessWidget {
           create: (context) => LoginViewModel(
             authRepository: context.read<AuthRepository>(),
             authState: context.read<AuthState>(),
+          ),
+        ),
+        ChangeNotifierProvider<SignUpViewModel>(
+          create: (context) => SignUpViewModel(
+            authRepository: context.read<AuthRepository>(),
           ),
         ),
         ChangeNotifierProvider<ThemeProvider>(

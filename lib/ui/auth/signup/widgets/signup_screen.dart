@@ -1,12 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:loop/routes/routes.dart';
 import 'package:loop/theme/app_dimensions.dart';
+import 'package:loop/ui/auth/signup/view_models/signup_viewmodel.dart';
 import 'package:loop/ui/shared/widgets/app_progress_bar.dart';
 import 'package:loop/ui/auth/signup/widgets/signup_footer.dart';
 import 'package:loop/ui/auth/signup/widgets/signup_step_field.dart';
 import 'package:loop/ui/auth/signup/widgets/signup_top_bar.dart';
 import 'package:loop/ui/shared/widgets/app_button.dart';
+import 'package:loop/ui/shared/widgets/app_snack_bar.dart';
 import 'package:loop/utils/validators.dart';
+import 'package:provider/provider.dart';
 
 class SignUpScreen extends StatefulWidget {
   const SignUpScreen({super.key});
@@ -123,11 +127,32 @@ class _SignUpScreenState extends State<SignUpScreen> {
     }
   }
 
-  void _submit() {
-    print("✅ Sign Up Info:");
-    print("Email: ${_emailController.text}");
-    print("Password: ${_passwordController.text}");
-    print("Username: ${_usernameController.text}");
+  void _submit() async {
+    final viewModel = context.read<SignUpViewModel>();
+
+    final email = _emailController.text.trim();
+    final password = _passwordController.text.trim();
+    final username = _usernameController.text.trim();
+
+    final success =
+        await viewModel.signup(email, password, username);
+
+    if (!mounted) return;
+    AppSnackBar.show(
+      context,
+      title:
+          success ? 'Sign Up Successful' : 'Sign Up Failed',
+      body: success ? '' : viewModel.errorMessage,
+      type: success
+          ? SnackBarType.success
+          : SnackBarType.error,
+    );
+
+    if (success) {
+      if (!mounted) return;
+      Navigator.pushReplacementNamed(
+          context, AppRoutes.home);
+    }
   }
 
   @override
