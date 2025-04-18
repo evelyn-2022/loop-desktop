@@ -23,7 +23,7 @@ class LoginFooter extends StatelessWidget {
             ),
           ],
         ),
-        const SizedBox(height: AppDimensions.gapMd),
+        const SizedBox(height: AppDimensions.gapSm),
         AppLink(
           text: "Continue as guest",
           color: theme.colorScheme.secondary,

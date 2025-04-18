@@ -266,7 +266,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       ),
                     ),
                     const SizedBox(
-                        height: AppDimensions.gapMd),
+                        height: AppDimensions.gapXs),
                     AppButton(
                       label: _currentStep < totalSteps - 1
                           ? 'Next'

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:loop/theme/app_dimensions.dart';
 import 'package:loop/ui/shared/widgets/app_password_requirements.dart';
 import 'package:loop/ui/shared/widgets/app_text_field.dart';
 import 'package:loop/utils/validators.dart';
@@ -69,12 +70,12 @@ class SignUpStepField extends StatelessWidget {
               hiddenSvgAsset: 'assets/icons/eye_hidden.svg',
               submitAttempted: submitAttempted,
             ),
-            const SizedBox(height: 12),
             AppPasswordRequirements(
               hasMinLength: hasMinLength,
               hasNumber: hasNumber,
               hasLowercase: hasLowercase,
             ),
+            const SizedBox(height: AppDimensions.gapSm),
           ],
         );
 

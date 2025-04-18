@@ -23,7 +23,7 @@ class SignUpFooter extends StatelessWidget {
             ),
           ],
         ),
-        const SizedBox(height: AppDimensions.gapMd),
+        const SizedBox(height: AppDimensions.gapSm),
         AppLink(
           text: "Continue as guest",
           fontSize: 14,

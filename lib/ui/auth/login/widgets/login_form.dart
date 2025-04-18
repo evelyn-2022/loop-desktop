@@ -42,7 +42,7 @@ class LoginForm extends StatelessWidget {
             validator: Validators.validateEmail,
             submitAttempted: submitAttempted,
           ),
-          const SizedBox(height: AppDimensions.gapSm),
+          const SizedBox(height: AppDimensions.gapXs),
           AppTextField(
             key: const ValueKey('password'),
             controller: passwordController,
@@ -56,7 +56,7 @@ class LoginForm extends StatelessWidget {
             hiddenSvgAsset: 'assets/icons/eye_hidden.svg',
             submitAttempted: submitAttempted,
           ),
-          const SizedBox(height: AppDimensions.gapSm),
+          const SizedBox(height: AppDimensions.gapXs),
           AppButton(
             label: 'Log in',
             onPressed: onSubmit,

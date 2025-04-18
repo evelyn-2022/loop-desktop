@@ -152,7 +152,7 @@ class _AppTextFieldState extends State<AppTextField> {
           ),
         ),
         SizedBox(
-          height: 16,
+          height: 20,
           child: Padding(
             padding: const EdgeInsets.only(
               left:
