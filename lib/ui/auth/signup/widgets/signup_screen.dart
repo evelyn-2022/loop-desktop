@@ -43,6 +43,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
   bool _hasMinLength = false;
   bool _hasNumber = false;
   bool _hasLowercase = false;
+  String? _emailError;
 
   final List<String> _stepInstructions = [
     "Enter your email",
@@ -107,7 +108,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
     }
   }
 
-  void _validateAndContinue() {
+  void _validateAndContinue() async {
     setState(() => _submitAttempted = true);
 
     final isValid = _isStepValid();
@@ -115,6 +116,21 @@ class _SignUpScreenState extends State<SignUpScreen> {
     if (!isValid) {
       _keyboardListenerFocus.requestFocus();
       return;
+    }
+
+    if (_currentStep == 0) {
+      final viewModel = context.read<SignUpViewModel>();
+      final email = _emailController.text.trim();
+
+      final isTaken = await viewModel.checkEmail(email);
+      if (isTaken) {
+        setState(() {
+          _emailError =
+              'Email already registered, please log in instead';
+          _keyboardListenerFocus.requestFocus();
+        });
+        return;
+      }
     }
 
     if (_currentStep < totalSteps - 1) {
@@ -246,6 +262,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         hasMinLength: _hasMinLength,
                         hasNumber: _hasNumber,
                         hasLowercase: _hasLowercase,
+                        emailError: _emailError,
                       ),
                     ),
                     const SizedBox(

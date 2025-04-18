@@ -17,6 +17,29 @@ class SignUpViewModel extends ChangeNotifier {
     required this.authRepository,
   });
 
+  Future<bool> checkEmail(String email) async {
+    _isLoading = true;
+    _errorMessage = null;
+    _successMessage = null;
+    notifyListeners();
+
+    final response = await authRepository.apiClient
+        .checkEmailRegistered(email);
+
+    _isLoading = false;
+
+    if (response is ApiSuccess) {
+      return false;
+    } else if (response is ApiError &&
+        response.code == 409) {
+      return true;
+    } else {
+      _errorMessage = response.message;
+      notifyListeners();
+      return false;
+    }
+  }
+
   Future<bool> signup(String email, String password,
       String username) async {
     _isLoading = true;

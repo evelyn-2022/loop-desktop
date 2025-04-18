@@ -46,4 +46,16 @@ class AuthApiClient {
       () {},
     );
   }
+
+  Future<ApiResponse<void>> checkEmailRegistered(
+      String email) async {
+    return handleDioRequest<void>(
+      dio.get(
+        '/auth/check-email',
+        queryParameters: {'email': email},
+      ),
+      (_) {},
+      () {},
+    );
+  }
 }

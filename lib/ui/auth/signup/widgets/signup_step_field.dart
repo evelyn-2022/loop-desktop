@@ -17,6 +17,7 @@ class SignUpStepField extends StatelessWidget {
   final bool hasMinLength;
   final bool hasNumber;
   final bool hasLowercase;
+  final String? emailError;
 
   const SignUpStepField({
     super.key,
@@ -33,6 +34,7 @@ class SignUpStepField extends StatelessWidget {
     required this.hasMinLength,
     required this.hasNumber,
     required this.hasLowercase,
+    this.emailError,
   });
 
   @override
@@ -48,6 +50,7 @@ class SignUpStepField extends StatelessWidget {
           keyboardType: TextInputType.emailAddress,
           validator: Validators.validateEmail,
           submitAttempted: submitAttempted,
+          externalErrorText: emailError,
         );
       case 1:
         return Column(

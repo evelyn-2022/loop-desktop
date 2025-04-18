@@ -17,6 +17,7 @@ class AppTextField extends StatefulWidget {
   final FocusNode? focusNode;
   final KeyEventResult Function(KeyEvent)? onKeyEvent;
   final bool submitAttempted;
+  final String? externalErrorText;
 
   const AppTextField({
     super.key,
@@ -33,6 +34,7 @@ class AppTextField extends StatefulWidget {
     this.focusNode,
     this.onKeyEvent,
     this.submitAttempted = false,
+    this.externalErrorText,
   });
 
   @override
@@ -84,8 +86,9 @@ class _AppTextFieldState extends State<AppTextField> {
   }
 
   void _validateAndShowError() {
-    final error =
+    final error = widget.externalErrorText ??
         widget.validator?.call(widget.controller.text);
+
     if (mounted) {
       setState(() {
         _errorMessage = error;

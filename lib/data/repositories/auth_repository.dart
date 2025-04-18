@@ -58,4 +58,19 @@ class AuthRepository {
 
     return response;
   }
+
+  Future<bool> isEmailTaken(String email) async {
+    final response =
+        await apiClient.checkEmailRegistered(email);
+
+    if (response is ApiSuccess) {
+      return false;
+    } else if (response is ApiError &&
+        response.code == 409) {
+      return true;
+    } else {
+      throw Exception(
+          'Unexpected error: ${response.message}');
+    }
+  }
 }
