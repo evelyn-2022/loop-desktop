@@ -18,6 +18,7 @@ class AppDimensions {
   static const double gapSm = 16;
   static const double gapMd = 24;
   static const double gapLg = 32;
+  static const double gapXl = 40;
 
   static const double formWidth = 400;
 

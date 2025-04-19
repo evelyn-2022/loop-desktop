@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:loop/routes/routes.dart';
 import 'package:loop/theme/app_dimensions.dart';
 import 'package:loop/ui/auth/signup/view_models/signup_viewmodel.dart';
+import 'package:loop/ui/auth/signup/widgets/post_signup_screen.dart';
 import 'package:loop/ui/shared/widgets/app_progress_bar.dart';
 import 'package:loop/ui/auth/signup/widgets/signup_footer.dart';
 import 'package:loop/ui/auth/signup/widgets/signup_step_field.dart';
@@ -165,9 +165,14 @@ class _SignUpScreenState extends State<SignUpScreen> {
     );
 
     if (success) {
-      if (!mounted) return;
-      Navigator.pushReplacementNamed(
-          context, AppRoutes.home);
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (_) => PostSignupScreen(
+            email: email,
+          ),
+        ),
+      );
     }
   }
 
@@ -190,6 +195,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final viewModel = context.read<SignUpViewModel>();
 
     return Scaffold(
       body: Focus(
@@ -223,13 +229,13 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       textAlign: TextAlign.center,
                     ),
                     const SizedBox(
-                        height: AppDimensions.gapMd),
+                        height: AppDimensions.gapXl),
                     AppProgressBar(
                       currentStep: _currentStep,
                       totalSteps: totalSteps,
                     ),
                     const SizedBox(
-                        height: AppDimensions.gapSm),
+                        height: AppDimensions.gapXs),
                     SignUpTopBar(
                       currentStep: _currentStep,
                       stepInstructions: _stepInstructions,
@@ -272,10 +278,11 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           ? 'Next'
                           : 'Sign Up',
                       onPressed: _validateAndContinue,
+                      isLoading: viewModel.isLoading,
                     ),
                     if (_currentStep == 0) ...[
                       const SizedBox(
-                          height: AppDimensions.gapMd),
+                          height: AppDimensions.gapXl),
                       const SignUpFooter(),
                     ],
                   ],

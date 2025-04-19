@@ -29,6 +29,11 @@ class AppTheme {
             fontWeight: FontWeight.w500,
             color: AppColors.black_800,
           ),
+          bodyLarge: GoogleFonts.inter(
+            fontSize: 24,
+            fontWeight: FontWeight.normal,
+            color: AppColors.black_700,
+          ),
           bodyMedium: GoogleFonts.inter(
             fontSize: 16,
             fontWeight: FontWeight.normal,
@@ -83,16 +88,22 @@ class AppTheme {
           ),
           hintStyle: TextStyle(
             color: AppColors.grey_200,
+            fontSize: 16,
           ),
           labelStyle: TextStyle(
             color: AppColors.grey_200,
+            fontSize: 16,
           ),
           floatingLabelStyle:
               WidgetStateTextStyle.resolveWith((states) {
             if (states.contains(WidgetState.focused)) {
-              return TextStyle(color: AppColors.grey_300);
+              return TextStyle(
+                  color: AppColors.grey_300, fontSize: 14);
             }
-            return TextStyle(color: AppColors.grey_200);
+            return TextStyle(
+              color: AppColors.grey_200,
+              fontSize: 14,
+            );
           }),
           contentPadding: EdgeInsets.symmetric(
               horizontal: 20, vertical: 16),
@@ -181,6 +192,11 @@ class AppTheme {
             fontWeight: FontWeight.w500,
             color: AppColors.white_700,
           ),
+          bodyLarge: GoogleFonts.inter(
+            fontSize: 24,
+            fontWeight: FontWeight.normal,
+            color: AppColors.white_700,
+          ),
           bodyMedium: GoogleFonts.inter(
             fontSize: 16,
             fontWeight: FontWeight.normal,
@@ -239,7 +255,6 @@ class AppTheme {
           focusedErrorBorder: OutlineInputBorder(
             borderSide: BorderSide(
               color: AppColors.red_200,
-              // width: AppDimensions.strokeWidthLg,
             ),
           ),
           errorStyle: TextStyle(
@@ -248,16 +263,22 @@ class AppTheme {
           ),
           hintStyle: TextStyle(
             color: AppColors.grey_400,
+            fontSize: 16,
           ),
           labelStyle: TextStyle(
             color: AppColors.grey_300,
+            fontSize: 16,
           ),
           floatingLabelStyle:
               WidgetStateTextStyle.resolveWith((states) {
             if (states.contains(WidgetState.focused)) {
-              return TextStyle(color: AppColors.grey_200);
+              return TextStyle(
+                color: AppColors.grey_200,
+                fontSize: 14,
+              );
             }
-            return TextStyle(color: AppColors.grey_300);
+            return TextStyle(
+                color: AppColors.grey_300, fontSize: 14);
           }),
           contentPadding: EdgeInsets.symmetric(
               horizontal:

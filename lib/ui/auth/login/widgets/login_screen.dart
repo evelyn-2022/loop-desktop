@@ -107,7 +107,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     textAlign: TextAlign.center,
                   ),
                   const SizedBox(
-                      height: AppDimensions.gapMd),
+                      height: AppDimensions.gapXl),
                   LoginForm(
                     formKey: _formKey,
                     emailController: _emailController,
@@ -119,7 +119,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     isLoading: viewModel.isLoading,
                   ),
                   const SizedBox(
-                      height: AppDimensions.gapMd),
+                      height: AppDimensions.gapXl),
                   const LoginFooter(),
                 ],
               ),

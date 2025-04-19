@@ -73,4 +73,9 @@ class AuthRepository {
           'Unexpected error: ${response.message}');
     }
   }
+
+  Future<ApiResponse<void>> resendVerificationEmail(
+      String email) {
+    return apiClient.resendVerificationEmail(email);
+  }
 }

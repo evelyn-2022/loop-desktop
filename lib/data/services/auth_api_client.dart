@@ -58,4 +58,16 @@ class AuthApiClient {
       () {},
     );
   }
+
+  Future<ApiResponse<void>> resendVerificationEmail(
+      String email) async {
+    return handleDioRequest<void>(
+      dio.post(
+        '/auth/resend-verification',
+        data: {'email': email},
+      ),
+      (_) {},
+      () {},
+    );
+  }
 }
