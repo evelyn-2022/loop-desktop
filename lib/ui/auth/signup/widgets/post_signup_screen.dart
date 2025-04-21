@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:loop/routes/routes.dart';
 import 'package:loop/theme/app_dimensions.dart';
 import 'package:loop/ui/auth/signup/view_models/signup_viewmodel.dart';
@@ -46,73 +47,78 @@ class PostSignupScreen extends StatelessWidget {
         child: ConstrainedBox(
           constraints: const BoxConstraints(
               maxWidth: AppDimensions.formWidth),
-          child: Padding(
-            padding:
-                const EdgeInsets.all(AppDimensions.gapMd),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text(
-                  'Almost there!',
-                  style: Theme.of(context)
-                      .textTheme
-                      .displayLarge,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              SvgPicture.asset(
+                'assets/icons/mailbox.svg',
+                width: AppDimensions.iconSizeXXL,
+                height: AppDimensions.iconSizeXXL,
+                colorFilter: ColorFilter.mode(
+                  theme.colorScheme.primary,
+                  BlendMode.srcIn,
                 ),
-                const SizedBox(height: AppDimensions.gapXl),
-                Text(
-                  "A verification email has been sent to",
-                  style: theme.textTheme.bodyMedium,
+              ),
+              const SizedBox(height: AppDimensions.gapLg),
+              Text(
+                'Almost there',
+                style: Theme.of(context)
+                    .textTheme
+                    .displayLarge,
+              ),
+              const SizedBox(height: AppDimensions.gapLg),
+              Text(
+                "A verification email has been sent to",
+                style: theme.textTheme.bodyMedium,
+              ),
+              const SizedBox(height: AppDimensions.gapXs),
+              Text(
+                email,
+                style: theme.textTheme.bodyLarge!.copyWith(
+                  fontWeight: FontWeight.w600,
+                  color: theme.colorScheme.primary,
                 ),
-                const SizedBox(height: AppDimensions.gapXs),
-                Text(
-                  email,
-                  style:
-                      theme.textTheme.bodyLarge!.copyWith(
-                    fontWeight: FontWeight.w600,
-                    color: theme.colorScheme.primary,
+              ),
+              const SizedBox(height: AppDimensions.gapLg),
+              Text(
+                "Didn't receive it?",
+                style: theme.textTheme.bodyMedium,
+              ),
+              const SizedBox(height: AppDimensions.gapXs),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text("Check your spam folder or ",
+                      style: theme.textTheme.bodyMedium),
+                  AppLink(
+                    text: viewModel.isSendingEmail
+                        ? "Sending..."
+                        : viewModel.canResend
+                            ? "Click here"
+                            : "Please wait...",
+                    color: (viewModel.isSendingEmail ||
+                            !viewModel.canResend)
+                        ? theme.colorScheme.secondary
+                        : null,
+                    onTap: () {
+                      if (!viewModel.isSendingEmail) {
+                        viewModel
+                            .resendVerificationEmail(email);
+                      }
+                    },
                   ),
-                ),
-                const SizedBox(height: AppDimensions.gapXl),
-                Text(
-                  "Didn't receive it?",
-                  style: theme.textTheme.bodyMedium,
-                ),
-                const SizedBox(height: AppDimensions.gapXs),
-                Row(
-                  mainAxisAlignment:
-                      MainAxisAlignment.center,
-                  children: [
-                    Text("Check your spam folder or ",
-                        style: theme.textTheme.bodyMedium),
-                    AppLink(
-                      text: viewModel.isSendingEmail
-                          ? "Sending..."
-                          : viewModel.canResend
-                              ? "Resend"
-                              : "Please wait...",
-                      color: (viewModel.isSendingEmail ||
-                              !viewModel.canResend)
-                          ? theme.colorScheme.secondary
-                          : null,
-                      onTap: () {
-                        if (!viewModel.isSendingEmail) {
-                          viewModel.resendVerificationEmail(
-                              email);
-                        }
-                      },
-                    ),
-                  ],
-                ),
-                const SizedBox(height: AppDimensions.gapXl),
-                AppButton(
-                  label: "Go to Login",
-                  onPressed: () {
-                    Navigator.pushReplacementNamed(
-                        context, AppRoutes.login);
-                  },
-                ),
-              ],
-            ),
+                ],
+              ),
+              const SizedBox(height: AppDimensions.gapXl),
+              AppButton(
+                label: "Go to Login",
+                width: AppDimensions.buttonWidth,
+                onPressed: () {
+                  Navigator.pushReplacementNamed(
+                      context, AppRoutes.login);
+                },
+              ),
+            ],
           ),
         ),
       ),

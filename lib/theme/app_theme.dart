@@ -31,7 +31,7 @@ class AppTheme {
           ),
           bodyLarge: GoogleFonts.inter(
             fontSize: 24,
-            fontWeight: FontWeight.normal,
+            fontWeight: FontWeight.w500,
             color: AppColors.black_700,
           ),
           bodyMedium: GoogleFonts.inter(
@@ -194,7 +194,7 @@ class AppTheme {
           ),
           bodyLarge: GoogleFonts.inter(
             fontSize: 24,
-            fontWeight: FontWeight.normal,
+            fontWeight: FontWeight.w500,
             color: AppColors.white_700,
           ),
           bodyMedium: GoogleFonts.inter(

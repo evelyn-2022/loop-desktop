@@ -3,9 +3,11 @@ class AppDimensions {
   static const double buttonBorderRadius = 4;
   static const double buttonPaddingHorizontal = 20;
   static const double buttonPaddingVertical = 20;
+  static const double buttonWidth = 150;
 
   static const double iconSizeXs = 14;
   static const double iconSizeSm = 20;
+  static const double iconSizeXXL = 100;
   static const double strokeWidthMd = 1.5;
   static const double strokeWidthLg = 2;
 
