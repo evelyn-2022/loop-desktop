@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:loop/theme/app_dimensions.dart';
 import 'package:loop/ui/shared/widgets/app_button.dart';
+import 'package:loop/ui/shared/widgets/app_link.dart';
 import 'package:loop/ui/shared/widgets/app_text_field.dart';
 import 'package:loop/utils/validators.dart';
 
@@ -28,6 +29,8 @@ class LoginForm extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
     return Form(
       key: formKey,
       child: Column(
@@ -56,7 +59,19 @@ class LoginForm extends StatelessWidget {
             hiddenSvgAsset: 'assets/icons/eye_hidden.svg',
             submitAttempted: submitAttempted,
           ),
-          const SizedBox(height: AppDimensions.gapXs),
+          Align(
+            alignment: Alignment.centerRight,
+            child: AppLink(
+              text: 'Forgot password?',
+              color: theme.colorScheme.secondary,
+              fontSize: 14,
+              onTap: () {
+                Navigator.pushNamed(
+                    context, '/forgot-password');
+              },
+            ),
+          ),
+          const SizedBox(height: AppDimensions.gapMd),
           AppButton(
             label: 'Log in',
             onPressed: onSubmit,
