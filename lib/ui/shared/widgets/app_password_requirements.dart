@@ -53,13 +53,24 @@ class AppPasswordRequirements extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        _buildItem(
-            context, hasMinLength, "At least 8 characters"),
+        Text(
+          "Your password must include:",
+          style: Theme.of(context)
+              .textTheme
+              .bodySmall
+              ?.copyWith(
+                color:
+                    Theme.of(context).colorScheme.onSurface,
+              ),
+        ),
         const SizedBox(height: AppDimensions.gapXs),
-        _buildItem(context, hasNumber, "Contains a number"),
+        _buildItem(context, hasMinLength,
+            "A minimum of 8 characters"),
+        const SizedBox(height: AppDimensions.gapXs),
+        _buildItem(context, hasNumber, "At least 1 number"),
         const SizedBox(height: AppDimensions.gapXs),
         _buildItem(context, hasLowercase,
-            "Contains a lowercase letter"),
+            "At least 1 lowercase letter"),
       ],
     );
   }
