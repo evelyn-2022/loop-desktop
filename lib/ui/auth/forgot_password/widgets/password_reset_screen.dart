@@ -65,54 +65,52 @@ class _PasswordResetScreenState
 
     return Scaffold(
       body: Center(
-        child: SingleChildScrollView(
-          child: ConstrainedBox(
-            constraints: const BoxConstraints(
-                maxWidth: AppDimensions.formWidth),
-            child: Form(
-              key: _formKey,
-              child: Padding(
-                padding: const EdgeInsets.all(
-                    AppDimensions.gapMd),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Text('Reset Password',
-                        style:
-                            theme.textTheme.displayLarge),
-                    const SizedBox(
-                        height: AppDimensions.gapXl),
-                    AppTextField(
-                      controller: _passwordController,
-                      focusNode: _passwordFocus,
-                      label: 'New Password',
-                      hint: 'Enter new password',
-                      obscure: true,
-                      validator:
-                          Validators.validatePassword,
-                      keyboardType:
-                          TextInputType.visiblePassword,
-                      visibleSvgAsset:
-                          'assets/icons/eye_open.svg',
-                      hiddenSvgAsset:
-                          'assets/icons/eye_hidden.svg',
-                      submitAttempted: _submitAttempted,
-                    ),
-                    AppPasswordRequirements(
-                      hasMinLength: hasMinLength,
-                      hasNumber: hasNumber,
-                      hasLowercase: hasLowercase,
-                    ),
-                    const SizedBox(
-                        height: AppDimensions.gapMd),
-                    AppButton(
-                      label: 'Reset Password',
-                      onPressed: _handleSubmit,
-                      isLoading:
-                          false, // You can wire up loading from ViewModel
-                    ),
-                  ],
-                ),
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(
+              maxWidth: AppDimensions.formWidth),
+          child: Form(
+            key: _formKey,
+            child: Padding(
+              padding:
+                  const EdgeInsets.all(AppDimensions.gapMd),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text('Enter new password',
+                      style: theme.textTheme.displayLarge),
+                  const SizedBox(
+                      height: AppDimensions.gapLg),
+                  AppTextField(
+                    controller: _passwordController,
+                    focusNode: _passwordFocus,
+                    label: 'Password',
+                    hint: 'Enter new password',
+                    obscure: true,
+                    validator: Validators.validatePassword,
+                    keyboardType:
+                        TextInputType.visiblePassword,
+                    visibleSvgAsset:
+                        'assets/icons/eye_open.svg',
+                    hiddenSvgAsset:
+                        'assets/icons/eye_hidden.svg',
+                    submitAttempted: _submitAttempted,
+                  ),
+                  const SizedBox(
+                      height: AppDimensions.gapSm),
+                  AppPasswordRequirements(
+                    hasMinLength: hasMinLength,
+                    hasNumber: hasNumber,
+                    hasLowercase: hasLowercase,
+                  ),
+                  const SizedBox(
+                      height: AppDimensions.gapMd),
+                  AppButton(
+                    label: 'Confirm',
+                    onPressed: _handleSubmit,
+                    isLoading:
+                        false, // You can wire up loading from ViewModel
+                  ),
+                ],
               ),
             ),
           ),

@@ -70,12 +70,12 @@ class SignUpStepField extends StatelessWidget {
               hiddenSvgAsset: 'assets/icons/eye_hidden.svg',
               submitAttempted: submitAttempted,
             ),
+            const SizedBox(height: AppDimensions.gapSm),
             AppPasswordRequirements(
               hasMinLength: hasMinLength,
               hasNumber: hasNumber,
               hasLowercase: hasLowercase,
             ),
-            const SizedBox(height: AppDimensions.gapSm),
           ],
         );
 

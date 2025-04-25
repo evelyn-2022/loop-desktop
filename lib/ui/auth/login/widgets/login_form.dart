@@ -45,7 +45,7 @@ class LoginForm extends StatelessWidget {
             validator: Validators.validateEmail,
             submitAttempted: submitAttempted,
           ),
-          const SizedBox(height: AppDimensions.gapXs),
+          const SizedBox(height: AppDimensions.gapSm),
           AppTextField(
             key: const ValueKey('password'),
             controller: passwordController,
@@ -59,20 +59,17 @@ class LoginForm extends StatelessWidget {
             hiddenSvgAsset: 'assets/icons/eye_hidden.svg',
             submitAttempted: submitAttempted,
           ),
-          Transform.translate(
-            offset: const Offset(
-                0, -6), // move 10 pixels to the right
-            child: Align(
-              alignment: Alignment.centerRight,
-              child: AppLink(
-                text: 'Forgot password?',
-                color: theme.colorScheme.secondary,
-                fontSize: 14,
-                onTap: () {
-                  Navigator.pushNamed(
-                      context, '/forgot-password');
-                },
-              ),
+          const SizedBox(height: AppDimensions.gapXs),
+          Align(
+            alignment: Alignment.centerRight,
+            child: AppLink(
+              text: 'Forgot password?',
+              color: theme.colorScheme.secondary,
+              fontSize: 14,
+              onTap: () {
+                Navigator.pushNamed(
+                    context, '/forgot-password');
+              },
             ),
           ),
           const SizedBox(height: AppDimensions.gapSm),

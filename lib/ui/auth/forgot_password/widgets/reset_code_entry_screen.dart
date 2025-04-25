@@ -178,7 +178,7 @@ class _ResetCodeEntryScreenState
                         style:
                             theme.textTheme.displayLarge),
                     const SizedBox(
-                        height: AppDimensions.gapXl),
+                        height: AppDimensions.gapLg),
                     Text(
                         'Enter the 6-digit code sent to your email',
                         style: theme.textTheme.bodyMedium),

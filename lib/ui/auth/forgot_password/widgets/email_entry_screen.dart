@@ -113,7 +113,7 @@ class _EmailEntryScreenState
                       style: theme.textTheme.displayLarge,
                     ),
                     const SizedBox(
-                        height: AppDimensions.gapXl),
+                        height: AppDimensions.gapLg),
                     Text(
                       'Enter your email to get a 6-digit reset code',
                       style: theme.textTheme.bodyMedium,
@@ -132,7 +132,7 @@ class _EmailEntryScreenState
                       submitAttempted: _submitAttempted,
                     ),
                     const SizedBox(
-                        height: AppDimensions.gapSm),
+                        height: AppDimensions.gapMd),
                     AppButton(
                       label: 'Send Code',
                       onPressed: _handleSubmit,

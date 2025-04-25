@@ -19,7 +19,7 @@ class SignUpTopBar extends StatelessWidget {
     final theme = Theme.of(context);
     return Row(
       children: [
-        if (currentStep > 0)
+        if (currentStep > 0) ...[
           IconButton(
             onPressed: onBack,
             icon: SvgPicture.asset(
@@ -32,7 +32,8 @@ class SignUpTopBar extends StatelessWidget {
               ),
             ),
           ),
-        const SizedBox(width: AppDimensions.gapXs),
+          const SizedBox(width: AppDimensions.gapXs),
+        ],
         Text(
           stepInstructions[currentStep],
           style: theme.textTheme.bodyMedium,

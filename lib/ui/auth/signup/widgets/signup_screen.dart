@@ -229,7 +229,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       textAlign: TextAlign.center,
                     ),
                     const SizedBox(
-                        height: AppDimensions.gapXl),
+                        height: AppDimensions.gapLg),
                     AppProgressBar(
                       currentStep: _currentStep,
                       totalSteps: totalSteps,
@@ -248,7 +248,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       },
                     ),
                     const SizedBox(
-                        height: AppDimensions.gapMd),
+                        height: AppDimensions.gapSm),
                     Form(
                       key: _formKey,
                       child: SignUpStepField(
@@ -272,7 +272,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       ),
                     ),
                     const SizedBox(
-                        height: AppDimensions.gapXs),
+                        height: AppDimensions.gapMd),
                     AppButton(
                       label: _currentStep < totalSteps - 1
                           ? 'Next'
@@ -282,7 +282,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     ),
                     if (_currentStep == 0) ...[
                       const SizedBox(
-                          height: AppDimensions.gapXl),
+                          height: AppDimensions.gapLg),
                       const SignUpFooter(),
                     ],
                   ],

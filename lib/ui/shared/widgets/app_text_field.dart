@@ -151,27 +151,23 @@ class _AppTextFieldState extends State<AppTextField> {
             ),
           ),
         ),
-        SizedBox(
-          height: 20,
-          child: Padding(
-            padding: const EdgeInsets.only(
-              left:
-                  AppDimensions.textFieldPaddingHorizontal,
-              top: 2,
-            ),
-            child: AnimatedOpacity(
-              opacity: _showError && _errorMessage != null
-                  ? 1
-                  : 0,
-              duration: const Duration(milliseconds: 150),
-              child: Text(
-                _errorMessage ?? '',
-                style: TextStyle(
-                  color: AppColors.red_200,
-                  fontSize: 12,
-                ),
-              ),
-            ),
+        Padding(
+          padding: const EdgeInsets.only(
+            left: AppDimensions.textFieldPaddingHorizontal,
+            top: 2,
+          ),
+          child: AnimatedSize(
+            duration: const Duration(milliseconds: 200),
+            curve: Curves.easeInOut,
+            child: (_showError && _errorMessage != null)
+                ? Text(
+                    _errorMessage!,
+                    style: const TextStyle(
+                      color: AppColors.red_200,
+                      fontSize: 12,
+                    ),
+                  )
+                : const SizedBox.shrink(),
           ),
         ),
       ],

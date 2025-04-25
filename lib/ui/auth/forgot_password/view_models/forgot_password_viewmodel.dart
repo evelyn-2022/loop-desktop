@@ -5,11 +5,13 @@ import 'package:loop/data/services/models/api_response.dart';
 class ForgotPasswordViewModel extends ChangeNotifier {
   final AuthRepository authRepository;
   String? _email;
+  String? _code;
   bool _isLoading = false;
   String? _errorMessage;
   String? _successMessage;
 
   String? get email => _email;
+  String? get code => _code;
   bool get isLoading => _isLoading;
   String? get errorMessage => _errorMessage;
   String? get successMessage => _successMessage;
@@ -47,6 +49,8 @@ class ForgotPasswordViewModel extends ChangeNotifier {
     _errorMessage = null;
     _successMessage = null;
     notifyListeners();
+
+    _code = code;
 
     final response =
         await authRepository.verifyResetCode(_email!, code);
