@@ -23,6 +23,7 @@ class _ResetCodeEntryScreenState
       List.generate(6, (_) => TextEditingController());
   final List<FocusNode> _focusNodes =
       List.generate(6, (_) => FocusNode());
+  final _keyboardListenerFocus = FocusNode();
 
   @override
   void initState() {
@@ -40,6 +41,7 @@ class _ResetCodeEntryScreenState
     for (final node in _focusNodes) {
       node.dispose();
     }
+    _keyboardListenerFocus.dispose();
     super.dispose();
   }
 
@@ -88,6 +90,12 @@ class _ResetCodeEntryScreenState
           ? (index + digits.length)
           : 5;
       _focusNodes[nextIndex].requestFocus();
+
+      // Auto-submit after paste
+      if (_controllers.every((c) => c.text.isNotEmpty)) {
+        _handleSubmit();
+      }
+
       return;
     }
 
@@ -104,6 +112,11 @@ class _ResetCodeEntryScreenState
         _focusNodes[index - 1].requestFocus();
       }
     }
+
+    // Auto submit after manual input
+    if (_controllers.every((c) => c.text.isNotEmpty)) {
+      _handleSubmit();
+    }
   }
 
   @override
@@ -113,100 +126,132 @@ class _ResetCodeEntryScreenState
         context.watch<ForgotPasswordViewModel>();
 
     return Scaffold(
-      body: Center(
-        child: ConstrainedBox(
-          constraints: const BoxConstraints(
-              maxWidth: AppDimensions.formWidth),
-          child: Form(
-            key: _formKey,
-            child: Padding(
-              padding:
-                  const EdgeInsets.all(AppDimensions.gapMd),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text(
-                    'Enter reset code',
-                    style: theme.textTheme.displayLarge,
-                  ),
-                  const SizedBox(
-                      height: AppDimensions.gapXl),
-                  Text(
-                    'Enter the 6-digit code sent to your email',
-                    style: theme.textTheme.bodyMedium,
-                  ),
-                  const SizedBox(
-                      height: AppDimensions.gapMd),
-                  Row(
-                    children:
-                        List.generate(6 * 2 - 1, (index) {
-                      if (index.isOdd) {
-                        return const Spacer();
-                      }
-                      final boxIndex = index ~/ 2;
-                      return SizedBox(
-                          width:
-                              AppDimensions.textFieldHeight,
-                          height:
-                              AppDimensions.textFieldHeight,
-                          child: TextField(
-                            controller:
-                                _controllers[boxIndex],
-                            focusNode:
-                                _focusNodes[boxIndex],
-                            keyboardType:
-                                TextInputType.number,
-                            textAlign: TextAlign.center,
+      body: Focus(
+        focusNode: _keyboardListenerFocus,
+        autofocus: true,
+        onKeyEvent: (node, event) {
+          if (event is KeyDownEvent) {
+            final key = event.logicalKey;
+
+            // Enter submits
+            if (key == LogicalKeyboardKey.enter) {
+              _handleSubmit();
+              return KeyEventResult.handled;
+            }
+
+            // Left/Right arrow navigation
+            final currentIndex =
+                _focusNodes.indexWhere((n) => n.hasFocus);
+            if (key == LogicalKeyboardKey.arrowLeft &&
+                currentIndex > 0) {
+              _focusNodes[currentIndex - 1].requestFocus();
+              return KeyEventResult.handled;
+            } else if (key ==
+                    LogicalKeyboardKey.arrowRight &&
+                currentIndex < 5) {
+              _focusNodes[currentIndex + 1].requestFocus();
+              return KeyEventResult.handled;
+            }
+          }
+          return KeyEventResult.ignored;
+        },
+        child: Center(
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(
+                maxWidth: AppDimensions.formWidth),
+            child: Form(
+              key: _formKey,
+              child: Padding(
+                padding: const EdgeInsets.all(
+                    AppDimensions.gapMd),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      'Enter reset code',
+                      style: theme.textTheme.displayLarge,
+                    ),
+                    const SizedBox(
+                        height: AppDimensions.gapXl),
+                    Text(
+                      'Enter the 6-digit code sent to your email',
+                      style: theme.textTheme.bodyMedium,
+                    ),
+                    const SizedBox(
+                        height: AppDimensions.gapMd),
+                    Row(
+                      children:
+                          List.generate(6 * 2 - 1, (index) {
+                        if (index.isOdd) {
+                          return const Spacer();
+                        }
+                        final boxIndex = index ~/ 2;
+                        return SizedBox(
+                            width: AppDimensions
+                                .textFieldHeight,
+                            height: AppDimensions
+                                .textFieldHeight,
+                            child: TextField(
+                              controller:
+                                  _controllers[boxIndex],
+                              focusNode:
+                                  _focusNodes[boxIndex],
+                              keyboardType:
+                                  TextInputType.number,
+                              textAlign: TextAlign.center,
+                              style: theme
+                                  .textTheme.bodyMedium,
+                              decoration:
+                                  const InputDecoration(
+                                counterText: '',
+                                border:
+                                    OutlineInputBorder(),
+                                contentPadding:
+                                    EdgeInsets.all(8),
+                              ),
+                              onChanged: (value) =>
+                                  _onChanged(
+                                      boxIndex, value),
+                              inputFormatters: [
+                                FilteringTextInputFormatter
+                                    .digitsOnly,
+                              ],
+                            ));
+                      }),
+                    ),
+                    const SizedBox(
+                        height: AppDimensions.gapMd),
+                    AppButton(
+                      label: 'Verify Code',
+                      onPressed: _handleSubmit,
+                      isLoading: viewModel.isLoading,
+                    ),
+                    const SizedBox(
+                        height: AppDimensions.gapMd),
+                    Row(
+                      mainAxisAlignment:
+                          MainAxisAlignment.center,
+                      children: [
+                        Text("Didn't receive the code? ",
                             style:
-                                theme.textTheme.bodyMedium,
-                            decoration:
-                                const InputDecoration(
-                              counterText: '',
-                              border: OutlineInputBorder(),
-                              contentPadding:
-                                  EdgeInsets.all(8),
-                            ),
-                            onChanged: (value) =>
-                                _onChanged(boxIndex, value),
-                            inputFormatters: [
-                              FilteringTextInputFormatter
-                                  .digitsOnly,
-                            ],
-                          ));
-                    }),
-                  ),
-                  const SizedBox(
-                      height: AppDimensions.gapMd),
-                  AppButton(
-                    label: 'Verify Code',
-                    onPressed: _handleSubmit,
-                    isLoading: viewModel.isLoading,
-                  ),
-                  const SizedBox(
-                      height: AppDimensions.gapMd),
-                  Row(
-                    mainAxisAlignment:
-                        MainAxisAlignment.center,
-                    children: [
-                      Text("Didn't receive the code? ",
-                          style:
-                              theme.textTheme.bodyMedium),
-                      AppLink(
-                        text: viewModel.isLoading
-                            ? "Sending..."
-                            : "Resend",
-                        color: (viewModel.isLoading)
-                            ? theme.colorScheme.secondary
-                            : null,
-                        onTap: () {
-                          if (!viewModel.isLoading) {
-                            // viewModel.resendResetCode();
-                          }
-                        },
-                      ),
-                    ],
-                  ),
-                ],
+                                theme.textTheme.bodyMedium),
+                        AppLink(
+                          text: viewModel.isLoading
+                              ? "Sending..."
+                              : "Resend",
+                          color: (viewModel.isLoading)
+                              ? theme.colorScheme.secondary
+                              : null,
+                          onTap: () {
+                            if (!viewModel.isLoading) {
+                              // viewModel.resendResetCode();
+                            }
+                          },
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
               ),
             ),
           ),
