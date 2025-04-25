@@ -4,10 +4,12 @@ import 'package:loop/data/services/models/api_response.dart';
 
 class ForgotPasswordViewModel extends ChangeNotifier {
   final AuthRepository authRepository;
+  String? _email;
   bool _isLoading = false;
   String? _errorMessage;
   String? _successMessage;
 
+  String? get email => _email;
   bool get isLoading => _isLoading;
   String? get errorMessage => _errorMessage;
   String? get successMessage => _successMessage;
@@ -19,6 +21,8 @@ class ForgotPasswordViewModel extends ChangeNotifier {
     _errorMessage = null;
     _successMessage = null;
     notifyListeners();
+
+    _email = email;
 
     final response =
         await authRepository.forgotPassword(email);
@@ -37,6 +41,49 @@ class ForgotPasswordViewModel extends ChangeNotifier {
     }
     return false;
   }
+
+  Future<bool> verifyResetCode(String code) async {
+    _isLoading = true;
+    _errorMessage = null;
+    _successMessage = null;
+    notifyListeners();
+
+    final response =
+        await authRepository.verifyResetCode(_email!, code);
+
+    _isLoading = false;
+
+    if (response is ApiSuccess) {
+      _successMessage = 'Code verified successfully.';
+      notifyListeners();
+      return true;
+    } else if (response is ApiError) {
+      _errorMessage = response.message;
+      notifyListeners();
+      return false;
+    }
+    return false;
+  }
+
+  // Future<void> resendResetCode() async {
+  //   _isLoading = true;
+  //   _errorMessage = null;
+  //   _successMessage = null;
+  //   notifyListeners();
+
+  //   final response = await authRepository
+  //       .resendResetCode();
+
+  //   _isLoading = false;
+
+  //   if (response is ApiSuccess) {
+  //     _successMessage = 'Reset code has been resent.';
+  //     notifyListeners();
+  //   } else if (response is ApiError) {
+  //     _errorMessage = response.message;
+  //     notifyListeners();
+  //   }
+  // }
 
   // Clear any error messages
   void clearError() {

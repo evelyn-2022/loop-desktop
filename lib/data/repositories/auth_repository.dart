@@ -83,4 +83,9 @@ class AuthRepository {
       String email) async {
     return apiClient.forgotPassword(email);
   }
+
+  Future<ApiResponse<void>> verifyResetCode(
+      String email, String code) async {
+    return apiClient.verifyResetCode(email, code);
+  }
 }

@@ -82,4 +82,19 @@ class AuthApiClient {
       () {},
     );
   }
+
+  Future<ApiResponse<void>> verifyResetCode(
+      String email, String code) async {
+    return handleDioRequest<void>(
+      dio.post(
+        '/auth/verify-reset-code',
+        data: {
+          'email': email,
+          'code': code,
+        },
+      ),
+      (_) {},
+      () {},
+    );
+  }
 }

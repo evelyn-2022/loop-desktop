@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:loop/routes/routes.dart';
 import 'package:loop/ui/shared/widgets/app_snack_bar.dart';
 import 'package:provider/provider.dart';
 import 'package:loop/theme/app_dimensions.dart';
@@ -64,7 +65,7 @@ class _EmailEntryScreenState
       );
 
       if (success) {
-        // Navigate to the next screen if the reset code is sent
+        Navigator.pushNamed(context, AppRoutes.verifyCode);
       }
     }
   }
@@ -117,7 +118,8 @@ class _EmailEntryScreenState
                       'Enter your email to get a 6-digit reset code',
                       style: theme.textTheme.bodyMedium,
                     ),
-                    const SizedBox(height: 24),
+                    const SizedBox(
+                        height: AppDimensions.gapMd),
                     AppTextField(
                       key: const ValueKey('email'),
                       controller: _emailController,

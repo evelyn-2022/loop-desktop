@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:loop/ui/auth/forgot_password/widgets/email_entry_screen.dart';
+import 'package:loop/ui/auth/forgot_password/widgets/reset_code_entry_screen.dart';
 import 'package:provider/provider.dart';
 
 import 'data/services/auth_token_manager.dart';
@@ -58,6 +59,10 @@ class _AppInitializerState extends State<AppInitializer> {
             AppRoutes.home: (context) =>
                 const DesktopShell(),
             AppRoutes.forgotPassword: (context) =>
+                const EmailEntryScreen(),
+            AppRoutes.verifyCode: (context) =>
+                const ResetCodeEntryScreen(),
+            AppRoutes.resetPassword: (context) =>
                 const EmailEntryScreen(),
           },
         );
