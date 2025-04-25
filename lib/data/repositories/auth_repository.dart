@@ -78,4 +78,9 @@ class AuthRepository {
       String email) {
     return apiClient.resendVerificationEmail(email);
   }
+
+  Future<ApiResponse<void>> forgotPassword(
+      String email) async {
+    return apiClient.forgotPassword(email);
+  }
 }

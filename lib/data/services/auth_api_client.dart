@@ -70,4 +70,16 @@ class AuthApiClient {
       () {},
     );
   }
+
+  Future<ApiResponse<void>> forgotPassword(
+      String email) async {
+    return handleDioRequest<void>(
+      dio.post(
+        '/auth/forgot-password',
+        queryParameters: {'email': email},
+      ),
+      (_) {},
+      () {},
+    );
+  }
 }

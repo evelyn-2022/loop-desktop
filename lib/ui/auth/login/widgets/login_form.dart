@@ -59,19 +59,23 @@ class LoginForm extends StatelessWidget {
             hiddenSvgAsset: 'assets/icons/eye_hidden.svg',
             submitAttempted: submitAttempted,
           ),
-          Align(
-            alignment: Alignment.centerRight,
-            child: AppLink(
-              text: 'Forgot password?',
-              color: theme.colorScheme.secondary,
-              fontSize: 14,
-              onTap: () {
-                Navigator.pushNamed(
-                    context, '/forgot-password');
-              },
+          Transform.translate(
+            offset: const Offset(
+                0, -6), // move 10 pixels to the right
+            child: Align(
+              alignment: Alignment.centerRight,
+              child: AppLink(
+                text: 'Forgot password?',
+                color: theme.colorScheme.secondary,
+                fontSize: 14,
+                onTap: () {
+                  Navigator.pushNamed(
+                      context, '/forgot-password');
+                },
+              ),
             ),
           ),
-          const SizedBox(height: AppDimensions.gapMd),
+          const SizedBox(height: AppDimensions.gapSm),
           AppButton(
             label: 'Log in',
             onPressed: onSubmit,

@@ -8,6 +8,7 @@ import 'package:loop/data/services/dio_interceptor.dart';
 import 'package:loop/data/services/profile_api_client.dart';
 import 'package:loop/providers/auth_state.dart';
 import 'package:loop/providers/theme_provider.dart';
+import 'package:loop/ui/auth/forgot_password/view_models/forgot_password_viewmodel.dart';
 import 'package:loop/ui/auth/signup/view_models/signup_viewmodel.dart';
 import 'package:loop/ui/profile/view_models/profile_viewmodel.dart';
 import 'package:provider/provider.dart';
@@ -91,6 +92,11 @@ class AppProviders extends StatelessWidget {
           create: (context) => ProfileViewModel(
               repository:
                   context.read<ProfileRepository>()),
+        ),
+        ChangeNotifierProvider<ForgotPasswordViewModel>(
+          create: (context) => ForgotPasswordViewModel(
+            authRepository: context.read<AuthRepository>(),
+          ),
         ),
       ],
       child: child,

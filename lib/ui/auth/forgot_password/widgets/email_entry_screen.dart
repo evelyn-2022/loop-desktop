@@ -1,4 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:loop/ui/shared/widgets/app_snack_bar.dart';
+import 'package:provider/provider.dart';
+import 'package:loop/theme/app_dimensions.dart';
+import 'package:loop/ui/auth/forgot_password/view_models/forgot_password_viewmodel.dart';
+import 'package:loop/ui/shared/widgets/app_button.dart';
 import 'package:loop/ui/shared/widgets/app_link.dart';
 import 'package:loop/ui/shared/widgets/app_text_field.dart';
 import 'package:loop/utils/validators.dart';
@@ -16,77 +22,129 @@ class _EmailEntryScreenState
   final _formKey = GlobalKey<FormState>();
   final _emailController = TextEditingController();
   final _emailFocus = FocusNode();
+  final _keyboardListenerFocus = FocusNode();
   bool _submitAttempted = false;
 
-  void _handleSubmit() {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _emailFocus.requestFocus();
+    });
+  }
+
+  void _handleSubmit() async {
     setState(() => _submitAttempted = true);
     if (_formKey.currentState?.validate() ?? false) {
       final email = _emailController.text.trim();
 
-      // Replace this with your actual logic
-      // context
-      //     .read<PasswordRecoveryViewModel>()
-      //     .sendResetCode(email);
+      final viewModel =
+          context.read<ForgotPasswordViewModel>();
 
-      // Navigator.pushNamed(context, AppRoutes.verifyCode);
+      final isFormValid =
+          Validators.validateEmail(email) == null;
+
+      if (!isFormValid || viewModel.isLoading) {
+        _keyboardListenerFocus.requestFocus();
+        return;
+      }
+
+      final success =
+          await viewModel.requestPasswordReset(email);
+
+      AppSnackBar.show(
+        context,
+        title: success
+            ? viewModel.successMessage!
+            : 'Cannot reset password',
+        body: success ? '' : viewModel.errorMessage,
+        type: success
+            ? SnackBarType.success
+            : SnackBarType.error,
+      );
+
+      if (success) {
+        // Navigate to the next screen if the reset code is sent
+      }
     }
   }
 
   @override
   void dispose() {
     _emailController.dispose();
+    _emailFocus.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final viewModel =
+        context.watch<ForgotPasswordViewModel>();
 
     return Scaffold(
-      body: Center(
-        child: SingleChildScrollView(
+      body: Focus(
+        focusNode: _keyboardListenerFocus,
+        autofocus: true,
+        onKeyEvent: (node, event) {
+          if (event is KeyDownEvent &&
+              event.logicalKey ==
+                  LogicalKeyboardKey.enter) {
+            _handleSubmit();
+            return KeyEventResult.handled;
+          }
+          return KeyEventResult.ignored;
+        },
+        child: Center(
           child: ConstrainedBox(
-            constraints:
-                const BoxConstraints(maxWidth: 400),
+            constraints: const BoxConstraints(
+                maxWidth: AppDimensions.formWidth),
             child: Form(
               key: _formKey,
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text(
-                    'Forgot Password',
-                    style: theme.textTheme.headlineMedium,
-                  ),
-                  const SizedBox(height: 16),
-                  Text(
-                    'Enter your email to receive a 6-digit reset code.',
-                    style: theme.textTheme.bodyMedium,
-                  ),
-                  const SizedBox(height: 24),
-                  AppTextField(
-                    key: const ValueKey('email'),
-                    controller: _emailController,
-                    focusNode: _emailFocus,
-                    label: 'Email',
-                    hint: 'Enter your email',
-                    keyboardType:
-                        TextInputType.emailAddress,
-                    validator: Validators.validateEmail,
-                    submitAttempted: _submitAttempted,
-                  ),
-                  const SizedBox(height: 24),
-                  SizedBox(
-                    width: double.infinity,
-                    child: ElevatedButton(
-                      onPressed: _handleSubmit,
-                      child: const Text('Send Code'),
+              child: Padding(
+                padding: const EdgeInsets.all(
+                    AppDimensions.gapMd),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      'Forgot password',
+                      style: theme.textTheme.displayLarge,
                     ),
-                  ),
-                  const SizedBox(height: 16),
-                  AppLink(
-                      text: 'Back to login',
-                      onTap: () => Navigator.pop(context))
-                ],
+                    const SizedBox(
+                        height: AppDimensions.gapXl),
+                    Text(
+                      'Enter your email to get a 6-digit reset code',
+                      style: theme.textTheme.bodyMedium,
+                    ),
+                    const SizedBox(height: 24),
+                    AppTextField(
+                      key: const ValueKey('email'),
+                      controller: _emailController,
+                      focusNode: _emailFocus,
+                      label: 'Email',
+                      hint: 'Enter your email',
+                      keyboardType:
+                          TextInputType.emailAddress,
+                      validator: Validators.validateEmail,
+                      submitAttempted: _submitAttempted,
+                    ),
+                    const SizedBox(
+                        height: AppDimensions.gapSm),
+                    AppButton(
+                      label: 'Send Code',
+                      onPressed: _handleSubmit,
+                      isLoading: viewModel.isLoading,
+                    ),
+                    const SizedBox(
+                        height: AppDimensions.gapMd),
+                    AppLink(
+                        text: 'Back to login',
+                        color: theme.colorScheme.secondary,
+                        fontSize: 14,
+                        onTap: () => Navigator.pop(context))
+                  ],
+                ),
               ),
             ),
           ),
