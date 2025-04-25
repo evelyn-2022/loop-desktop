@@ -97,4 +97,23 @@ class AuthApiClient {
       () {},
     );
   }
+
+  Future<ApiResponse<void>> resetPassword({
+    required String email,
+    required String code,
+    required String newPassword,
+  }) async {
+    return handleDioRequest<void>(
+      dio.post(
+        '/auth/reset-password',
+        data: {
+          'email': email,
+          'code': code,
+          'newPassword': newPassword,
+        },
+      ),
+      (_) {},
+      () {},
+    );
+  }
 }

@@ -89,6 +89,39 @@ class ForgotPasswordViewModel extends ChangeNotifier {
   //   }
   // }
 
+  Future<bool> resetPassword(String newPassword) async {
+    if (_email == null || _code == null) {
+      _errorMessage = 'Missing email or code.';
+      notifyListeners();
+      return false;
+    }
+
+    _isLoading = true;
+    _errorMessage = null;
+    _successMessage = null;
+    notifyListeners();
+
+    final response = await authRepository.resetPassword(
+      _email!,
+      _code!,
+      newPassword,
+    );
+
+    _isLoading = false;
+
+    if (response is ApiSuccess) {
+      _successMessage =
+          'Password has been reset successfully.';
+      notifyListeners();
+      return true;
+    } else if (response is ApiError) {
+      _errorMessage = response.message;
+      notifyListeners();
+      return false;
+    }
+    return false;
+  }
+
   // Clear any error messages
   void clearError() {
     if (_errorMessage != null) {
