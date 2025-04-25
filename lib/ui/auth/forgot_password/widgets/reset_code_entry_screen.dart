@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:loop/theme/app_dimensions.dart';
 import 'package:loop/ui/shared/widgets/app_button.dart';
 import 'package:loop/ui/shared/widgets/app_link.dart';
+import 'package:loop/ui/shared/widgets/app_snack_bar.dart';
 import 'package:provider/provider.dart';
 import 'package:loop/routes/routes.dart';
 import 'package:loop/ui/auth/forgot_password/view_models/forgot_password_viewmodel.dart';
@@ -22,7 +23,6 @@ class _ResetCodeEntryScreenState
       List.generate(6, (_) => TextEditingController());
   final List<FocusNode> _focusNodes =
       List.generate(6, (_) => FocusNode());
-  bool _submitAttempted = false;
 
   @override
   void initState() {
@@ -44,8 +44,6 @@ class _ResetCodeEntryScreenState
   }
 
   void _handleSubmit() async {
-    setState(() => _submitAttempted = true);
-
     final resetCode =
         _controllers.map((c) => c.text).join();
 
@@ -57,15 +55,23 @@ class _ResetCodeEntryScreenState
 
     final viewModel =
         context.read<ForgotPasswordViewModel>();
+
     final success =
         await viewModel.verifyResetCode(resetCode);
 
+    AppSnackBar.show(
+      context,
+      title: success
+          ? viewModel.successMessage!
+          : 'Cannot verify code',
+      body: success ? '' : viewModel.errorMessage,
+      type: success
+          ? SnackBarType.success
+          : SnackBarType.error,
+    );
+
     if (success) {
       Navigator.pushNamed(context, AppRoutes.resetPassword);
-    } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Invalid reset code')),
-      );
     }
   }
 
@@ -87,8 +93,7 @@ class _ResetCodeEntryScreenState
 
     // Normal typing
     if (value.isNotEmpty) {
-      _controllers[index].text = value[value.length -
-          1]; // Only keep the last typed digit
+      _controllers[index].text = value[value.length - 1];
       if (index < _focusNodes.length - 1) {
         _focusNodes[index + 1].requestFocus();
       } else {
@@ -140,8 +145,10 @@ class _ResetCodeEntryScreenState
                       }
                       final boxIndex = index ~/ 2;
                       return SizedBox(
-                          width: 48,
-                          height: 48,
+                          width:
+                              AppDimensions.textFieldHeight,
+                          height:
+                              AppDimensions.textFieldHeight,
                           child: TextField(
                             controller:
                                 _controllers[boxIndex],
@@ -181,13 +188,13 @@ class _ResetCodeEntryScreenState
                     mainAxisAlignment:
                         MainAxisAlignment.center,
                     children: [
-                      Text("Didn't receive it? ",
+                      Text("Didn't receive the code? ",
                           style:
                               theme.textTheme.bodyMedium),
                       AppLink(
                         text: viewModel.isLoading
                             ? "Sending..."
-                            : "Resend code",
+                            : "Resend",
                         color: (viewModel.isLoading)
                             ? theme.colorScheme.secondary
                             : null,
