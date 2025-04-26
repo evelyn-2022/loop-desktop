@@ -202,17 +202,18 @@ class _ResetCodeEntryScreenState
                             style:
                                 theme.textTheme.bodyMedium),
                         AppLink(
-                          text: viewModel.isLoading
+                          text: viewModel.isResending
                               ? 'Sending...'
                               : 'Resend',
-                          color: viewModel.isLoading
+                          color: viewModel.isResending
                               ? theme.colorScheme.secondary
                               : null,
                           onTap: () {
-                            if (!viewModel.isLoading) {
-                              // viewModel.resendResetCode();
+                            if (!viewModel.isResending) {
+                              viewModel.resendResetCode();
                             }
                           },
+                          isLoading: viewModel.isResending,
                         ),
                       ],
                     ),

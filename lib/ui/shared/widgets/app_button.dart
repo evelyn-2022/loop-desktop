@@ -30,8 +30,8 @@ class AppButton extends StatelessWidget {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   SizedBox(
-                    width: AppDimensions.iconSizeSm,
-                    height: AppDimensions.iconSizeSm,
+                    width: AppDimensions.iconSizeXs,
+                    height: AppDimensions.iconSizeXs,
                     child: CircularProgressIndicator(
                       strokeWidth:
                           AppDimensions.strokeWidthMd,

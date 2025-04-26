@@ -7,12 +7,14 @@ class ForgotPasswordViewModel extends ChangeNotifier {
   String? _email;
   String? _code;
   bool _isLoading = false;
+  bool _isResending = false;
   String? _errorMessage;
   String? _successMessage;
 
   String? get email => _email;
   String? get code => _code;
   bool get isLoading => _isLoading;
+  bool get isResending => _isResending;
   String? get errorMessage => _errorMessage;
   String? get successMessage => _successMessage;
 
@@ -69,25 +71,25 @@ class ForgotPasswordViewModel extends ChangeNotifier {
     return false;
   }
 
-  // Future<void> resendResetCode() async {
-  //   _isLoading = true;
-  //   _errorMessage = null;
-  //   _successMessage = null;
-  //   notifyListeners();
+  Future<void> resendResetCode() async {
+    _isResending = true;
+    _errorMessage = null;
+    _successMessage = null;
+    notifyListeners();
 
-  //   final response = await authRepository
-  //       .resendResetCode();
+    final response =
+        await authRepository.forgotPassword(email!);
 
-  //   _isLoading = false;
+    _isResending = false;
 
-  //   if (response is ApiSuccess) {
-  //     _successMessage = 'Reset code has been resent.';
-  //     notifyListeners();
-  //   } else if (response is ApiError) {
-  //     _errorMessage = response.message;
-  //     notifyListeners();
-  //   }
-  // }
+    if (response is ApiSuccess) {
+      _successMessage = 'Reset code has been resent.';
+      notifyListeners();
+    } else if (response is ApiError) {
+      _errorMessage = response.message;
+      notifyListeners();
+    }
+  }
 
   Future<bool> resetPassword(String newPassword) async {
     if (_email == null || _code == null) {

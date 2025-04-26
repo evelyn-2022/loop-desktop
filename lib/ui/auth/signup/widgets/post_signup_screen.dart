@@ -93,11 +93,8 @@ class PostSignupScreen extends StatelessWidget {
                   AppLink(
                     text: viewModel.isSendingEmail
                         ? "Sending..."
-                        : viewModel.canResend
-                            ? "Click here"
-                            : "Please wait...",
-                    color: (viewModel.isSendingEmail ||
-                            !viewModel.canResend)
+                        : "Click here",
+                    color: viewModel.isSendingEmail
                         ? theme.colorScheme.secondary
                         : null,
                     onTap: () {
@@ -106,6 +103,7 @@ class PostSignupScreen extends StatelessWidget {
                             .resendVerificationEmail(email);
                       }
                     },
+                    isLoading: viewModel.isSendingEmail,
                   ),
                 ],
               ),

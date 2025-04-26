@@ -7,13 +7,11 @@ class SignUpViewModel extends ChangeNotifier {
 
   bool _isLoading = false;
   bool _isSendingEmail = false;
-  bool _canResend = true;
   String? _errorMessage;
   String? _successMessage;
 
   bool get isLoading => _isLoading;
   bool get isSendingEmail => _isSendingEmail;
-  bool get canResend => _canResend;
   String? get errorMessage => _errorMessage;
   String? get successMessage => _successMessage;
 
@@ -69,10 +67,6 @@ class SignUpViewModel extends ChangeNotifier {
   }
 
   Future<void> resendVerificationEmail(String email) async {
-    if (!_canResend) return;
-
-    _canResend = false;
-    _isLoading = true;
     _isSendingEmail = true;
     _errorMessage = null;
     _successMessage = null;
@@ -81,9 +75,8 @@ class SignUpViewModel extends ChangeNotifier {
     final response =
         await authRepository.resendVerificationEmail(email);
 
-    _isSendingEmail = false;
     Future.delayed(const Duration(seconds: 5), () {
-      _canResend = true;
+      _isSendingEmail = false;
       notifyListeners();
     });
 

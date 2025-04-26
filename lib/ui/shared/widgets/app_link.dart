@@ -5,6 +5,7 @@ class AppLink extends StatelessWidget {
   final VoidCallback onTap;
   final Color? color;
   final double? fontSize;
+  final bool isLoading;
 
   const AppLink({
     super.key,
@@ -12,6 +13,7 @@ class AppLink extends StatelessWidget {
     required this.onTap,
     this.color,
     this.fontSize,
+    this.isLoading = false,
   });
 
   @override
@@ -26,9 +28,11 @@ class AppLink extends StatelessWidget {
             );
 
     return MouseRegion(
-      cursor: SystemMouseCursors.click,
+      cursor: isLoading
+          ? SystemMouseCursors.forbidden
+          : SystemMouseCursors.click,
       child: GestureDetector(
-        onTap: onTap,
+        onTap: isLoading ? null : onTap,
         child: Text(
           text,
           style: style,
