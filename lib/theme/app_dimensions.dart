@@ -7,6 +7,8 @@ class AppDimensions {
 
   static const double iconSizeXs = 14;
   static const double iconSizeSm = 20;
+  static const double iconSizeMd = 32;
+  static const double iconSizeLg = 48;
   static const double iconSizeXXL = 100;
   static const double strokeWidthMd = 1.5;
   static const double strokeWidthLg = 2;
@@ -33,4 +35,6 @@ class AppDimensions {
 
   static const double minSnackBarWidth = 360;
   static const double maxSnackBarWidth = 520;
+
+  static const double dividerThickness = 1.5;
 }

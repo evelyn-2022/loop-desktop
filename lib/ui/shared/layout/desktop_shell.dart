@@ -98,7 +98,7 @@ class _DesktopShellState extends State<DesktopShell> {
             ),
           ),
           VerticalDivider(
-              width: 2,
+              width: AppDimensions.dividerThickness,
               color: Theme.of(context).dividerColor),
           Expanded(
             child: IndexedStack(

@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:loop/app_initializer.dart';
 import 'providers/app_providers.dart';
 import 'ui/shared/layout/desktop_shell.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
-void main() {
+Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await dotenv.load(fileName: ".env");
   runApp(const AppProviders(child: AppInitializer()));
 }
 

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:loop/ui/auth/oauth/widgets/social_login.dart';
 import 'package:loop/theme/app_dimensions.dart';
 import 'package:loop/ui/auth/login/widgets/login_footer.dart';
 import 'package:loop/ui/auth/login/widgets/login_form.dart';
@@ -118,6 +119,9 @@ class _LoginScreenState extends State<LoginScreen> {
                     onSubmit: _login,
                     isLoading: viewModel.isLoading,
                   ),
+                  const SizedBox(
+                      height: AppDimensions.gapLg),
+                  const SocialLogin(),
                   const SizedBox(
                       height: AppDimensions.gapLg),
                   const LoginFooter(),

@@ -180,7 +180,7 @@ class AppTheme {
           outline: AppColors.grey_400,
           outlineVariant: AppColors.grey_200,
         ),
-        dividerColor: AppColors.black_700,
+        dividerColor: AppColors.grey_400,
         textTheme: TextTheme(
           displayLarge: GoogleFonts.bitter(
             fontSize: 32,
