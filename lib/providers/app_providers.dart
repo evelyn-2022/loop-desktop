@@ -5,10 +5,12 @@ import 'package:loop/config/app_config.dart';
 import 'package:loop/data/repositories/profile_repository.dart';
 import 'package:loop/data/services/auth_token_manager.dart';
 import 'package:loop/data/services/dio_interceptor.dart';
+import 'package:loop/data/services/oauth_api_client.dart';
 import 'package:loop/data/services/profile_api_client.dart';
 import 'package:loop/providers/auth_state.dart';
 import 'package:loop/providers/theme_provider.dart';
 import 'package:loop/ui/auth/forgot_password/view_models/forgot_password_viewmodel.dart';
+import 'package:loop/ui/auth/oauth/view_modles/oauth_viewmodel.dart';
 import 'package:loop/ui/auth/signup/view_models/signup_viewmodel.dart';
 import 'package:loop/ui/profile/view_models/profile_viewmodel.dart';
 import 'package:provider/provider.dart';
@@ -60,9 +62,13 @@ class AppProviders extends StatelessWidget {
         Provider<AuthApiClient>(
           create: (_) => AuthApiClient(),
         ),
+        Provider<OAuthApiClient>(
+          create: (_) => OAuthApiClient(),
+        ),
         Provider<AuthRepository>(
           create: (context) => AuthRepository(
             apiClient: context.read<AuthApiClient>(),
+            oauthApiClient: context.read<OAuthApiClient>(),
             tokenManager: context.read<AuthTokenManager>(),
           ),
         ),
@@ -96,6 +102,12 @@ class AppProviders extends StatelessWidget {
         ChangeNotifierProvider<ForgotPasswordViewModel>(
           create: (context) => ForgotPasswordViewModel(
             authRepository: context.read<AuthRepository>(),
+          ),
+        ),
+        ChangeNotifierProvider<OAuthViewModel>(
+          create: (context) => OAuthViewModel(
+            authRepository: context.read<AuthRepository>(),
+            authState: context.read<AuthState>(),
           ),
         ),
       ],

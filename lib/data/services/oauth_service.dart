@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:loop/data/services/models/oauth_login_response.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class OAuthService {
@@ -49,12 +50,14 @@ class OAuthService {
     return completer.future;
   }
 
-  Future<String?> loginWithGoogle() async {
+  Future<OAuthLoginResponse?> loginWithGoogle() async {
     final port = await startLocalServer();
+    final baseRedirectUri =
+        dotenv.env['GOOGLE_REDIRECT_URI'];
 
     final params = {
       'client_id': dotenv.env['GOOGLE_CLIENT_ID'],
-      'redirect_uri': 'http://localhost:$port',
+      'redirect_uri': '$baseRedirectUri:$port',
       'response_type': 'code',
       'scope': 'openid email profile',
     };
@@ -71,12 +74,16 @@ class OAuthService {
       if (code != null) {
         print('🔥🔥 Authorization code received: $code');
         print('port is: $port');
-        return code;
+        return OAuthLoginResponse(
+          code: code,
+          redirectUri: '$baseRedirectUri:$port',
+        );
       } else {
         print('Failed to receive code');
       }
     } else {
       throw 'Could not launch $url';
     }
+    return null;
   }
 }

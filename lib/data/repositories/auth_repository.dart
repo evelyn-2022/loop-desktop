@@ -4,13 +4,16 @@ import 'package:loop/data/services/models/login_request.dart';
 import 'package:loop/data/services/models/login_response.dart';
 import 'package:loop/data/services/models/api_response.dart';
 import 'package:loop/data/services/models/signup_request.dart';
+import 'package:loop/data/services/oauth_api_client.dart';
 
 class AuthRepository {
   final AuthApiClient apiClient;
+  final OAuthApiClient oauthApiClient;
   final AuthTokenManager tokenManager;
 
   AuthRepository({
     required this.apiClient,
+    required this.oauthApiClient,
     required this.tokenManager,
   });
 
@@ -99,5 +102,26 @@ class AuthRepository {
       code: code,
       newPassword: newPassword,
     );
+  }
+
+  Future<ApiResponse<LoginResponse>> oauthLogin({
+    required String provider,
+    required String code,
+    required String redirectUri,
+  }) async {
+    final response = await oauthApiClient.oauthLogin(
+      provider: provider,
+      code: code,
+      redirectUri: redirectUri,
+    );
+
+    if (response is ApiSuccess<LoginResponse>) {
+      await tokenManager.saveTokens(
+        accessToken: response.data!.accessToken,
+        refreshToken: response.data!.refreshToken,
+      );
+    }
+
+    return response;
   }
 }
