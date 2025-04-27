@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:loop/theme/app_dimensions.dart';
+import 'package:provider/provider.dart';
 
+import 'package:loop/providers/auth_state.dart';
+import 'package:loop/theme/app_dimensions.dart';
 import 'package:loop/ui/home/widgets/home_screen.dart';
 import 'package:loop/ui/search/widgets/search_screen.dart';
 import 'package:loop/ui/library/widgets/library_screen.dart';
@@ -32,6 +34,9 @@ class _DesktopShellState extends State<DesktopShell> {
 
   @override
   Widget build(BuildContext context) {
+    final authState = context.watch<AuthState>();
+    final profileUrl = authState.currentUser?.profileUrl;
+
     return Scaffold(
       body: Row(
         children: [
@@ -81,8 +86,33 @@ class _DesktopShellState extends State<DesktopShell> {
                 ),
                 const Spacer(),
                 HoverTooltip(
-                  icon: SvgPicture.asset(
-                      'assets/icons/profile_guest.svg'),
+                  icon: profileUrl != null
+                      ? CircleAvatar(
+                          radius:
+                              AppDimensions.navBarIconSize /
+                                  2,
+                          backgroundImage:
+                              NetworkImage(profileUrl),
+                          backgroundColor:
+                              Colors.transparent,
+                        )
+                      : SvgPicture.asset(
+                          'assets/icons/profile_guest.svg',
+                          colorFilter: ColorFilter.mode(
+                            _selectedIndex == 4
+                                ? Theme.of(context)
+                                    .colorScheme
+                                    .primary
+                                : Theme.of(context)
+                                    .colorScheme
+                                    .secondary,
+                            BlendMode.srcIn,
+                          ),
+                          width:
+                              AppDimensions.navBarIconSize,
+                          height:
+                              AppDimensions.navBarIconSize,
+                        ),
                   message: 'Profile',
                   isSelected: _selectedIndex == 4,
                   onTap: () {

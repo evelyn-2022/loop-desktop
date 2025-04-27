@@ -3,12 +3,14 @@ class User {
   final String email;
   final String username;
   final bool admin;
+  final String? profileUrl;
 
   User({
     required this.id,
     required this.email,
     required this.username,
     required this.admin,
+    this.profileUrl,
   });
 
   factory User.fromJson(Map<String, dynamic> json) => User(
@@ -16,6 +18,7 @@ class User {
         email: json['email'],
         username: json['username'],
         admin: json['admin'],
+        profileUrl: json['profileUrl'],
       );
 
   factory User.empty() => User(
@@ -23,5 +26,6 @@ class User {
         email: '',
         username: '',
         admin: false,
+        profileUrl: null,
       );
 }

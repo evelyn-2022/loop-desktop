@@ -51,21 +51,24 @@ class _ProfileScreenState extends State<ProfileScreen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text('Profile', style: textTheme.headlineMedium),
-          const SizedBox(height: 24),
-          CircleAvatar(
-            radius: 40,
-            backgroundColor:
-                colorScheme.primary.withOpacity(0.1),
-            child: Icon(Icons.person,
-                size: 40, color: colorScheme.primary),
-          ),
-          const SizedBox(height: 16),
           if (isLoading) ...[
             const CircularProgressIndicator(),
           ] else if (error != null) ...[
             Text('Error: $error',
                 style: textTheme.bodyMedium),
           ] else if (user != null) ...[
+            CircleAvatar(
+              radius: 40,
+              backgroundColor:
+                  colorScheme.primary.withOpacity(0.1),
+              backgroundImage: user.profileUrl != null
+                  ? NetworkImage(user.profileUrl!)
+                  : null,
+              child: user.profileUrl == null
+                  ? Icon(Icons.person,
+                      size: 40, color: colorScheme.primary)
+                  : null,
+            ),
             Text('Username: ${user.username}',
                 style: textTheme.bodyMedium),
             const SizedBox(height: 8),
