@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:loop/routes/routes.dart';
+import 'package:loop/ui/auth/oauth/widgets/social_login_button.dart';
 import 'package:loop/ui/shared/widgets/app_snack_bar.dart';
 import 'package:provider/provider.dart';
 import 'package:loop/data/services/oauth_service.dart';
@@ -101,65 +101,23 @@ class SocialLogin extends StatelessWidget {
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            _SocialIconButton(
+            SocialLoginButton(
               assetPath: 'assets/icons/google.svg',
               onPressed: () => _handleGoogleLogin(context),
             ),
             const SizedBox(width: AppDimensions.gapSm),
-            _SocialIconButton(
+            SocialLoginButton(
               assetPath: 'assets/icons/apple.svg',
               onPressed: () => {},
             ),
             const SizedBox(width: AppDimensions.gapSm),
-            _SocialIconButton(
+            SocialLoginButton(
               assetPath: 'assets/icons/google.svg',
               onPressed: () => {},
             ),
           ],
         ),
       ],
-    );
-  }
-}
-
-class _SocialIconButton extends StatelessWidget {
-  final String assetPath;
-  final VoidCallback onPressed;
-
-  const _SocialIconButton({
-    required this.assetPath,
-    required this.onPressed,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-
-    return InkWell(
-      onTap: onPressed,
-      borderRadius: BorderRadius.circular(4),
-      child: Container(
-        width: 48,
-        height: 48,
-        decoration: BoxDecoration(
-          border: Border.all(
-            color: theme.dividerColor,
-            width: AppDimensions.dividerThickness,
-          ),
-          borderRadius: BorderRadius.circular(4),
-        ),
-        child: Center(
-          child: SvgPicture.asset(
-            assetPath,
-            width: AppDimensions.iconSizeMd,
-            height: AppDimensions.iconSizeMd,
-            colorFilter: ColorFilter.mode(
-              theme.colorScheme.primary,
-              BlendMode.srcIn,
-            ),
-          ),
-        ),
-      ),
     );
   }
 }
