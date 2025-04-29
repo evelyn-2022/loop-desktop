@@ -99,21 +99,22 @@ class SocialLogin extends StatelessWidget {
         ),
         const SizedBox(height: AppDimensions.gapMd),
         Row(
-          mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            SocialLoginButton(
-              assetPath: 'assets/icons/google.svg',
-              onPressed: () => _handleGoogleLogin(context),
+            Expanded(
+              child: SocialLoginButton(
+                assetPath: 'assets/icons/google.svg',
+                text: 'Google',
+                onPressed: () =>
+                    _handleGoogleLogin(context),
+              ),
             ),
-            const SizedBox(width: AppDimensions.gapSm),
-            SocialLoginButton(
-              assetPath: 'assets/icons/apple.svg',
-              onPressed: () => {},
-            ),
-            const SizedBox(width: AppDimensions.gapSm),
-            SocialLoginButton(
-              assetPath: 'assets/icons/google.svg',
-              onPressed: () => {},
+            const SizedBox(width: 12),
+            Expanded(
+              child: SocialLoginButton(
+                assetPath: 'assets/icons/apple.svg',
+                text: 'Apple',
+                onPressed: () {},
+              ),
             ),
           ],
         ),

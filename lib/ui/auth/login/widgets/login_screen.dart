@@ -120,7 +120,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     isLoading: viewModel.isLoading,
                   ),
                   const SizedBox(
-                      height: AppDimensions.gapLg),
+                      height: AppDimensions.gapMd),
                   const SocialLogin(),
                   const SizedBox(
                       height: AppDimensions.gapLg),

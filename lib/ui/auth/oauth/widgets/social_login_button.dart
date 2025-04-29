@@ -5,11 +5,13 @@ import 'package:loop/theme/app_dimensions.dart';
 class SocialLoginButton extends StatelessWidget {
   final String assetPath;
   final VoidCallback onPressed;
+  final String? text;
 
   const SocialLoginButton({
     super.key,
     required this.assetPath,
     required this.onPressed,
+    this.text,
   });
 
   @override
@@ -20,8 +22,7 @@ class SocialLoginButton extends StatelessWidget {
       onTap: onPressed,
       borderRadius: BorderRadius.circular(4),
       child: Container(
-        width: 48,
-        height: 48,
+        height: AppDimensions.buttonHeight,
         decoration: BoxDecoration(
           border: Border.all(
             color: theme.dividerColor,
@@ -29,16 +30,24 @@ class SocialLoginButton extends StatelessWidget {
           ),
           borderRadius: BorderRadius.circular(4),
         ),
-        child: Center(
-          child: SvgPicture.asset(
-            assetPath,
-            width: AppDimensions.iconSizeMd,
-            height: AppDimensions.iconSizeMd,
-            colorFilter: ColorFilter.mode(
-              theme.colorScheme.primary,
-              BlendMode.srcIn,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            SvgPicture.asset(
+              assetPath,
+              width: AppDimensions.iconSizeSm,
+              height: AppDimensions.iconSizeSm,
+              colorFilter: ColorFilter.mode(
+                theme.colorScheme.primary,
+                BlendMode.srcIn,
+              ),
             ),
-          ),
+            const SizedBox(width: 12),
+            Text(
+              text ?? 'Your text here',
+              style: theme.textTheme.bodyMedium,
+            ),
+          ],
         ),
       ),
     );
