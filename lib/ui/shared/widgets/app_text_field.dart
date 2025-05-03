@@ -86,8 +86,9 @@ class _AppTextFieldState extends State<AppTextField> {
   }
 
   void _validateAndShowError() {
-    final error = widget.externalErrorText ??
-        widget.validator?.call(widget.controller.text);
+    final error =
+        widget.validator?.call(widget.controller.text) ??
+            widget.externalErrorText;
 
     if (mounted) {
       setState(() {
