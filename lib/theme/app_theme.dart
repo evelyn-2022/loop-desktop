@@ -41,7 +41,7 @@ class AppTheme {
           ),
           bodySmall: GoogleFonts.inter(
             fontSize: 14,
-            fontWeight: FontWeight.w400,
+            fontWeight: FontWeight.normal,
             color: AppColors.grey_300,
           ),
           // Link text style
@@ -67,7 +67,7 @@ class AppTheme {
             color: AppColors.black_700,
           ),
         ),
-        dividerColor: AppColors.yellow_100,
+        dividerColor: AppColors.grey_100,
         inputDecorationTheme: InputDecorationTheme(
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(4),
@@ -86,13 +86,14 @@ class AppTheme {
               width: 1.5,
             ),
           ),
-          hintStyle: TextStyle(
+          hintStyle: GoogleFonts.inter(
             color: AppColors.grey_200,
             fontSize: 16,
           ),
-          labelStyle: TextStyle(
+          labelStyle: GoogleFonts.inter(
             color: AppColors.grey_200,
             fontSize: 16,
+            fontWeight: FontWeight.normal,
           ),
           floatingLabelStyle:
               WidgetStateTextStyle.resolveWith((states) {
@@ -204,7 +205,7 @@ class AppTheme {
           ),
           bodySmall: GoogleFonts.inter(
             fontSize: 14,
-            fontWeight: FontWeight.w400,
+            fontWeight: FontWeight.normal,
             color: AppColors.grey_200,
           ),
           // Button text style
@@ -249,7 +250,6 @@ class AppTheme {
           errorBorder: OutlineInputBorder(
             borderSide: BorderSide(
               color: AppColors.red_200,
-              // width: 1.5,
             ),
           ),
           focusedErrorBorder: OutlineInputBorder(
@@ -257,17 +257,14 @@ class AppTheme {
               color: AppColors.red_200,
             ),
           ),
-          errorStyle: TextStyle(
-            fontSize: 12,
-            color: AppColors.red_200,
-          ),
-          hintStyle: TextStyle(
+          hintStyle: GoogleFonts.inter(
             color: AppColors.grey_400,
             fontSize: 16,
           ),
-          labelStyle: TextStyle(
+          labelStyle: GoogleFonts.inter(
             color: AppColors.grey_300,
             fontSize: 16,
+            fontWeight: FontWeight.normal,
           ),
           floatingLabelStyle:
               WidgetStateTextStyle.resolveWith((states) {
